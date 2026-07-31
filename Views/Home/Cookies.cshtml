@@ -1,0 +1,196 @@
+@{
+    ViewData["Title"] = "Cookie Policy | ElectroScan AI";
+}
+
+<style>
+    /* ==========================================================================
+       COOKIE POLICY - PREMIUM SAAS STYLES
+       ========================================================================== */
+    .es-cookies-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-light-bg: #F8FAF9;
+        --es-card-bg: #FFFFFF;
+        --es-border: #E2EFE9;
+        --es-text-main: #0F221E;
+        --es-text-muted: #4A635B;
+        --es-font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --es-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: var(--es-font-body);
+        color: var(--es-text-main);
+    }
+
+    /* Hero Section */
+    .cookies-hero {
+        position: relative;
+        padding: 80px 0 50px;
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.12) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        text-align: center;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #0B2B26;
+        color: var(--es-mint);
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(11, 43, 38, 0.15);
+    }
+
+    .cookies-hero h1 {
+        font-family: var(--es-font-heading);
+        font-size: clamp(2.4rem, 4vw, 3.5rem);
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 12px;
+        line-height: 1.15;
+    }
+
+    .cookies-hero p {
+        font-size: 1rem;
+        color: var(--es-text-muted);
+        margin: 0;
+    }
+
+    .es-cookies-container {
+        padding: 40px 0 90px;
+        max-width: 860px;
+    }
+
+    .cookies-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 24px;
+        padding: 48px;
+        box-shadow: 0 10px 30px rgba(11, 43, 38, 0.04);
+    }
+
+    .cookie-section {
+        margin-bottom: 36px;
+    }
+
+    .cookie-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .cookie-section h2 {
+        font-family: var(--es-font-heading);
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .cookie-section h2 i {
+        color: var(--es-emerald);
+        font-size: 1.1rem;
+    }
+
+    .cookie-section p {
+        font-size: 0.98rem;
+        color: var(--es-text-muted);
+        line-height: 1.75;
+        margin: 0;
+    }
+
+    /* Types Table / Cards */
+    .cookie-types-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-top: 16px;
+    }
+
+    .cookie-type-box {
+        background: var(--es-light-bg);
+        border: 1px solid var(--es-border);
+        border-radius: 16px;
+        padding: 20px;
+    }
+
+    .cookie-type-box h4 {
+        font-family: var(--es-font-heading);
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .cookie-type-box h4 i {
+        color: var(--es-emerald);
+    }
+
+    .cookie-type-box p {
+        font-size: 0.88rem;
+        color: var(--es-text-muted);
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    @@media (max-width: 768px) {
+        .cookies-card {
+            padding: 28px 20px;
+        }
+        .cookie-types-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="es-cookies-page">
+    <div class="cookies-hero">
+        <div class="container">
+            <div class="hero-badge reveal">
+                <i class="fas fa-cookie-bite"></i> COOKIE POLICY
+            </div>
+            <h1 class="reveal">Cookie Policy</h1>
+            <p class="reveal">Last Updated: July 14, 2026</p>
+        </div>
+    </div>
+
+    <div class="container es-cookies-container">
+        <div class="cookies-card reveal">
+            <div class="cookie-section">
+                <h2><i class="fas fa-info-circle"></i> 1. What Are Cookies</h2>
+                <p>Cookies are tiny text files stored on your computer or mobile device when you browse our site. They help us remember your configuration settings, authenticate logins, and target performance improvements.</p>
+            </div>
+
+            <div class="cookie-section">
+                <h2><i class="fas fa-sliders-h"></i> 2. How We Use Cookies</h2>
+                <p>We use essential security cookies to track authorized sessions across dashboards, preferences cookies to retain configuration settings (like timezone/language), and analytical cookies to improve AI load scanning operations.</p>
+                
+                <div class="cookie-types-grid">
+                    <div class="cookie-type-box">
+                        <h4><i class="fas fa-shield-alt"></i> Essential Cookies</h4>
+                        <p>Required for account authentication, secure session tokens, and role-based access control.</p>
+                    </div>
+                    <div class="cookie-type-box">
+                        <h4><i class="fas fa-chart-bar"></i> Performance Cookies</h4>
+                        <p>Helps analyze system diagnostics, load times, and AI scanner model execution speeds.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cookie-section">
+                <h2><i class="fas fa-user-cog"></i> 3. Managing Your Cookies</h2>
+                <p>You can configure your browser to reject all cookies or notify you when a cookie is placed. Note that turning off essential cookies will disable access to dashboard sections.</p>
+            </div>
+        </div>
+    </div>
+</div>

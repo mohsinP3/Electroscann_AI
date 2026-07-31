@@ -1,0 +1,273 @@
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "My Dashboard";
+    ViewBag.PageTitle = "Dashboard";
+    ViewBag.ActivePage = "Home";
+}
+
+<!-- Page Header -->
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h1 class="fw-bold fs-3 text-dark mb-1 d-flex align-items-center gap-2">
+            <span class="d-inline-flex align-items-center justify-content-center bg-emerald-subtle text-emerald rounded-3 p-2" style="width:40px; height:40px;">
+                <i class="fas fa-bolt fs-5"></i>
+            </span>
+            Welcome back, @((User.Identity?.Name ?? "Electrician").Split(' ')[0])! 👋
+        </h1>
+        <p class="text-muted m-0 small">Here’s your professional electrician hub, active job proposals, and earnings tracker.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <a asp-action="AvailableJobs" asp-controller="ElectricianDashboard" class="btn btn-emerald rounded-pill fw-bold px-3 py-2 btn-sm shadow-sm">
+            <i class="fas fa-search me-1"></i> Browse Available Jobs
+        </a>
+    </div>
+</div>
+
+<!-- Key Stat Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #1F8A6B;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Available Jobs</span>
+                <div class="stat-icon-wrapper bg-emerald-subtle text-emerald">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">@(ViewBag.AvailableJobs ?? 0)</div>
+            <div class="text-emerald small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-briefcase me-1"></i> Active Hiring Listings
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #2BAA85;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Completed Jobs</span>
+                <div class="stat-icon-wrapper bg-success-subtle text-success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">@(ViewBag.CompletedJobs ?? 0)</div>
+            <div class="text-success small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-award me-1"></i> Verified Deliveries
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #6BCB9E;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">My Rating</span>
+                <div class="stat-icon-wrapper bg-warning-subtle text-warning">
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">@((ViewBag.Rating is decimal rating && rating > 0) ? rating.ToString("F1") : "N/A")</div>
+            <div class="text-warning small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-star me-1"></i> Out of 5.0 Rating
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #FF7A00;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Total Earnings</span>
+                <div class="stat-icon-wrapper bg-info-subtle text-info">
+                    <i class="fas fa-wallet"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">Rs. 0</div>
+            <div class="text-info small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-money-bill-alt me-1"></i> Disbursed Payouts
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Showcase Actions Grid -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="dashboard-action-card">
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-icon-wrapper bg-emerald-subtle text-emerald">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-dark m-0">Recent Job Opportunities</h6>
+                        <small class="text-muted">Explore electrical contracts & vacancies</small>
+                    </div>
+                </div>
+                <p class="text-secondary small mb-4">Browse newly posted electrical jobs from verified corporate firms, residential clients, and industrial plants across Pakistan.</p>
+            </div>
+            <a asp-action="AvailableJobs" asp-controller="ElectricianDashboard" class="btn btn-emerald rounded-pill fw-bold btn-sm align-self-start px-4">
+                <i class="fas fa-search me-1"></i> Browse Jobs Now
+            </a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="dashboard-action-card">
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-icon-wrapper bg-info-subtle text-info">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-dark m-0">Complete Your Profile</h6>
+                        <small class="text-muted">Certifications & Experience</small>
+                    </div>
+                </div>
+                <p class="text-secondary small mb-4">Add your electrical licenses, diploma certificates, and portfolio photos to boost application acceptance rates by 3.5x.</p>
+            </div>
+            <a asp-action="Profile" asp-controller="ElectricianDashboard" class="btn btn-outline-dark rounded-pill fw-bold btn-sm align-self-start px-4">
+                <i class="fas fa-user-check me-1"></i> Update Profile
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Analytics Charts Row -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white" style="border: 1px solid #E2ECE8 !important;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="p-2 bg-emerald-subtle text-emerald rounded-3 d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;">
+                        <i class="fas fa-chart-line"></i>
+                    </span>
+                    <h6 class="fw-bold text-dark m-0">Earnings Overview</h6>
+                </div>
+                <span class="badge bg-light text-muted border px-2 py-1">Monthly</span>
+            </div>
+            <canvas id="earningsChart" height="130"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white" style="border: 1px solid #E2ECE8 !important;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="p-2 bg-emerald-subtle text-emerald rounded-3 d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;">
+                        <i class="fas fa-chart-pie"></i>
+                    </span>
+                    <h6 class="fw-bold text-dark m-0">Job Status</h6>
+                </div>
+                <span class="badge bg-light text-muted border px-2 py-1">Overall</span>
+            </div>
+            <canvas id="jobStatusChart" height="130"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Table Container -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4" style="border: 1px solid #E2ECE8 !important;">
+    <div class="d-flex justify-content-between align-items-center p-3 px-4 bg-white border-bottom">
+        <div class="fw-bold text-dark d-flex align-items-center gap-2">
+            <i class="fas fa-briefcase text-emerald"></i> Recent Job Activity
+        </div>
+        <a asp-action="AvailableJobs" asp-controller="ElectricianDashboard" class="btn btn-sm btn-outline-dark rounded-pill fw-bold">Browse Jobs</a>
+    </div>
+    <div class="table-responsive">
+        <table class="data-table-modern">
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th>Pay</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="fw-bold text-dark">Senior Electrical Wiring</td>
+                    <td>Tech Solutions Pvt</td>
+                    <td><i class="fas fa-map-marker-alt text-emerald me-1"></i> Lahore</td>
+                    <td class="fw-bold text-emerald">Rs. 25,000</td>
+                    <td><span class="badge bg-emerald-subtle text-emerald px-3 py-1 rounded-pill fw-bold border border-emerald-subtle">Open</span></td>
+                    <td>
+                        <a asp-action="AvailableJobs" asp-controller="ElectricianDashboard" class="btn btn-sm btn-outline-dark rounded-pill px-3 fw-bold">
+                            <i class="fas fa-eye me-1"></i> View
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fw-bold text-dark">Commercial Panel Inspection</td>
+                    <td>Power Systems Ltd</td>
+                    <td><i class="fas fa-map-marker-alt text-emerald me-1"></i> Karachi</td>
+                    <td class="fw-bold text-emerald">Rs. 18,000</td>
+                    <td><span class="badge bg-warning-subtle text-warning px-3 py-1 rounded-pill fw-bold border border-warning-subtle">Applied</span></td>
+                    <td>
+                        <a asp-action="AppliedJobs" asp-controller="ElectricianDashboard" class="btn btn-sm btn-outline-dark rounded-pill px-3 fw-bold">
+                            <i class="fas fa-eye me-1"></i> View
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fw-bold text-dark">Industrial Safety Audit</td>
+                    <td>ElectroCorp Industries</td>
+                    <td><i class="fas fa-map-marker-alt text-emerald me-1"></i> Islamabad</td>
+                    <td class="fw-bold text-emerald">Rs. 35,000</td>
+                    <td><span class="badge bg-info-subtle text-info px-3 py-1 rounded-pill fw-bold border border-info-subtle">In Review</span></td>
+                    <td>
+                        <a asp-action="AppliedJobs" asp-controller="ElectricianDashboard" class="btn btn-sm btn-outline-dark rounded-pill px-3 fw-bold">
+                            <i class="fas fa-eye me-1"></i> View
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    if (document.getElementById('earningsChart')) {
+        new Chart(document.getElementById('earningsChart'), {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Earnings (Rs.)',
+                    data: [8000, 12000, 9500, 15000, 18000, 22000],
+                    borderColor: '#1F8A6B',
+                    backgroundColor: 'rgba(31,138,107,0.08)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#1F8A6B',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 } } },
+                    x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+                }
+            }
+        });
+    }
+
+    if (document.getElementById('jobStatusChart')) {
+        new Chart(document.getElementById('jobStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Completed', 'In Progress', 'Applied'],
+                datasets: [{
+                    data: [12, 3, 5],
+                    backgroundColor: ['#1F8A6B', '#2BAA85', '#6BCB9E'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: '65%',
+                plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12 } } }
+            }
+        });
+    }
+</script>
+}
+

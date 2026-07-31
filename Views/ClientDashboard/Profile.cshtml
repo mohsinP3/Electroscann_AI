@@ -1,0 +1,80 @@
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "My Profile";
+    ViewBag.PageTitle = "My Profile";
+    ViewBag.ActivePage = "Profile";
+}
+
+<div class="page-header">
+    <h1>My Profile</h1>
+    <p>Manage your account credentials, primary address, and contact parameters</p>
+</div>
+
+<div style="display:grid; grid-template-columns: 280px 1fr; gap: 24px;">
+    <!-- Left info card -->
+    <div>
+        <div class="form-card" style="text-align:center; padding:28px;">
+            <div style="width:80px;height:80px;background:linear-gradient(135deg,#1F8A6B,#6BCB9E);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:#fff;font-size:1.8rem;">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <h3 style="font-size:1.1rem;font-weight:700;color:#1E293B;margin-bottom:4px;">@(User.Identity?.Name ?? "Client")</h3>
+            <p style="font-size:0.8rem;color:#1F8A6B;font-weight:600;margin-bottom:16px;">Client / Homeowner</p>
+            <span class="badge badge-green" style="font-size:0.75rem;padding:6px 14px;">
+                <i class="fas fa-circle" style="font-size:6px;"></i> Active Member
+            </span>
+
+            <div style="margin-top:20px;border-top:1px solid #E2ECE9;padding-top:16px;text-align:left;">
+                <div style="font-size:0.8rem;color:#64748B;display:flex;flex-direction:column;gap:10px;">
+                    <div><i class="fas fa-envelope" style="width:18px;color:#1F8A6B;"></i> @User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value</div>
+                    <div><i class="fas fa-calendar" style="width:18px;color:#1F8A6B;"></i> Joined 2026</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Form -->
+    <div>
+        <div class="form-card">
+            <div style="font-size:1rem;font-weight:700;color:#1E293B;margin-bottom:20px;display:flex;align-items:center;gap:8px;">
+                <i class="fas fa-user-cog" style="color:#1F8A6B;"></i> Edit Personal Profile
+            </div>
+
+            <form>
+                <div class="section-label" style="font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9CA3AF;padding:0 4px;margin-bottom:12px;display:flex;align-items:center;gap:8px; width:100%;">
+                    Profile Details
+                    <span style="flex:1;height:1px;background:#E5E7EB;display:inline-block;"></span>
+                </div>
+
+                <div class="form-grid" style="margin-bottom:20px;">
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" class="form-input" value="@(User.Identity?.Name ?? "")" placeholder="Muhammad Ali">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" value="@User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value" readonly style="background:#F8FAFA;color:#9CA3AF;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Primary Phone Number</label>
+                        <input type="tel" class="form-input" placeholder="+92 300 0000000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" class="form-input" placeholder="Lahore, Karachi...">
+                    </div>
+                    <div class="form-group" style="grid-column:1/-1;">
+                        <label class="form-label">Home / Site Address</label>
+                        <input type="text" class="form-input" placeholder="Full residential physical address for inspection matching">
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:12px;">
+                    <button type="button" class="btn-primary-dash" onclick="showDashToast('Profile updated!')">
+                        <i class="fas fa-save"></i> Save Profile
+                    </button>
+                    <button type="button" class="btn-outline-dash">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

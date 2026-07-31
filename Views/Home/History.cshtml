@@ -1,0 +1,360 @@
+@model IEnumerable<ElectroScanAI.Models.Entities.AIScan>
+@{
+    ViewData["Title"] = "Scan History | ElectroScan AI";
+}
+
+<style>
+    .es-history-hero {
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.12) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        padding: 60px 0 30px;
+        text-align: center;
+        border-bottom: 1px solid var(--es-border);
+    }
+
+    .es-history-card {
+        background: #FFFFFF;
+        border: 1px solid #E2EFE9;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 15px rgba(11, 43, 38, 0.04);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .es-history-card:hover {
+        transform: translateY(-3px);
+        border-color: #1F8A6B;
+        box-shadow: 0 12px 28px rgba(31, 138, 107, 0.12);
+    }
+
+    .es-history-thumb-wrapper {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        background: #0B2B26;
+        overflow: hidden;
+    }
+
+    .es-history-thumb-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .es-history-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        padding: 5px 14px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+    }
+
+    .es-history-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .es-history-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #0B2B26;
+        margin-bottom: 6px;
+    }
+
+    .es-history-date {
+        font-size: 0.82rem;
+        color: #64748B;
+        margin-bottom: 14px;
+    }
+
+    .wire-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 6px;
+        margin-right: 4px;
+        margin-bottom: 6px;
+    }
+
+    .wire-tag-l { background: #FFE4E6; color: #9F1239; border: 1px solid #FECDD3; }
+    .wire-tag-n { background: #DBEAFE; color: #1E40AF; border: 1px solid #BFDBFE; }
+    .wire-tag-e { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
+    .wire-tag-u { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+
+    .scan-modal-img-container {
+        position: relative;
+        width: 100%;
+        max-height: 480px;
+        background: #0B2B26;
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .scan-modal-img {
+        max-width: 100%;
+        max-height: 480px;
+        display: block;
+        object-fit: contain;
+    }
+
+    .modal-wire-pin {
+        position: absolute;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid #FFFFFF;
+        color: #FFFFFF;
+        font-size: 0.78rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 12px rgba(0,0,0,0.5);
+        z-index: 10;
+    }
+
+    .modal-wire-pin.pin-l { background: #DC2626; }
+    .modal-wire-pin.pin-n { background: #2563EB; }
+    .modal-wire-pin.pin-e { background: #16A34A; }
+    .modal-wire-pin.pin-u { background: #D97706; }
+</style>
+
+<div class="es-history-hero">
+    <div class="container">
+        <span class="badge bg-dark text-white px-3 py-2 rounded-pill small mb-2">
+            <i class="fas fa-history text-mint me-1"></i> INSPECTION HISTORY LOGS
+        </span>
+        <h1 class="fw-bold text-dark m-0">AI Wire Scan History</h1>
+        <p class="text-muted mt-2 max-w-xl mx-auto">
+            Review your past electrical panel inspections, wire color findings (Phase L, Neutral N, Earth E), and safety compliance records.
+        </p>
+    </div>
+</div>
+
+<div class="container py-5">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4 shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4 shadow-sm" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 bg-light rounded-4 border p-5">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h4 class="fw-bold text-dark">No Scans Recorded Yet</h4>
+            <p class="text-muted">Use the AI Camera Scanner to scan electrical wires and generate your first report.</p>
+            <a asp-action="AI_Scanner" asp-controller="Home" class="btn btn-emerald px-4 py-2 rounded-pill fw-bold mt-2">
+                <i class="fas fa-camera me-2"></i> Launch AI Scanner
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom flex-wrap gap-2">
+            <h5 class="fw-bold text-dark m-0"><i class="fas fa-list-alt text-emerald me-2"></i> Saved Inspection Reports (@Model.Count())</h5>
+            <form asp-action="DeleteAllScans" asp-controller="Home" method="post" onsubmit="return confirm('Are you sure you want to PERMANENTLY delete ALL scan history logs?');" class="m-0">
+                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill fw-bold px-3">
+                    <i class="fas fa-trash-alt me-1"></i> Clear All History
+                </button>
+            </form>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="es-history-card">
+                        <div class="es-history-thumb-wrapper">
+                            <img src="@(string.IsNullOrEmpty(item.ImagePath) ? "/Image/about.jpg" : item.ImagePath)" alt="@item.ScanName" class="es-history-thumb-img" onerror="this.src='/Image/about.jpg';" />
+                            <span class="es-history-badge @(item.RiskLevel == ElectroScanAI.Models.Enums.ScanRiskLevel.High ? "bg-danger text-white" : item.RiskLevel == ElectroScanAI.Models.Enums.ScanRiskLevel.Medium ? "bg-warning text-dark" : "bg-success text-white")">
+                                @item.RiskLevel.ToString().ToUpper() RISK
+                            </span>
+                        </div>
+
+                        <div class="es-history-body">
+                            <h5 class="es-history-title">@item.ScanName</h5>
+                            <div class="es-history-date">
+                                <i class="far fa-calendar-alt me-1"></i> @item.CreatedAt.ToLocalTime().ToString("f")
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="wire-tag wire-tag-l"><i class="fas fa-bolt"></i> Phase (L)</span>
+                                <span class="wire-tag wire-tag-n"><i class="fas fa-minus-circle"></i> Neutral (N)</span>
+                                <span class="wire-tag wire-tag-e"><i class="fas fa-shield-alt"></i> Earth (E)</span>
+                            </div>
+
+                            <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+                                <span class="badge bg-light text-dark border">
+                                    <i class="fas fa-check-circle text-success me-1"></i> @item.Status
+                                </span>
+                                <div class="d-flex align-items-center gap-1">
+                                    <button class="btn btn-sm btn-outline-dark fw-bold rounded-pill view-scan-btn" 
+                                            data-id="@item.Id"
+                                            data-name="@item.ScanName"
+                                            data-date="@item.CreatedAt.ToLocalTime().ToString("f")"
+                                            data-img="@(string.IsNullOrEmpty(item.ImagePath) ? "/Image/about.jpg" : item.ImagePath)"
+                                            data-summary='@item.ResultSummary'>
+                                        <i class="fas fa-eye me-1"></i> View
+                                    </button>
+                                    <form asp-action="DeleteScan" asp-controller="Home" method="post" onsubmit="return confirm('Are you sure you want to permanently delete this scan entry?');" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger fw-bold rounded-pill" title="Delete scan record">
+                                            <i class="fas fa-trash-alt me-1"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- Modal for Viewing Scan Details with Wire Overlays -->
+<div class="modal fade" id="scanDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 overflow-hidden">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title fw-bold" id="modalScanTitle">Scan Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted small" id="modalScanDate"><i class="far fa-clock me-1"></i> Date</span>
+                    <span class="badge bg-emerald-subtle text-emerald fw-bold px-3 py-1 rounded-pill" id="modalScanStandard">Standard: IEC</span>
+                </div>
+
+                <!-- Interactive Image Overlay Area -->
+                <div class="scan-modal-img-container mb-4" id="modalImgContainer">
+                    <img id="modalScanImg" src="" alt="Scan Image" class="scan-modal-img" />
+                    <div id="modalPinsOverlay"></div>
+                </div>
+
+                <h6 class="fw-bold text-dark mb-2"><i class="fas fa-list-check me-2 text-emerald"></i> Detected Wire Terminals & Colors</h6>
+                <div class="row g-2 mb-3" id="modalWireCardsRow">
+                    <!-- Dynamic Wire Cards -->
+                </div>
+            </div>
+            <div class="modal-footer bg-light d-flex justify-content-between align-items-center">
+                <form id="modalDeleteForm" asp-action="DeleteScan" asp-controller="Home" method="post" onsubmit="return confirm('Are you sure you want to delete this scan entry?');" class="m-0">
+                    <input type="hidden" name="id" id="modalDeleteScanId" value="" />
+                    <button type="submit" class="btn btn-outline-danger rounded-pill fw-bold px-3">
+                        <i class="fas fa-trash-alt me-1"></i> Delete Scan
+                    </button>
+                </form>
+                <button type="button" class="btn btn-secondary rounded-pill fw-bold px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const detailModal = new bootstrap.Modal(document.getElementById('scanDetailModal'));
+        const modalScanTitle = document.getElementById('modalScanTitle');
+        const modalScanDate = document.getElementById('modalScanDate');
+        const modalScanImg = document.getElementById('modalScanImg');
+        const modalPinsOverlay = document.getElementById('modalPinsOverlay');
+        const modalWireCardsRow = document.getElementById('modalWireCardsRow');
+        const modalScanStandard = document.getElementById('modalScanStandard');
+        const modalDeleteScanId = document.getElementById('modalDeleteScanId');
+
+        document.querySelectorAll('.view-scan-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                const date = this.getAttribute('data-date');
+                const img = this.getAttribute('data-img');
+                const summaryRaw = this.getAttribute('data-summary');
+
+                if (modalDeleteScanId) modalDeleteScanId.value = id;
+                modalScanTitle.innerText = name || "Scan Details";
+                modalScanDate.innerHTML = `<i class="far fa-clock me-1"></i> ${date}`;
+                modalScanImg.src = img;
+
+                modalPinsOverlay.innerHTML = "";
+                modalWireCardsRow.innerHTML = "";
+
+                let parsed = null;
+                try {
+                    parsed = JSON.parse(summaryRaw);
+                } catch (e) { }
+
+                if (parsed && parsed.wireDetections && Array.isArray(parsed.wireDetections)) {
+                    modalScanStandard.innerText = `Standard: ${parsed.wiringStandard || 'IEC'}`;
+
+                    parsed.wireDetections.forEach(det => {
+                        // Place pin on overlay
+                        const pin = document.createElement('div');
+                        const roleClass = det.wireRole === 'L' ? 'pin-l' : det.wireRole === 'N' ? 'pin-n' : det.wireRole === 'E' ? 'pin-e' : 'pin-u';
+                        pin.className = `modal-wire-pin ${roleClass}`;
+                        pin.style.left = `${(det.xRatio * 100).toFixed(1)}%`;
+                        pin.style.top = `${(det.yRatio * 100).toFixed(1)}%`;
+                        pin.innerText = det.pointIndex || det.wireRole;
+                        pin.title = `${det.detectedLabel} (${det.colorName}) - ${det.confidence}%`;
+                        modalPinsOverlay.appendChild(pin);
+
+                        // Render Card
+                        const col = document.createElement('div');
+                        col.className = 'col-md-4';
+                        const bgClass = det.wireRole === 'L' ? '#FFF5F5' : det.wireRole === 'N' ? '#EFF6FF' : det.wireRole === 'E' ? '#F0FDF4' : '#FEF3C7';
+                        const borderClass = det.wireRole === 'L' ? '#FECDD3' : det.wireRole === 'N' ? '#BFDBFE' : det.wireRole === 'E' ? '#BBF7D0' : '#FDE68A';
+
+                        col.innerHTML = `
+                            <div class="p-3 border rounded-3 h-100" style="background:${bgClass}; border-color:${borderClass} !important;">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <strong class="small fw-bold">${det.detectedLabel}</strong>
+                                    <span class="badge bg-dark text-white">${det.confidence}% Match</span>
+                                </div>
+                                <div class="small text-muted mb-1"><strong>Color:</strong> ${det.colorName} (${det.rgbHex})</div>
+                                <div class="small text-dark mt-2">${det.recommendation || ''}</div>
+                            </div>
+                        `;
+                        modalWireCardsRow.appendChild(col);
+                    });
+                } else {
+                    modalScanStandard.innerText = "Standard: IEC 60446";
+                    modalWireCardsRow.innerHTML = `
+                        <div class="col-12">
+                            <div class="p-3 bg-light border rounded text-muted small">
+                                ${summaryRaw || "Scan summary stored."}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                detailModal.show();
+            });
+        });
+    });
+</script>
+}

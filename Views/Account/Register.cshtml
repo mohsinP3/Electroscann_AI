@@ -1,0 +1,755 @@
+@model Electroscann_ai.Models.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Register - ElectroScan AI";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | ElectroScan AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(107, 203, 158, 0.16), transparent 22%),
+                linear-gradient(135deg, #0B2B26 0%, #0f3b33 55%, #11463c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 16px;
+            animation: pageFadeIn 0.5s ease;
+        }
+
+        .register-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(248,251,250,0.96));
+            border: 1px solid rgba(255,255,255,0.55);
+            border-radius: 28px;
+            padding: 40px 44px;
+            width: 100%;
+            max-width: 740px;
+            box-shadow:
+                0 12px 30px rgba(2, 20, 16, 0.24),
+                0 28px 70px rgba(2, 20, 16, 0.22),
+                inset 0 1px 0 rgba(255,255,255,0.85);
+            backdrop-filter: blur(12px);
+            animation: cardRise 0.55s ease;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .register-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .register-logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #1F8A6B, #6BCB9E);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            box-shadow: 0 10px 24px rgba(31,138,107,0.28);
+        }
+
+        .register-logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1E293B;
+            letter-spacing: -0.03em;
+        }
+
+        .register-logo-text span { color: #1F8A6B; }
+
+        .register-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .register-header p {
+            color: #64748B;
+            font-size: 0.95rem;
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .role-card {
+            border: 1.5px solid #D8E4DE;
+            border-radius: 18px;
+            padding: 16px 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+            position: relative;
+            background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(241,248,245,0.94));
+            overflow: hidden;
+        }
+
+        .role-card::after {
+            content: '';
+            position: absolute;
+            inset: auto 14px 10px;
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, transparent, #1F8A6B, transparent);
+            opacity: 0;
+            transform: scaleX(0.3);
+            transition: all 0.25s ease;
+        }
+
+        .role-card:hover {
+            border-color: rgba(31,138,107,0.6);
+            background: linear-gradient(180deg, rgba(240,253,247,0.95), rgba(228,246,239,0.94));
+            transform: translateY(-2px);
+        }
+
+        .role-card.selected {
+            border-color: #1F8A6B;
+            background: linear-gradient(180deg, rgba(31,138,107,0.12), rgba(107,203,158,0.07));
+            box-shadow: 0 12px 26px rgba(31,138,107,0.18), 0 4px 10px rgba(15, 60, 47, 0.12);
+            transform: translateY(-3px) scale(1.01);
+        }
+
+        .role-card.selected::after {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        .role-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .role-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(180deg, #f6fbf8, #edf5f1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: #1F8A6B;
+            font-size: 1rem;
+            transition: all 0.25s ease;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+
+        .role-card.selected .role-icon {
+            background: linear-gradient(135deg, #1F8A6B, #2ea882);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(31,138,107,0.27);
+        }
+
+        .role-name {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: 0.02em;
+        }
+
+        .role-desc {
+            font-size: 0.72rem;
+            color: #6B7280;
+            margin-top: 2px;
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        .section-label {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #94A3B8;
+            padding: 0 4px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, #DCE7E3, transparent);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap i {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94A3B8;
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+
+        .form-control,
+        .form-select {
+            width: 100%;
+            padding: 12px 14px 12px 38px;
+            border: 1.5px solid #D9E4DD;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            color: #0F172A;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,247,245,0.98));
+            box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #1F8A6B;
+            background: #fff;
+            box-shadow:
+                inset 0 1px 2px rgba(15,23,42,0.05),
+                0 0 0 4px rgba(31, 138, 107, 0.14);
+            transform: translateY(-1px);
+        }
+
+        .form-control::placeholder { color: #94A3B8; }
+
+        .form-select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #94A3B8;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            padding: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .password-toggle:hover { color: #1F8A6B; }
+
+        .password-strength {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+            font-size: 0.74rem;
+            color: #64748B;
+        }
+
+        .strength-bar {
+            flex: 1;
+            height: 7px;
+            border-radius: 999px;
+            background: #E2E8F0;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981);
+            transition: width 0.25s ease;
+        }
+
+        .role-specific {
+            display: block;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transform: translateY(-8px);
+            transition: all 0.3s ease;
+        }
+
+        .role-specific.active {
+            max-height: 420px;
+            opacity: 1;
+            transform: translateY(0);
+            margin-bottom: 12px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #1F8A6B, #2ea882 58%, #6BCB9E);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+            box-shadow: 0 10px 24px rgba(31,138,107,0.28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            left: -40%;
+            width: 40%;
+            height: 180%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.38), transparent);
+            transform: rotate(20deg);
+            transition: all 0.45s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 32px rgba(31,138,107,0.34);
+            filter: saturate(1.06);
+        }
+
+        .btn-submit:hover::before {
+            left: 110%;
+        }
+
+        .btn-submit.is-loading {
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
+        .btn-submit.is-loading .btn-label {
+            opacity: 0.85;
+        }
+
+        .btn-submit .spinner {
+            display: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: #fff;
+            animation: spin 0.7s linear infinite;
+        }
+
+        .btn-submit.is-loading .spinner {
+            display: inline-block;
+        }
+
+        .auth-footer-link {
+            text-align: center;
+            font-size: 0.875rem;
+            color: #64748B;
+            margin-top: 18px;
+        }
+
+        .auth-footer-link a {
+            color: #1F8A6B;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .validation-error {
+            font-size: 0.74rem;
+            color: #DC2626;
+            margin-top: 3px;
+        }
+
+        .alert-box {
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+            animation: alertIn 0.35s ease;
+        }
+
+        .alert-danger {
+            background: linear-gradient(180deg, #fff5f5, #fef2f2);
+            color: #991B1B;
+            border: 1px solid #fecaca;
+        }
+
+        @@media (max-width: 680px) {
+            .register-card { padding: 28px 20px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .role-selector { grid-template-columns: 1fr; }
+        }
+
+        @@keyframes pageFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @@keyframes cardRise {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @@keyframes alertIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @@keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-card">
+        <div class="register-header">
+            <div class="register-logo">
+                <div class="register-logo-icon"><i class="fas fa-microchip"></i></div>
+                <span class="register-logo-text">ElectroScan<span>AI</span></span>
+            </div>
+            <h1>Create your account</h1>
+            <p>Join thousands of professionals on ElectroScan AI</p>
+        </div>
+
+        @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+        {
+            <div class="alert-box alert-danger">
+                <i class="fas fa-exclamation-circle" style="margin-top:2px;"></i>
+                <div>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div>@error.ErrorMessage</div>
+                    }
+                </div>
+            </div>
+        }
+
+        <form asp-action="Register" method="post" id="registerForm">
+
+            <!-- Role Selector (Visual Cards) -->
+            <div class="section-label">I am a</div>
+            <div class="role-selector">
+                <label class="role-card" id="card-client" onclick="selectRole('3')">
+                    <input asp-for="Role" type="radio" name="Role" value="3" id="role-client">
+                    <div class="role-icon"><i class="fas fa-user"></i></div>
+                    <div class="role-name">Client</div>
+                    <div class="role-desc">Homeowner / Individual</div>
+                </label>
+                <label class="role-card" id="card-electrician" onclick="selectRole('1')">
+                    <input asp-for="Role" type="radio" name="Role" value="1" id="role-electrician">
+                    <div class="role-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="role-name">Electrician</div>
+                    <div class="role-desc">Licensed Professional</div>
+                </label>
+                <label class="role-card" id="card-company" onclick="selectRole('2')">
+                    <input asp-for="Role" type="radio" name="Role" value="2" id="role-company">
+                    <div class="role-icon"><i class="fas fa-building"></i></div>
+                    <div class="role-name">Company</div>
+                    <div class="role-desc">Business / Firm</div>
+                </label>
+            </div>
+
+            <!-- Hidden role select for UI-only state sync -->
+            <select id="RoleSelect" style="display:none;">
+                <option value="3">Client</option>
+                <option value="1">Electrician</option>
+                <option value="2">Company</option>
+            </select>
+
+            <!-- Basic Info -->
+            <div class="form-section">
+                <div class="section-label">Basic Information</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-user"></i>
+                            <input asp-for="FullName" class="form-control" placeholder="Muhammad Ali">
+                        </div>
+                        <span asp-validation-for="FullName" class="validation-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address *</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-envelope"></i>
+                            <input asp-for="Email" class="form-control" type="email" placeholder="you@example.com">
+                        </div>
+                        <span asp-validation-for="Email" class="validation-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number *</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-phone"></i>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="+92 300 1234567">
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="validation-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <input asp-for="City" class="form-control" placeholder="Lahore, Karachi...">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password *</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-lock"></i>
+                            <input asp-for="Password" class="form-control" type="password" placeholder="Min 8 characters" id="pw1">
+                            <button type="button" class="password-toggle" onclick="togglePw('pw1','eye1')">
+                                <i class="fas fa-eye" id="eye1"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength" aria-live="polite">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            <span id="strengthText">Start typing</span>
+                        </div>
+                        <span asp-validation-for="Password" class="validation-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password *</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-lock"></i>
+                            <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Repeat password" id="pw2">
+                            <button type="button" class="password-toggle" onclick="togglePw('pw2','eye2')">
+                                <i class="fas fa-eye" id="eye2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Electrician Fields -->
+            <div id="ElectricianFields" class="role-specific">
+                <div class="section-label">Electrician Details</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">License Number</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-id-card"></i>
+                            <input asp-for="LicenseNumber" class="form-control" placeholder="PEC-XXXX-XXXX">
+                        </div>
+                        <span asp-validation-for="LicenseNumber" class="validation-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Years of Experience</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-calendar-alt"></i>
+                            <input asp-for="YearsOfExperience" class="form-control" type="number" min="0" max="50" step="1" inputmode="numeric" pattern="[0-9]*" placeholder="e.g. 5">
+                        </div>
+                        <span asp-validation-for="YearsOfExperience" class="validation-error"></span>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Specialization</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-tools"></i>
+                            <select asp-for="Specialization" class="form-select">
+                                <option value="">Select Specialization</option>
+                                <option>Residential Wiring</option>
+                                <option>Commercial Wiring</option>
+                                <option>Industrial Wiring</option>
+                                <option>Solar Installation</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="Specialization" class="validation-error"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Fields -->
+            <div id="CompanyFields" class="role-specific">
+                <div class="section-label">Company Details</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Company Name</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-building"></i>
+                            <input asp-for="CompanyName" class="form-control" placeholder="Tech Solutions Pvt Ltd">
+                        </div>
+                        <span asp-validation-for="CompanyName" class="validation-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">NTN Number</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-file-invoice"></i>
+                            <input asp-for="NTNNumber" class="form-control" placeholder="NTN-XXXX-XXXX">
+                        </div>
+                        <span asp-validation-for="NTNNumber" class="validation-error"></span>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Industry</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-industry"></i>
+                            <select asp-for="Industry" class="form-select">
+                                <option value="">Select Industry</option>
+                                <option>Electrical Contracting</option>
+                                <option>Construction</option>
+                                <option>Solar Energy</option>
+                                <option>Facility Management</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="Industry" class="validation-error"></span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitButton">
+                <span class="spinner"></span>
+                <span class="btn-label"><i class="fas fa-user-plus"></i> Create My Account</span>
+            </button>
+        </form>
+
+        <div class="auth-footer-link">
+            Already have an account? <a href="@Url.Action("Login", "Account")">Sign in instead</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        let selectedRole = '3';
+
+        function selectRole(role) {
+            selectedRole = role;
+
+            document.querySelectorAll('.role-card').forEach(card => card.classList.remove('selected'));
+            const cardMap = { '3': 'card-client', '1': 'card-electrician', '2': 'card-company' };
+            const roleFieldMap = {
+                '1': 'ElectricianFields',
+                '2': 'CompanyFields'
+            };
+
+            document.getElementById(cardMap[role])?.classList.add('selected');
+            document.getElementById('RoleSelect').value = role;
+
+            document.querySelectorAll('input[name="Role"]').forEach(radio => {
+                radio.checked = radio.value === role;
+            });
+
+            document.querySelectorAll('.role-specific').forEach(el => el.classList.remove('active'));
+            if (roleFieldMap[role]) {
+                document.getElementById(roleFieldMap[role]).classList.add('active');
+            }
+        }
+
+        function togglePw(inputId, iconId) {
+            const inp = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                inp.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        function updatePasswordStrength() {
+            const passwordInput = document.getElementById('pw1');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            const value = passwordInput.value;
+
+            let score = 0;
+            if (value.length >= 8) score += 35;
+            if (/[A-Z]/.test(value)) score += 20;
+            if (/[0-9]/.test(value)) score += 20;
+            if (/[^A-Za-z0-9]/.test(value)) score += 25;
+
+            if (!value) {
+                strengthFill.style.width = '0%';
+                strengthText.textContent = 'Start typing';
+                return;
+            }
+
+            if (score < 35) {
+                strengthFill.style.width = '30%';
+                strengthText.textContent = 'Weak';
+            } else if (score < 70) {
+                strengthFill.style.width = '60%';
+                strengthText.textContent = 'Good';
+            } else {
+                strengthFill.style.width = '100%';
+                strengthText.textContent = 'Strong';
+            }
+        }
+
+        function setSubmitLoadingState() {
+            const submitButton = document.getElementById('submitButton');
+            submitButton.classList.add('is-loading');
+            submitButton.disabled = true;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            selectRole('3');
+            const passwordInput = document.getElementById('pw1');
+            passwordInput.addEventListener('input', updatePasswordStrength);
+            document.getElementById('registerForm').addEventListener('submit', setSubmitLoadingState);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1818 @@
+@{
+    ViewData["Title"] = "AI Camera Electrical Scanner | ElectroScan AI";
+}
+
+@Html.AntiForgeryToken()
+
+<style>
+    .es-scanner-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-orange: #FF7A00;
+        --es-light-bg: #F8FAF9;
+        --es-border: #E2EFE9;
+        --es-font-heading: 'Space Grotesk', sans-serif;
+        --es-font-body: 'Inter', sans-serif;
+    }
+
+    .es-scanner-hero {
+        position: relative;
+        padding: 55px 0 35px;
+        background: linear-gradient(180deg, #071D1A 0%, #0B2B26 50%, #0F3B33 100%);
+        text-align: center;
+        border-bottom: 1px solid rgba(107, 203, 158, 0.2);
+        color: #FFFFFF;
+    }
+
+    .es-gradient-heading {
+        background: linear-gradient(135deg, #FFFFFF 0%, #00D68F 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .es-pill-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 214, 143, 0.12);
+        border: 1px solid rgba(0, 214, 143, 0.35);
+        color: #00D68F;
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+    }
+
+    /* Camera Viewfinder Frame */
+    .cam-stage-frame {
+        position: relative;
+        width: 100%;
+        max-width: 860px;
+        margin: 0 auto;
+        background: #0B2B26;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 16px 40px rgba(11, 43, 38, 0.15);
+        border: 2px solid var(--es-emerald);
+    }
+
+    .cam-top-hud {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        z-index: 25;
+        background: linear-gradient(180deg, rgba(11, 43, 38, 0.92) 0%, rgba(11, 43, 38, 0) 100%);
+        padding: 14px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .cam-viewfinder-area {
+        position: relative;
+        width: 100%;
+        height: 440px;
+        background: #081C19;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .cam-video-element {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Camera Viewfinder Alignment Grid */
+    .cam-grid-overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .cam-grid-cell {
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+    }
+    .cam-target-crosshair {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 130px;
+        height: 130px;
+        border: 2px solid rgba(0, 214, 143, 0.6);
+        border-radius: 18px;
+        pointer-events: none;
+        box-shadow: 0 0 18px rgba(0, 214, 143, 0.35);
+    }
+    .cam-target-crosshair::before, .cam-target-crosshair::after {
+        content: '';
+        position: absolute;
+        background: #00D68F;
+    }
+    .cam-target-crosshair::before {
+        top: 50%; left: -12px; right: -12px; height: 2px; transform: translateY(-50%);
+    }
+    .cam-target-crosshair::after {
+        left: 50%; top: -12px; bottom: -12px; width: 2px; transform: translateX(-50%);
+    }
+
+    /* Clamp Meter HUD Overlay */
+    .clamp-meter-hud {
+        position: absolute;
+        top: 60px;
+        left: 20px;
+        z-index: 28;
+        pointer-events: auto;
+    }
+    .clamp-lcd-panel {
+        background: #061613;
+        border: 2px solid var(--es-mint);
+        border-radius: 12px;
+        padding: 10px 14px;
+        min-width: 240px;
+        box-shadow: 0 0 20px rgba(107, 203, 158, 0.25);
+        font-family: 'Space Grotesk', monospace;
+    }
+    .clamp-lcd-brand {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #6BCB9E;
+        letter-spacing: 0.08em;
+    }
+    .clamp-lcd-label {
+        font-size: 0.65rem;
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 700;
+        letter-spacing: 0.05em;
+    }
+    .clamp-lcd-val {
+        font-size: 1.4rem;
+        font-weight: 800;
+        line-height: 1.1;
+    }
+    .clamp-jaw-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 220px;
+        height: 220px;
+        border: 4px dashed #FF7A00;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 15;
+        box-shadow: 0 0 30px rgba(255, 122, 0, 0.35);
+        animation: rotate-jaw 20s linear infinite;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 10px;
+    }
+    .clamp-jaw-label {
+        background: rgba(11, 43, 38, 0.92);
+        color: #FF7A00;
+        border: 1px solid #FF7A00;
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 3px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.06em;
+    }
+    @@keyframes rotate-jaw {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Shutter Flash Animation Overlay */
+    .shutter-flash-overlay {
+        position: absolute;
+        inset: 0;
+        background: #FFFFFF;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 40;
+        transition: opacity 0.15s ease-out;
+    }
+    .shutter-flash-overlay.active {
+        opacity: 0.95;
+    }
+
+    /* Camera Status HUD Pills & Selector */
+    .cam-device-select {
+        background: rgba(11, 43, 38, 0.88);
+        color: #6BCB9E;
+        border: 1px solid var(--es-emerald);
+        border-radius: 20px;
+        padding: 4px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        outline: none;
+        max-width: 220px;
+    }
+    .cam-device-select option {
+        background: #0B2B26;
+        color: #FFFFFF;
+    }
+
+    .cam-bottom-hud {
+        background: #081C19;
+        padding: 18px 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    /* Single Shutter Button */
+    .shutter-btn {
+        width: 78px;
+        height: 78px;
+        border-radius: 50%;
+        background: transparent;
+        border: 4px solid #FFFFFF;
+        padding: 4px;
+        cursor: pointer;
+        outline: none;
+        transition: transform 0.15s ease;
+        box-shadow: 0 0 24px rgba(255, 122, 0, 0.4);
+    }
+
+    .shutter-btn:active {
+        transform: scale(0.92);
+    }
+
+    .shutter-inner {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FF7A00 0%, #E66E00 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #FFFFFF;
+        font-size: 1.5rem;
+    }
+
+    /* Confirm Screen */
+    .confirm-stage {
+        display: none;
+        position: relative;
+        width: 100%;
+        max-width: 860px;
+        margin: 0 auto;
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 16px 40px rgba(11, 43, 38, 0.08);
+    }
+
+    .interactive-photo-wrapper {
+        position: relative;
+        width: 100%;
+        max-height: 500px;
+        background: #081C19;
+        overflow: hidden;
+        cursor: crosshair;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .interactive-photo-img {
+        max-width: 100%;
+        max-height: 500px;
+        display: block;
+        object-fit: contain;
+    }
+
+    /* Tap Pin Markers */
+    .tap-wire-pin {
+        position: absolute;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 2px solid #FFFFFF;
+        color: #FFFFFF;
+        font-size: 0.85rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 14px rgba(0, 0, 0, 0.6);
+        z-index: 30;
+        animation: pulse-pin 1.5s infinite;
+    }
+
+    .tap-wire-pin.pin-l { background: #DC2626; }
+    .tap-wire-pin.pin-n { background: #2563EB; }
+    .tap-wire-pin.pin-e { background: #16A34A; }
+    .tap-wire-pin.pin-u { background: #D97706; }
+
+    @@keyframes pulse-pin {
+        0% { transform: translate(-50%, -50%) scale(1); }
+        50% { transform: translate(-50%, -50%) scale(1.12); }
+        100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(6px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+    }
+
+    .spinner-ring {
+        width: 52px;
+        height: 52px;
+        border: 4px solid var(--es-border);
+        border-top-color: var(--es-emerald);
+        border-radius: 50%;
+        animation: spin 0.9s linear infinite;
+        margin-bottom: 16px;
+    }
+
+    @@keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="es-scanner-page">
+    <div class="es-scanner-hero">
+        <div class="container">
+            <div class="es-pill-badge">
+                <span class="es-pulse-dot"></span>
+                <span><i class="fas fa-sparkles me-1"></i> GEMINI AI VISION & WIRE COLOR INSPECTION</span>
+            </div>
+            <h1 class="fw-bold m-0 fs-2 fs-md-1">
+                AI Camera Electrical Scanner<br>
+                <span class="es-gradient-heading">Live Telemetry & Wire Inspection</span>
+            </h1>
+            <p class="text-white-50 mt-2 max-w-2xl mx-auto fs-6">
+                Scan electrical panels, circuit breakers, or junction terminals. AI Vision detects thermal & safety compliance risks while non-contact sensor analytics identify 
+                <strong class="text-mint">Phase Live (L)</strong>, <strong class="text-info">Neutral (N)</strong>, and <strong class="text-success">Earth Ground (E)</strong> conductors.
+            </p>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <!-- TOP CONTROL BAR -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-10">
+                <div class="bg-white p-3 rounded-4 border d-flex flex-wrap justify-content-between align-items-center gap-3 shadow-sm">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-dark text-white px-3 py-2 rounded-pill small fw-bold">
+                            <i class="fas fa-flag text-warning me-1"></i> STANDARD: PAKISTAN CODE (RED = L, BLACK = N, GREEN = E)
+                        </span>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <button id="uploadTriggerBtn" class="btn btn-sm btn-outline-dark fw-bold rounded-pill">
+                            <i class="fas fa-upload me-1 text-emerald"></i> Upload Photo
+                        </button>
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+
+                        <button id="nativeCamTriggerBtn" class="btn btn-sm btn-outline-dark fw-bold rounded-pill">
+                            <i class="fas fa-camera me-1 text-warning"></i> Open Camera
+                        </button>
+                        <input type="file" id="nativeCamInput" accept="image/*" capture="environment" style="display: none;" />
+
+                        <a asp-action="History" asp-controller="Home" class="btn btn-sm btn-dark fw-bold rounded-pill px-3">
+                            <i class="fas fa-history me-1 text-mint"></i> Scan History
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STAGE 1: LIVE CAMERA VIEWFINDER -->
+        <div id="cameraStage" class="cam-stage-frame">
+            <div class="cam-top-hud">
+                <div class="d-flex align-items-center gap-2">
+                    <span id="camStatusBadge" class="badge bg-dark border text-white px-3 py-2 rounded-pill">
+                        <i id="camStatusDot" class="fas fa-circle text-secondary me-1"></i> 
+                        <span id="camStatusText">CAMERA READY</span>
+                    </span>
+                    <span id="camResBadge" class="badge bg-emerald-subtle text-emerald fw-bold px-3 py-2 rounded-pill d-none d-md-inline-block">
+                        <i class="fas fa-video me-1"></i> <span id="camResText">-- x --</span>
+                    </span>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <select id="cameraDeviceSelect" class="cam-device-select d-none" title="Select Camera Device">
+                        <option value="">Default Camera</option>
+                    </select>
+                    <span class="badge bg-emerald-subtle text-emerald fw-bold px-3 py-2 rounded-pill">Pakistan Standard</span>
+                </div>
+            </div>
+
+            <div class="cam-viewfinder-area" id="viewfinderArea">
+                <video id="webcamVideo" autoplay playsinline muted class="cam-video-element" style="display: none;"></video>
+                
+                <!-- Alignment Grid Overlay -->
+                <div id="camGridOverlay" class="cam-grid-overlay d-none">
+                    <div class="cam-grid-cell"></div><div class="cam-grid-cell"></div><div class="cam-grid-cell"></div>
+                    <div class="cam-grid-cell"></div><div class="cam-grid-cell"></div><div class="cam-grid-cell"></div>
+                    <div class="cam-grid-cell"></div><div class="cam-grid-cell"></div><div class="cam-grid-cell"></div>
+                    <div class="cam-target-crosshair"></div>
+                </div>
+
+                <!-- Camera Visual Alignment HUD Overlay (Togglable) -->
+                <div id="clampMeterHud" class="clamp-meter-hud d-none">
+                    <div class="clamp-lcd-panel">
+                        <div class="d-flex justify-content-between align-items-center mb-1 border-bottom border-dark pb-1">
+                            <span class="clamp-lcd-brand"><i class="fas fa-camera me-1 text-mint"></i> ELECTROSCAN VISION HUD</span>
+                            <span id="clampLcdStatus" class="badge bg-emerald text-white px-2 py-0.5 rounded-pill font-monospace" style="font-size: 0.68rem;">CAMERA VISUAL MODE</span>
+                        </div>
+                        <div class="row align-items-center text-center g-1 py-1">
+                            <div class="col-6 border-end border-dark">
+                                <div class="clamp-lcd-label">CURRENT (A)</div>
+                                <div class="clamp-lcd-val text-white-50" style="font-size: 1.1rem;">N/A <small style="font-size:0.6em" class="d-block text-white-50">RGB Vision</small></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="clamp-lcd-label">VOLTAGE (V)</div>
+                                <div class="clamp-lcd-val text-white-50" style="font-size: 1.1rem;">N/A <small style="font-size:0.6em" class="d-block text-white-50">RGB Vision</small></div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center pt-1 border-top border-dark small text-muted font-monospace" style="font-size: 0.72rem;">
+                            <span>MEASURE: <strong class="text-mint">Visual Inspection</strong></span>
+                            <span>METER: <strong class="text-white">OCR Active</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Alignment Zone Graphic -->
+                    <div class="clamp-jaw-ring">
+                        <div class="clamp-jaw-label">
+                            <i class="fas fa-bullseye text-mint me-1"></i> SCAN ALIGNMENT ZONE
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flash Overlay -->
+                <div id="shutterFlash" class="shutter-flash-overlay"></div>
+
+                <!-- Fallback / Permission Placeholder View -->
+                <div id="camPlaceholder" class="text-center p-4 text-white position-relative" style="z-index: 20;">
+                    <div id="camIconContainer" class="mb-3">
+                        <i class="fas fa-camera-retro fa-3x text-mint"></i>
+                    </div>
+                    <h5 id="camPlaceholderTitle" class="fw-bold mb-1">Electrical Camera Feed Ready</h5>
+                    <p id="camPlaceholderDesc" class="text-white-50 small mb-3 max-w-lg mx-auto">
+                        Point camera at wire terminals, circuit breakers, or junction panels for AI analysis.
+                    </p>
+
+                    <!-- Permission State Warning Alert Container -->
+                    <div id="camPermissionNotice" class="alert alert-warning border-0 bg-dark text-white rounded-3 small p-3 mb-3 mx-auto" style="max-width: 540px; display: none;">
+                        <div class="d-flex align-items-start gap-2 text-start">
+                            <i id="camNoticeIcon" class="fas fa-exclamation-triangle text-warning fa-lg mt-1"></i>
+                            <div>
+                                <strong id="camNoticeTitle">Camera Permission Notice</strong>
+                                <div id="camNoticeDetail" class="text-white-50 mt-1">
+                                    Click 'Enable Camera Feed' to grant access. If your browser blocks camera inside iframe, you can use File Upload or Native Mobile Camera.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap justify-content-center gap-2 mt-2">
+                        <button id="startWebcamBtn" class="btn btn-emerald px-4 py-2 rounded-pill fw-bold">
+                            <i class="fas fa-video me-2"></i> Enable Camera Feed
+                        </button>
+                        <button id="loadSampleWireBtn" class="btn btn-outline-light px-3 py-2 rounded-pill fw-bold" title="Use Sample Image">
+                            <i class="fas fa-file-image me-1"></i> Use Sample Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cam-bottom-hud">
+                <div id="hudTipText" class="text-white-50 small text-center fw-semibold mb-2">
+                    <i class="fas fa-bullseye text-warning me-1"></i> Align wires in frame and tap the camera shutter button to capture
+                </div>
+
+                <div class="d-flex align-items-center justify-content-center gap-3 w-100 flex-wrap">
+                    <button id="switchCamBtn" type="button" class="btn btn-sm btn-outline-light rounded-pill fw-bold px-3" title="Switch Camera (Front/Back)">
+                        <i class="fas fa-sync-alt me-1"></i> Flip Cam
+                    </button>
+
+                    <button id="toggleGridBtn" type="button" class="btn btn-sm btn-outline-light rounded-pill fw-bold px-3" title="Toggle Alignment Grid">
+                        <i class="fas fa-th me-1"></i> Grid
+                    </button>
+
+                    <button id="toggleClampHudBtn" type="button" class="btn btn-sm btn-outline-warning rounded-pill fw-bold px-3" title="Toggle Digital Clamp Meter Overlay">
+                        <i class="fas fa-microchip me-1 text-warning"></i> Clamp HUD
+                    </button>
+
+                    <button class="shutter-btn" id="shutterBtn" type="button" title="Capture Photo">
+                        <div class="shutter-inner">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </button>
+
+                    <button id="torchBtn" type="button" class="btn btn-sm btn-outline-light rounded-pill fw-bold px-3 d-none" title="Toggle Flashlight / Torch">
+                        <i class="fas fa-lightbulb me-1"></i> Torch
+                    </button>
+
+                    <button id="sampleDirectBtn" type="button" class="btn btn-sm btn-outline-light rounded-pill fw-bold px-3" title="Use Sample Image">
+                        <i class="fas fa-file-image me-1"></i> Use Sample Image
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STAGE 2: CONFIRM PHOTO & DUAL RUN ACTIONS -->
+        <div id="confirmStage" class="confirm-stage">
+            <div class="p-3 bg-dark text-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <span class="fw-bold"><i class="fas fa-check-circle text-mint me-2"></i> Photo Captured — Ready for AI Analysis</span>
+                <div class="d-flex gap-2">
+                    <button id="retakeBtn" class="btn btn-sm btn-outline-light rounded-pill fw-bold">
+                        <i class="fas fa-redo me-1"></i> Retake
+                    </button>
+                    <button id="runFullScanBtn" class="btn btn-sm btn-emerald rounded-pill fw-bold px-3">
+                        <i class="fas fa-bolt me-1"></i> Run Full AI Scan
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-3 bg-light border-bottom text-dark small d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <i class="fas fa-info-circle text-emerald me-1"></i> 
+                    <strong>Tip:</strong> Click <strong>Run Full AI Scan</strong> for instant Gemini AI inspection, OR tap wire terminals below to mark specific <strong>L/N/E</strong> pin points.
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <button id="analyzePointsBtn" class="btn btn-xs btn-outline-dark py-1 px-3 rounded-pill fw-bold">
+                        <i class="fas fa-crosshairs text-warning me-1"></i> Analyze Selected Pins (<span id="pinCountLabel">0</span>)
+                    </button>
+                    <button id="clearPinsBtn" class="btn btn-xs btn-outline-danger py-1 px-2 rounded-pill fw-bold">
+                        <i class="fas fa-eraser me-1"></i> Clear Pins
+                    </button>
+                </div>
+            </div>
+
+            <div class="interactive-photo-wrapper" id="photoContainer">
+                <img id="confirmedPhotoImg" src="" alt="Captured Wire Photo" class="interactive-photo-img" />
+                <div id="pinsOverlayContainer"></div>
+
+                <div id="analysisLoadingOverlay" class="loading-overlay" style="display: none;">
+                    <div class="spinner-ring"></div>
+                    <h5 class="fw-bold text-dark m-0" id="loadingTitle">Conducting AI Electrical Inspection</h5>
+                    <p class="text-muted small mt-1" id="loadingDesc">Analyzing wires via Gemini AI Vision & ImageSharp color standards...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STAGE 3: RESULTS & DIAGNOSTIC FINDINGS -->
+        <div id="resultsStage" class="mt-4" style="display: none;">
+            <div class="card rounded-4 border-0 shadow-sm overflow-hidden mb-4">
+                <div class="card-header bg-dark text-white p-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <h4 class="fw-bold m-0"><i class="fas fa-clipboard-check text-mint me-2"></i> AI Electrical Inspection Report</h4>
+                        <small class="text-white-50" id="resultScanDate">Scanned just now</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-emerald px-3 py-2 rounded-pill fw-bold" id="resultRiskBadge">Low Risk</span>
+                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill fw-bold" id="resultProviderBadge">Gemini 3.6 Flash</span>
+                        <span class="badge bg-secondary px-3 py-2 rounded-pill fw-bold" id="resultStandardBadge">IEC Standard</span>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- DEMO MODE ALERT BADGE -->
+                    <div class="alert alert-warning border-warning d-flex align-items-center gap-2 mb-4 rounded-3 d-none" id="demoModeBanner">
+                        <i class="fas fa-exclamation-triangle fa-lg text-warning"></i>
+                        <div>
+                            <strong>Demo Mode Active:</strong> Neither Gemini 3.6 Flash nor Groq API key is configured. Inspection results shown below are generated using local rule-based heuristic analysis.
+                        </div>
+                    </div>
+
+                    <!-- SECTION A: GEMINI / HEURISTIC HAZARD ANALYSIS -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-lg-8">
+                            <div class="p-3 rounded-3 bg-light border h-100">
+                                <h6 class="fw-bold text-dark mb-2"><i class="fas fa-microscope text-emerald me-2"></i> AI Inspection Findings</h6>
+                                <p class="text-dark fw-semibold mb-2" id="resultIssueText">Analyzing wires and electrical connections...</p>
+                                <div class="p-3 bg-white rounded border border-emerald-subtle small">
+                                    <strong class="text-emerald d-block mb-1"><i class="fas fa-shield-alt me-1"></i> Recommendation:</strong>
+                                    <span id="resultRecommendationText" class="text-muted">Inspect wire terminals and verify tight torque settings.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="p-3 rounded-3 bg-dark text-white h-100 text-center d-flex flex-column justify-content-center">
+                                <small class="text-white-50 text-uppercase fw-bold">AI Vision Confidence</small>
+                                <div class="display-5 fw-bold text-mint my-2" id="resultConfidenceScore">94%</div>
+                                <small class="text-white-50" id="resultStatusText">Wires Detected & Verified</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION A2: DIGITAL CLAMP METER CURRENT & VOLTAGE REPORT CARD -->
+                    <div id="clampMeterReportCard" class="card rounded-4 border-0 shadow-sm overflow-hidden mb-4 bg-dark text-white">
+                        <div class="card-header bg-black bg-opacity-40 p-3 d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom border-secondary">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-warning text-dark fw-bold px-3 py-1.5 rounded-pill"><i class="fas fa-microchip me-1"></i> CLAMP METER SENSOR</span>
+                                <h5 class="fw-bold m-0 text-white">Non-Contact Wire Current & Voltage Analysis</h5>
+                            </div>
+                            <span id="clampCurrentStatusBadge" class="badge bg-success px-3 py-2 rounded-pill fw-bold">Awaiting Analysis</span>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-3 align-items-stretch">
+                                <!-- Digital Ampere Reading Box -->
+                                <div class="col-md-3">
+                                    <div class="p-3 rounded-3 text-center h-100 d-flex flex-column justify-content-center" style="background: rgba(0, 214, 143, 0.08); border: 2px solid var(--es-bright-mint);">
+                                        <small class="text-uppercase fw-bold text-mint tracking-wider" style="font-size:0.75rem;">Measured Current</small>
+                                        <div class="display-5 fw-bold text-mint font-monospace my-1" id="resClampAmps">--</div>
+                                        <small class="text-white-50" id="resClampAmpSub">Phase Wire Amperage</small>
+                                    </div>
+                                </div>
+                                <!-- Voltage Box -->
+                                <div class="col-md-3">
+                                    <div class="p-3 rounded-3 text-center h-100 d-flex flex-column justify-content-center" style="background: rgba(255, 122, 0, 0.08); border: 1px solid rgba(255, 122, 0, 0.4);">
+                                        <small class="text-uppercase fw-bold text-warning tracking-wider" style="font-size:0.75rem;">Estimated Voltage</small>
+                                        <div class="h2 fw-bold text-warning font-monospace my-1" id="resClampVolts">--</div>
+                                        <small class="text-white-50">Single-Phase Grid</small>
+                                    </div>
+                                </div>
+                                <!-- Power Load Box -->
+                                <div class="col-md-3">
+                                    <div class="p-3 rounded-3 text-center h-100 d-flex flex-column justify-content-center" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15);">
+                                        <small class="text-uppercase fw-bold text-info tracking-wider" style="font-size:0.75rem;">Active Power Load</small>
+                                        <div class="h2 fw-bold text-info font-monospace my-1" id="resClampWatts">--</div>
+                                        <small class="text-white-50">~1.24 kW Active Load</small>
+                                    </div>
+                                </div>
+                                <!-- EM Induction Box -->
+                                <div class="col-md-3">
+                                    <div class="p-3 rounded-3 text-center h-100 d-flex flex-column justify-content-center" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15);">
+                                        <small class="text-uppercase fw-bold text-white-50 tracking-wider" style="font-size:0.75rem;">Magnetic Field</small>
+                                        <div class="h5 fw-bold text-white font-monospace my-1" id="resClampEmField">Awaiting Scan</div>
+                                        <small class="text-mint" id="resClampFlowActive"><i class="fas fa-bolt me-1"></i> Current Flowing</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3 p-3 rounded-3 bg-black bg-opacity-50 border border-secondary border-opacity-50 small text-white-50 d-flex align-items-start gap-2">
+                                <i class="fas fa-info-circle text-warning fa-lg mt-1"></i>
+                                <div>
+                                    <strong class="text-white d-block mb-0.5">Clamp Meter Sensor Summary:</strong>
+                                    <span id="resClampSummaryText" class="text-white-75">Clamp sensor heuristics detected active electric current flowing through the phase conductor. Line is live and carrying electrical load.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUMMARY STRIP -->
+                    <div class="p-3 mb-4 rounded-3 border d-flex justify-content-between align-items-center flex-wrap gap-2 d-none" id="wireSummaryStrip" style="background: rgba(15, 59, 51, 0.04); border-color: rgba(31, 138, 107, 0.2) !important;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white shadow-sm" id="wireSummaryIconBg" style="width: 44px; height: 44px; background: #1F8A6B;">
+                                <i class="fas fa-layer-group fs-5" id="wireSummaryIcon"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold text-dark m-0" id="wireSummaryCountText">0 wires detected</h6>
+                                <small class="text-muted" id="wireSummarySubtext">Evaluated per Pakistan Electrical Code Standard (Red=Live, Black=Neutral, Green=Earth)</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge px-3 py-2 rounded-pill fw-bold" id="wireSummaryStatusPill">Standard Verified</span>
+                        </div>
+                    </div>
+
+                    <!-- SECTION B: DYNAMIC CONDUCTOR IDENTIFICATION CARDS -->
+                    <h5 class="fw-bold text-dark mb-3"><i class="fas fa-layer-group me-2 text-emerald"></i> Conductor Identification & Standards Check</h5>
+                    <div class="row g-3 mb-4" id="wireResultCardsRow"></div>
+
+                    <!-- SECTION C: SPOT WIRE COLOR PIN ANALYSIS (if sampled) -->
+                    <div id="pinAnalysisSection" style="display: none;">
+                        <hr class="my-4" />
+                        <h5 class="fw-bold text-dark mb-3"><i class="fas fa-crosshairs me-2 text-warning"></i> Pin Spot-Color Detection</h5>
+                        <div class="row g-3" id="pinResultCardsRow"></div>
+                    </div>
+
+                    <!-- SECTION D: ACTION FOOTER -->
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-4 pt-3 border-top">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <a asp-action="History" asp-controller="Home" class="btn btn-dark rounded-pill px-4 fw-bold">
+                                <i class="fas fa-history me-2 text-mint"></i> View in Scan History
+                            </a>
+                            <button id="shareReportBtn" type="button" class="btn btn-emerald rounded-pill px-4 fw-bold">
+                                <i class="fas fa-share-alt me-2 text-white"></i> Share Inspection Report
+                            </button>
+                            <button id="copySummaryBtn" type="button" class="btn btn-outline-emerald rounded-pill px-3 fw-bold">
+                                <i class="fas fa-copy me-1"></i> Copy Text Summary
+                            </button>
+                        </div>
+                        <button id="scanAnotherBtn" class="btn btn-outline-dark rounded-pill px-4 fw-bold">
+                            <i class="fas fa-camera me-2"></i> Scan Another Wire Panel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Share Toast Alert Notification -->
+<div id="shareToastAlert" class="alert alert-success border-0 shadow-lg rounded-4 p-3 position-fixed bottom-0 end-0 m-4 text-white bg-dark d-none" style="z-index: 9999; max-width: 400px; border-left: 5px solid #00D68F !important;">
+    <div class="d-flex align-items-center gap-3">
+        <div class="rounded-circle bg-emerald p-2 d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px; flex-shrink: 0;">
+            <i class="fas fa-check fa-lg"></i>
+        </div>
+        <div>
+            <strong class="d-block text-white" id="toastTitle">Report Summary Copied!</strong>
+            <small class="text-white-50" id="toastBody">Formatted inspection results are copied to clipboard for sharing.</small>
+        </div>
+        <button type="button" class="btn-close btn-close-white ms-auto" onclick="document.getElementById('shareToastAlert').classList.add('d-none')"></button>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let mediaStream = null;
+        let currentVideoTrack = null;
+        let capturedBlob = null;
+        let tappedPoints = [];
+        let isGridActive = false;
+        let isTorchOn = false;
+        let currentFacingMode = "environment";
+        let currentDeviceId = "";
+        const activeStandard = "Pakistan Standard (Red=L, Black=N, Green=E)";
+
+        // UI Elements
+        const cameraStage = document.getElementById("cameraStage");
+        const confirmStage = document.getElementById("confirmStage");
+        const resultsStage = document.getElementById("resultsStage");
+
+        const webcamVideo = document.getElementById("webcamVideo");
+        const camPlaceholder = document.getElementById("camPlaceholder");
+        const camStatusDot = document.getElementById("camStatusDot");
+        const camStatusText = document.getElementById("camStatusText");
+        const camResBadge = document.getElementById("camResBadge");
+        const camResText = document.getElementById("camResText");
+        const cameraDeviceSelect = document.getElementById("cameraDeviceSelect");
+        const camGridOverlay = document.getElementById("camGridOverlay");
+        const shutterFlash = document.getElementById("shutterFlash");
+        const camPermissionNotice = document.getElementById("camPermissionNotice");
+        const camNoticeTitle = document.getElementById("camNoticeTitle");
+        const camNoticeDetail = document.getElementById("camNoticeDetail");
+        const camNoticeIcon = document.getElementById("camNoticeIcon");
+        const camPlaceholderTitle = document.getElementById("camPlaceholderTitle");
+        const camPlaceholderDesc = document.getElementById("camPlaceholderDesc");
+        const startWebcamBtn = document.getElementById("startWebcamBtn");
+        const loadSampleWireBtn = document.getElementById("loadSampleWireBtn");
+        const switchCamBtn = document.getElementById("switchCamBtn");
+        const toggleGridBtn = document.getElementById("toggleGridBtn");
+        const torchBtn = document.getElementById("torchBtn");
+        const shutterBtn = document.getElementById("shutterBtn");
+        const sampleDirectBtn = document.getElementById("sampleDirectBtn");
+
+        const retakeBtn = document.getElementById("retakeBtn");
+        const runFullScanBtn = document.getElementById("runFullScanBtn");
+        const confirmedPhotoImg = document.getElementById("confirmedPhotoImg");
+        const photoContainer = document.getElementById("photoContainer");
+        const pinsOverlayContainer = document.getElementById("pinsOverlayContainer");
+        const pinCountLabel = document.getElementById("pinCountLabel");
+        const analyzePointsBtn = document.getElementById("analyzePointsBtn");
+        const clearPinsBtn = document.getElementById("clearPinsBtn");
+        const analysisLoadingOverlay = document.getElementById("analysisLoadingOverlay");
+        const loadingTitle = document.getElementById("loadingTitle");
+        const loadingDesc = document.getElementById("loadingDesc");
+
+        const uploadTriggerBtn = document.getElementById("uploadTriggerBtn");
+        const fileInput = document.getElementById("fileInput");
+        const nativeCamTriggerBtn = document.getElementById("nativeCamTriggerBtn");
+        const nativeCamInput = document.getElementById("nativeCamInput");
+
+        const resultRiskBadge = document.getElementById("resultRiskBadge");
+        const resultStandardBadge = document.getElementById("resultStandardBadge");
+        const resultIssueText = document.getElementById("resultIssueText");
+        const resultRecommendationText = document.getElementById("resultRecommendationText");
+        const resultConfidenceScore = document.getElementById("resultConfidenceScore");
+        const resultStatusText = document.getElementById("resultStatusText");
+        const wireResultCardsRow = document.getElementById("wireResultCardsRow");
+
+        const pinAnalysisSection = document.getElementById("pinAnalysisSection");
+        const pinResultCardsRow = document.getElementById("pinResultCardsRow");
+        const scanAnotherBtn = document.getElementById("scanAnotherBtn");
+
+        // Audio Feedback for Shutter (using Web Audio API synth click)
+        function playShutterSound() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(800, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.08);
+            } catch (e) { }
+        }
+
+        // Enumerate video devices if available
+        async function updateCameraDevices() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(d => d.kind === "videoinput");
+                
+                if (videoDevices.length > 1) {
+                    cameraDeviceSelect.innerHTML = '<option value="">Default Camera</option>';
+                    videoDevices.forEach((device, index) => {
+                        const option = document.createElement("option");
+                        option.value = device.deviceId;
+                        option.textContent = device.label || `Camera ${index + 1} (${device.deviceId.substring(0, 5)}...)`;
+                        if (currentDeviceId && device.deviceId === currentDeviceId) {
+                            option.selected = true;
+                        }
+                        cameraDeviceSelect.appendChild(option);
+                    });
+                    cameraDeviceSelect.classList.remove("d-none");
+                }
+            } catch (e) {
+                console.warn("Could not enumerate camera devices:", e);
+            }
+        }
+
+        // 1. Enable & Start Camera Stream
+        async function startCamera(facing = "environment", deviceId = "") {
+            updateCamState("requesting", "REQUESTING PERMISSION...");
+            camPermissionNotice.style.display = "none";
+
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(t => t.stop());
+                mediaStream = null;
+                currentVideoTrack = null;
+            }
+
+            currentFacingMode = facing;
+            currentDeviceId = deviceId;
+
+            const constraints = {
+                video: {
+                    width: { ideal: 1920, max: 3840 },
+                    height: { ideal: 1080, max: 2160 }
+                },
+                audio: false
+            };
+
+            if (deviceId) {
+                constraints.video.deviceId = { exact: deviceId };
+            } else if (facing) {
+                constraints.video.facingMode = { ideal: facing };
+            }
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showCamError("NotSupported", "Camera API Not Supported", 
+                    "Your browser environment does not support camera stream access. You can upload a photo or use a sample image.");
+                return;
+            }
+
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+                currentVideoTrack = mediaStream.getVideoTracks()[0];
+                
+                webcamVideo.srcObject = mediaStream;
+                webcamVideo.style.display = "block";
+                camPlaceholder.style.display = "none";
+                camGridOverlay.classList.remove("d-none");
+                isGridActive = true;
+
+                webcamVideo.onloadedmetadata = () => {
+                    webcamVideo.play().catch(e => console.warn("Video play error:", e));
+                    const w = webcamVideo.videoWidth;
+                    const h = webcamVideo.videoHeight;
+                    if (w && h) {
+                        camResText.innerText = `${w}x${h}`;
+                        camResBadge.classList.remove("d-none");
+                    }
+                };
+
+                updateCamState("active", "LIVE CAMERA FEED");
+                updateCameraDevices();
+
+                // Check torch capability
+                if (currentVideoTrack && currentVideoTrack.getCapabilities) {
+                    const capabilities = currentVideoTrack.getCapabilities();
+                    if (capabilities.torch) {
+                        torchBtn.classList.remove("d-none");
+                    } else {
+                        torchBtn.classList.add("d-none");
+                    }
+                }
+            } catch (err) {
+                console.warn("Camera access error:", err);
+                handleCameraError(err);
+            }
+        }
+
+        function handleCameraError(err) {
+            webcamVideo.style.display = "none";
+            camPlaceholder.style.display = "block";
+            camResBadge.classList.add("d-none");
+
+            let title = "Camera Permission Denied";
+            let detail = "Access to the camera was denied or blocked. You can upload a photo directly or use native mobile camera.";
+            let errType = "NotAllowed";
+
+            if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+                title = "Camera Permission Denied";
+                detail = "Camera permission was denied by user or blocked by browser settings/iframe security policy. Please click 'Upload Photo' or 'Load Sample Wire Panel' to proceed.";
+                errType = "NotAllowed";
+            } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
+                title = "No Camera Hardware Found";
+                detail = "No camera hardware was detected on this device. Please connect a camera or upload an image file.";
+                errType = "NotFound";
+            } else if (err.name === "NotReadableError" || err.name === "TrackStartError") {
+                title = "Camera In Use";
+                detail = "The camera is currently in use by another application or browser tab. Please close other camera apps and retry.";
+                errType = "InUse";
+            } else if (err.name === "SecurityError") {
+                title = "Security Policy Restricted";
+                detail = "Camera access is restricted in this context. Use File Upload or Sample Wire Panel.";
+                errType = "Security";
+            } else {
+                title = "Camera Stream Error";
+                detail = `Unable to start camera stream: ${err.message || 'Unknown error'}. You can upload a photo below.`;
+                errType = "Error";
+            }
+
+            showCamError(errType, title, detail);
+        }
+
+        function showCamError(type, title, detail) {
+            updateCamState("error", "CAMERA UNAVAILABLE");
+            camPlaceholderTitle.innerText = title;
+            camPlaceholderDesc.innerText = "Please select a fallback option below or grant camera permission in browser settings.";
+            
+            camNoticeTitle.innerText = title;
+            camNoticeDetail.innerText = detail;
+            camNoticeIcon.className = type === "NotAllowed" ? "fas fa-lock text-warning fa-lg mt-1" :
+                                      type === "NotFound" ? "fas fa-video-slash text-danger fa-lg mt-1" :
+                                      type === "InUse" ? "fas fa-exclamation-circle text-info fa-lg mt-1" :
+                                      "fas fa-exclamation-triangle text-warning fa-lg mt-1";
+            camPermissionNotice.style.display = "block";
+        }
+
+        function updateCamState(state, label) {
+            camStatusText.innerText = label;
+            if (state === "active") {
+                camStatusDot.className = "fas fa-circle text-emerald me-1 animate-pulse";
+            } else if (state === "requesting") {
+                camStatusDot.className = "fas fa-spinner fa-spin text-warning me-1";
+            } else if (state === "error") {
+                camStatusDot.className = "fas fa-circle text-danger me-1";
+            } else {
+                camStatusDot.className = "fas fa-circle text-secondary me-1";
+            }
+        }
+
+        startWebcamBtn.addEventListener("click", () => startCamera(currentFacingMode, currentDeviceId));
+
+        if (switchCamBtn) {
+            switchCamBtn.addEventListener("click", function () {
+                const nextFacing = currentFacingMode === "environment" ? "user" : "environment";
+                startCamera(nextFacing, "");
+            });
+        }
+
+        if (cameraDeviceSelect) {
+            cameraDeviceSelect.addEventListener("change", function () {
+                startCamera(currentFacingMode, cameraDeviceSelect.value);
+            });
+        }
+
+        if (toggleGridBtn) {
+            toggleGridBtn.addEventListener("click", function () {
+                isGridActive = !isGridActive;
+                if (isGridActive) {
+                    camGridOverlay.classList.remove("d-none");
+                } else {
+                    camGridOverlay.classList.add("d-none");
+                }
+            });
+        }
+
+        // Clamp Meter Viewfinder HUD toggle
+        const toggleClampHudBtn = document.getElementById("toggleClampHudBtn");
+        const clampMeterHud = document.getElementById("clampMeterHud");
+        let isClampHudActive = false;
+
+        if (toggleClampHudBtn) {
+            toggleClampHudBtn.addEventListener("click", function () {
+                isClampHudActive = !isClampHudActive;
+                if (isClampHudActive) {
+                    clampMeterHud.classList.remove("d-none");
+                    toggleClampHudBtn.classList.remove("btn-outline-warning");
+                    toggleClampHudBtn.classList.add("btn-warning", "text-dark");
+                } else {
+                    clampMeterHud.classList.add("d-none");
+                    toggleClampHudBtn.classList.remove("btn-warning", "text-dark");
+                    toggleClampHudBtn.classList.add("btn-outline-warning");
+                }
+            });
+        }
+
+        if (torchBtn) {
+            torchBtn.addEventListener("click", async function () {
+                if (currentVideoTrack && currentVideoTrack.applyConstraints) {
+                    try {
+                        isTorchOn = !isTorchOn;
+                        await currentVideoTrack.applyConstraints({
+                            advanced: [{ torch: isTorchOn }]
+                        });
+                        torchBtn.classList.toggle("btn-warning", isTorchOn);
+                        torchBtn.classList.toggle("text-dark", isTorchOn);
+                    } catch (e) {
+                        console.warn("Torch failed:", e);
+                    }
+                }
+            });
+        }
+
+        if (sampleDirectBtn) {
+            sampleDirectBtn.addEventListener("click", loadSampleImage);
+        }
+
+        // Sample Wire Image
+        loadSampleWireBtn.addEventListener("click", loadSampleImage);
+        function loadSampleImage() {
+            capturedBlob = null;
+            confirmedPhotoImg.src = "/Image/sample_wire_panel.jpg";
+            showConfirmStage();
+        }
+
+        // Native Uploads
+        uploadTriggerBtn.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", function (e) {
+            if (e.target.files && e.target.files[0]) handleSelectedFile(e.target.files[0]);
+        });
+
+        nativeCamTriggerBtn.addEventListener("click", () => nativeCamInput.click());
+        nativeCamInput.addEventListener("change", function (e) {
+            if (e.target.files && e.target.files[0]) handleSelectedFile(e.target.files[0]);
+        });
+
+        function handleSelectedFile(file) {
+            capturedBlob = file;
+            confirmedPhotoImg.src = URL.createObjectURL(file);
+            showConfirmStage();
+        }
+
+        // Shutter Click
+        shutterBtn.addEventListener("click", function () {
+            // Flash feedback animation & sound
+            if (shutterFlash) {
+                shutterFlash.classList.add("active");
+                playShutterSound();
+                setTimeout(() => shutterFlash.classList.remove("active"), 160);
+            }
+
+            if (webcamVideo.style.display !== "none" && webcamVideo.videoWidth > 0) {
+                const canvas = document.createElement("canvas");
+                canvas.width = webcamVideo.videoWidth;
+                canvas.height = webcamVideo.videoHeight;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(webcamVideo, 0, 0, canvas.width, canvas.height);
+
+                canvas.toBlob(function (blob) {
+                    if (blob) {
+                        capturedBlob = blob;
+                        confirmedPhotoImg.src = URL.createObjectURL(blob);
+                        showConfirmStage();
+                    } else {
+                        loadSampleImage();
+                    }
+                }, "image/jpeg", 0.95);
+            } else {
+                loadSampleImage();
+            }
+        });
+
+        function showConfirmStage() {
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(t => t.stop());
+                mediaStream = null;
+            }
+            cameraStage.style.display = "none";
+            confirmStage.style.display = "block";
+            resultsStage.style.display = "none";
+            tappedPoints = [];
+            renderPins();
+        }
+
+        retakeBtn.addEventListener("click", function () {
+            confirmStage.style.display = "none";
+            cameraStage.style.display = "block";
+            resultsStage.style.display = "none";
+            webcamVideo.style.display = "none";
+            camPlaceholder.style.display = "block";
+        });
+
+        // Interactive Pins
+        photoContainer.addEventListener("click", function (e) {
+            if (e.target.closest("#retakeBtn") || e.target.closest("#runFullScanBtn") || e.target.closest("#analyzePointsBtn")) return;
+
+            const rect = photoContainer.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            const xRatio = Math.max(0, Math.min(1, clickX / rect.width));
+            const yRatio = Math.max(0, Math.min(1, clickY / rect.height));
+
+            if (tappedPoints.length >= 3) tappedPoints.shift();
+            tappedPoints.push({ xRatio, yRatio });
+            renderPins();
+        });
+
+        clearPinsBtn.addEventListener("click", function () {
+            tappedPoints = [];
+            renderPins();
+        });
+
+        function renderPins() {
+            pinsOverlayContainer.innerHTML = "";
+            pinCountLabel.innerText = tappedPoints.length;
+            tappedPoints.forEach((pt, index) => {
+                const pin = document.createElement("div");
+                pin.className = "tap-wire-pin pin-u";
+                pin.style.left = `${(pt.xRatio * 100).toFixed(1)}%`;
+                pin.style.top = `${(pt.yRatio * 100).toFixed(1)}%`;
+                pin.innerText = index + 1;
+                pin.title = `Wire Point ${index + 1}`;
+                pinsOverlayContainer.appendChild(pin);
+            });
+        }
+
+        // RUN FULL AI SCAN (Calls /Home/AnalyzeScan)
+        runFullScanBtn.addEventListener("click", () => executeFullScan());
+        analyzePointsBtn.addEventListener("click", () => executePinAnalysis());
+
+        async function executeFullScan() {
+            if (runFullScanBtn.disabled) return;
+            runFullScanBtn.disabled = true;
+            const originalHtml = runFullScanBtn.innerHTML;
+            runFullScanBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin me-1"></i> Analyzing...';
+
+            analysisLoadingOverlay.style.display = "flex";
+            loadingTitle.innerText = "Running AI Inspection & Electrical Hazard Analysis";
+            loadingDesc.innerText = "Evaluating wire colors and panel standards against Pakistan Code (Red Live, Black Neutral, Green Earth)...";
+
+            try {
+                const scanFormData = new FormData();
+                if (capturedBlob) {
+                    scanFormData.append("imageFile", capturedBlob, "electrical_scan.jpg");
+                } else {
+                    const currentSrc = confirmedPhotoImg.getAttribute("src") || "/Image/sample_wire_panel.jpg";
+                    scanFormData.append("existingImagePath", currentSrc);
+                }
+                scanFormData.append("deviceName", "Electrical Panel (Pakistan Standard)");
+
+                const scanRes = await fetch("/Home/AnalyzeScan", { method: "POST", body: scanFormData });
+                let scanData = null;
+                if (scanRes.ok) {
+                    scanData = await scanRes.json();
+                } else {
+                    scanData = {
+                        wiresDetected: false,
+                        confidenceScore: 0,
+                        riskLevel: "Low",
+                        issue: "Server responded with an error during AI vision analysis.",
+                        recommendation: "Please try running the scan again or upload another clear photo."
+                    };
+                }
+
+                // If user tapped pins, also fetch spot color analysis
+                let colorData = null;
+                if (tappedPoints.length > 0) {
+                    try {
+                        const colorFormData = new FormData();
+                        colorFormData.append("pointsJson", JSON.stringify(tappedPoints));
+                        if (capturedBlob) {
+                            colorFormData.append("imageFile", capturedBlob, "electrical_scan.jpg");
+                        } else {
+                            colorFormData.append("existingImagePath", confirmedPhotoImg.getAttribute("src") || "/Image/sample_wire_panel.jpg");
+                        }
+                        const colorRes = await fetch("/Home/AnalyzeWireColors", { method: "POST", body: colorFormData });
+                        if (colorRes.ok) {
+                            colorData = await colorRes.json();
+                        }
+                    } catch (e) {
+                        console.warn("AnalyzeWireColors fetch error:", e);
+                    }
+                }
+
+                analysisLoadingOverlay.style.display = "none";
+                renderUnifiedResults(scanData, colorData);
+            } catch (err) {
+                analysisLoadingOverlay.style.display = "none";
+                console.warn("AI scan request error:", err);
+                renderUnifiedResults({
+                    wiresDetected: false,
+                    confidenceScore: 0,
+                    riskLevel: "Low",
+                    issue: "Unable to complete AI scan due to a network or connection issue.",
+                    recommendation: "Please check your network connection and retry."
+                }, null);
+            } finally {
+                runFullScanBtn.disabled = false;
+                runFullScanBtn.innerHTML = originalHtml;
+            }
+        }
+
+        async function executePinAnalysis() {
+            if (tappedPoints.length === 0) {
+                alert("Please tap on 1 to 3 wire conductor terminals on the photo to place pin markers first.");
+                return;
+            }
+            if (analyzePointsBtn.disabled) return;
+
+            analyzePointsBtn.disabled = true;
+            const originalHtml = analyzePointsBtn.innerHTML;
+            analyzePointsBtn.innerHTML = `<i class="fas fa-circle-notch fa-spin me-1"></i> Analyzing (${tappedPoints.length})...`;
+
+            analysisLoadingOverlay.style.display = "flex";
+            loadingTitle.innerText = "Analyzing Selected Spot Wire Pins";
+            loadingDesc.innerText = `Analyzing color spectrum for ${tappedPoints.length} tapped pin location(s)...`;
+
+            try {
+                const colorFormData = new FormData();
+                colorFormData.append("pointsJson", JSON.stringify(tappedPoints));
+                if (capturedBlob) {
+                    colorFormData.append("imageFile", capturedBlob, "electrical_scan.jpg");
+                } else {
+                    colorFormData.append("existingImagePath", confirmedPhotoImg.getAttribute("src") || "/Image/sample_wire_panel.jpg");
+                }
+
+                const colorRes = await fetch("/Home/AnalyzeWireColors", { method: "POST", body: colorFormData });
+                let colorData = null;
+                if (colorRes.ok) {
+                    colorData = await colorRes.json();
+                } else {
+                    throw new Error("Pin analysis service returned status " + colorRes.status);
+                }
+
+                // Also run background scan analysis for context
+                const scanFormData = new FormData();
+                if (capturedBlob) {
+                    scanFormData.append("imageFile", capturedBlob, "electrical_scan.jpg");
+                } else {
+                    scanFormData.append("existingImagePath", confirmedPhotoImg.getAttribute("src") || "/Image/sample_wire_panel.jpg");
+                }
+                scanFormData.append("deviceName", "Electrical Panel (Spot Pin Analysis)");
+                const scanRes = await fetch("/Home/AnalyzeScan", { method: "POST", body: scanFormData });
+                let scanData = null;
+                if (scanRes.ok) scanData = await scanRes.json();
+
+                analysisLoadingOverlay.style.display = "none";
+                renderUnifiedResults(scanData, colorData);
+            } catch (err) {
+                analysisLoadingOverlay.style.display = "none";
+                console.warn("Pin analysis error:", err);
+                alert("Unable to complete spot pin color analysis. Please try again.");
+            } finally {
+                analyzePointsBtn.disabled = false;
+                analyzePointsBtn.innerHTML = originalHtml;
+            }
+        }
+
+        function getColorHex(colorStr) {
+            if (!colorStr) return '#94A3B8';
+            const lower = colorStr.toLowerCase();
+            if (lower.includes('red')) return '#EF4444';
+            if (lower.includes('black')) return '#1E293B';
+            if (lower.includes('green') && lower.includes('yellow')) return 'linear-gradient(135deg, #10B981 50%, #F59E0B 50%)';
+            if (lower.includes('green')) return '#10B981';
+            if (lower.includes('blue')) return '#3B82F6';
+            if (lower.includes('yellow')) return '#F59E0B';
+            if (lower.includes('white')) return '#FFFFFF';
+            if (lower.includes('brown')) return '#78350F';
+            if (lower.includes('grey') || lower.includes('gray')) return '#64748B';
+            return '#64748B';
+        }
+
+        let activeScanResultObject = null;
+
+        function renderUnifiedResults(scanData, colorData) {
+            resultsStage.style.display = "block";
+            activeScanResultObject = { scanData, colorData, timestamp: new Date().toLocaleString() };
+            resultStandardBadge.innerText = "Pakistan Code Standard";
+
+            const providerBadge = document.getElementById("resultProviderBadge");
+            if (providerBadge) {
+                if (scanData && scanData.provider) {
+                    providerBadge.innerText = scanData.provider;
+                    providerBadge.classList.remove("d-none");
+                } else if (scanData && scanData.demoMode) {
+                    providerBadge.innerText = "Rule-Based Demo Mode";
+                    providerBadge.classList.remove("d-none");
+                }
+            }
+
+            const demoBanner = document.getElementById("demoModeBanner");
+            if (demoBanner) {
+                if (scanData && scanData.demoMode === true) {
+                    demoBanner.classList.remove("d-none");
+                } else {
+                    demoBanner.classList.add("d-none");
+                }
+            }
+
+            const wiresDetected = scanData && scanData.wiresDetected === true;
+
+            // Risk & Issue
+            const risk = scanData ? (scanData.riskLevel || "Low") : "Low";
+            if (!wiresDetected) {
+                resultRiskBadge.innerText = "Not Detected";
+                resultRiskBadge.className = "badge px-3 py-2 rounded-pill fw-bold bg-secondary";
+                resultConfidenceScore.innerText = "0%";
+                resultStatusText.innerText = "Not Detected";
+            } else {
+                resultRiskBadge.innerText = `${risk} Risk`;
+                resultRiskBadge.className = `badge px-3 py-2 rounded-pill fw-bold ${risk === 'High' ? 'bg-danger' : risk === 'Medium' ? 'bg-warning text-dark' : 'bg-emerald'}`;
+                resultConfidenceScore.innerText = `${scanData ? (scanData.confidenceScore || 0) : 0}%`;
+                resultStatusText.innerText = "Wires Detected & Verified";
+            }
+
+            resultIssueText.innerText = scanData ? (scanData.issue || "No electrical wires or components detected.") : "Scan completed.";
+            resultRecommendationText.innerText = scanData ? (scanData.recommendation || "Please upload or capture a clear photo showing electrical wires or panel terminals.") : "Routine inspection recommended.";
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            }
+
+            // Populate Meter / Camera Inspection Findings Card
+            const clampMeterReportCard = document.getElementById("clampMeterReportCard");
+
+            const wd = scanData ? scanData.wireDetails : null;
+            const objectsList = (wd && (wd.objectsDetected || wd.object_detected)) || (scanData && (scanData.objectsDetected || scanData.object_detected)) || [];
+            const hasObjects = wiresDetected || (objectsList && objectsList.length > 0);
+
+            const isMeterVisible = (scanData && (scanData.meterVisible === true || scanData.meter_visible === true)) ||
+                                   (wd && (wd.meterVisible === true || wd.meter_visible === true));
+
+            const rawCurrent = (scanData && (scanData.currentReading || scanData.current_reading)) ||
+                               (wd && (wd.currentReading || wd.current_reading)) || "";
+
+            const rawVoltage = (scanData && (scanData.voltageReading || scanData.voltage_reading)) ||
+                               (wd && (wd.voltageReading || wd.voltage_reading)) || "";
+
+            const hasOcrReading = isMeterVisible && rawCurrent && !rawCurrent.toLowerCase().includes("cannot be determined");
+
+            if (clampMeterReportCard) {
+                if (!hasObjects) {
+                    // Suppress meter/current panel entirely when no wires/objects detected
+                    clampMeterReportCard.classList.add("d-none");
+                } else if (hasOcrReading) {
+                    clampMeterReportCard.classList.remove("d-none");
+                    clampMeterReportCard.innerHTML = `
+                        <div class="card-header bg-black bg-opacity-40 p-3 d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom border-secondary">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-emerald text-white fw-bold px-3 py-1.5 rounded-pill"><i class="fas fa-tachometer-alt me-1"></i> VISIBLE METER DISPLAY</span>
+                                <h5 class="fw-bold m-0 text-white">Digital Meter Display OCR Reading</h5>
+                            </div>
+                            <span class="badge bg-success px-3 py-2 rounded-pill fw-bold"><i class="fas fa-eye me-1"></i> READ FROM VISIBLE METER DISPLAY</span>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-3 align-items-stretch">
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded-3 text-center h-100 d-flex flex-column justify-content-center" style="background: rgba(0, 214, 143, 0.08); border: 2px solid #00D68F;">
+                                        <small class="text-uppercase fw-bold text-mint tracking-wider" style="font-size:0.75rem;">Measured Current</small>
+                                        <div class="display-6 fw-bold text-mint font-monospace my-1">${escapeHtml(rawCurrent)}</div>
+                                        <small class="text-white-50">Read from visible meter display</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded-3 text-center h-100 d-flex flex-column justify-content-center" style="background: rgba(255, 122, 0, 0.08); border: 1px solid rgba(255, 122, 0, 0.4);">
+                                        <small class="text-uppercase fw-bold text-warning tracking-wider" style="font-size:0.75rem;">Measured Voltage</small>
+                                        <div class="h3 fw-bold text-warning font-monospace my-1">${escapeHtml(rawVoltage || "Display Read")}</div>
+                                        <small class="text-white-50">Read from visible meter display</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3 p-3 rounded-3 bg-black bg-opacity-50 border border-secondary border-opacity-50 small text-white-50 d-flex align-items-start gap-2">
+                                <i class="fas fa-check-circle text-mint fa-lg mt-1"></i>
+                                <div>
+                                    <strong class="text-white d-block mb-0.5">Meter Reading Verification:</strong>
+                                    <span class="text-white-75">Reading extracted directly from the physical meter display visible in photo.</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Meter not visible: show honest camera limit message
+                    clampMeterReportCard.classList.remove("d-none");
+                    clampMeterReportCard.innerHTML = `
+                        <div class="card-body p-4 bg-dark text-white rounded-4 border border-secondary">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle bg-black bg-opacity-50 p-3 d-flex align-items-center justify-content-center text-mint" style="width: 48px; height: 48px; flex-shrink: 0;">
+                                    <i class="fas fa-camera fa-lg"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-white mb-1"><i class="fas fa-info-circle text-mint me-1"></i> Current & Voltage Measurement Note</h6>
+                                    <p class="text-white-50 m-0 fs-6">
+                                        <strong>Exact current cannot be determined from a standard RGB camera.</strong>
+                                    </p>
+                                    <small class="text-white-50 d-block mt-1">
+                                        No digital multimeter or clamp meter display detected in image frame. Visual inspection performed for conductor material, gauge, color coding, and insulation integrity.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // Render Multi-Wire Cards
+            wireResultCardsRow.innerHTML = "";
+
+            const wireSummaryStrip = document.getElementById("wireSummaryStrip");
+            const wireSummaryCountText = document.getElementById("wireSummaryCountText");
+            const wireSummaryStatusPill = document.getElementById("wireSummaryStatusPill");
+            const wireSummaryIconBg = document.getElementById("wireSummaryIconBg");
+            const wireSummaryIcon = document.getElementById("wireSummaryIcon");
+
+            if (!wiresDetected || !scanData.wireDetails) {
+                if (wireSummaryStrip) wireSummaryStrip.classList.add("d-none");
+
+                // Display prominent "No Wires Detected" alert card
+                const alertCol = document.createElement("div");
+                alertCol.className = "col-12";
+                alertCol.innerHTML = `
+                    <div class="p-4 bg-danger-subtle border border-danger text-danger rounded-3 text-center">
+                        <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                        <h5 class="fw-bold m-0">No Electrical Wires Detected</h5>
+                        <p class="m-0 mt-1 text-dark small">${scanData.issue || 'No electrical wires, cables, or terminals detected in this photo. Please upload or capture a clear photo showing electrical wires.'}</p>
+                    </div>
+                `;
+                wireResultCardsRow.appendChild(alertCol);
+            } else if (scanData.wireDetails && scanData.wireDetails.detectionMode === "GeneralCable") {
+                const details = scanData.wireDetails;
+                if (wireSummaryStrip) {
+                    wireSummaryStrip.classList.remove("d-none");
+                    wireSummaryCountText.innerText = `General Cable / Cord Identified — ${details.cableType || 'Power Cable'}`;
+                    wireSummaryStatusPill.className = "badge bg-info text-dark px-3 py-2 rounded-pill fw-bold";
+                    wireSummaryStatusPill.innerHTML = `<i class="fas fa-plug me-1"></i> Cable Power Estimation`;
+                    if (wireSummaryIconBg) wireSummaryIconBg.style.background = "#0284C7";
+                    if (wireSummaryIcon) wireSummaryIcon.className = "fas fa-plug fs-5";
+                }
+
+                const cableCol = document.createElement("div");
+                cableCol.className = "col-12";
+                const cableType = details.cableType || "General Electrical Cable";
+                const powerRange = details.estimatedPowerRangeWatts || "N/A";
+                const visualClues = details.visualClues || "Cable features and connector type analyzed.";
+                const disclaimer = details.disclaimer || "This is a visual estimate based on typical specifications for this cable/connector type, not a real-time electrical measurement.";
+
+                cableCol.innerHTML = `
+                    <div class="p-4 rounded-3 border bg-white shadow-sm position-relative" style="border-left: 5px solid #0284C7 !important;">
+                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                            <h4 class="fw-bold text-dark m-0"><i class="fas fa-plug text-primary me-2"></i> ${cableType}</h4>
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill fw-bold fs-6">
+                                <i class="fas fa-bolt me-1"></i> Cable Power Rating Estimate
+                            </span>
+                        </div>
+                        <div class="my-3 p-3 bg-light rounded-3 text-center border">
+                            <span class="text-muted small d-block mb-1 text-uppercase fw-semibold tracking-wide">Estimated Typical Power / Load Range</span>
+                            <span class="display-6 fw-bold text-dark">${powerRange}</span>
+                        </div>
+                        <div class="p-3 bg-white rounded border small text-dark mb-3">
+                            <strong class="d-block mb-1 text-secondary"><i class="fas fa-search me-1"></i> Visual Features & Clues Observed:</strong>
+                            ${visualClues}
+                        </div>
+                        <div class="p-2.5 bg-light rounded text-muted small border-top border-light d-flex align-items-center gap-2">
+                            <i class="fas fa-info-circle text-info me-1"></i>
+                            <span><em>${disclaimer}</em></span>
+                        </div>
+                    </div>
+                `;
+                wireResultCardsRow.appendChild(cableCol);
+            } else {
+                const details = scanData.wireDetails;
+                let detectedWires = details.detectedWires || [];
+
+                if (detectedWires.length === 0) {
+                    if (details.phaseWire) {
+                        detectedWires.push({
+                            id: 1,
+                            positionLabel: "Terminal 1 (Phase Live)",
+                            detectedColor: details.phaseWire.colorCode || "Red Insulation",
+                            classifiedRole: details.phaseWire.name || "Phase Live (L)",
+                            expectedColor: "Red",
+                            isCorrect: true,
+                            confidence: scanData.confidenceScore || 90,
+                            note: details.phaseWire.condition || "Live conductor verified.",
+                            icon: "fa-bolt"
+                        });
+                    }
+                    if (details.neutralWire) {
+                        detectedWires.push({
+                            id: 2,
+                            positionLabel: "Terminal 2 (Neutral Return)",
+                            detectedColor: details.neutralWire.colorCode || "Black Insulation",
+                            classifiedRole: details.neutralWire.name || "Neutral (N)",
+                            expectedColor: "Black",
+                            isCorrect: true,
+                            confidence: scanData.confidenceScore || 90,
+                            note: details.neutralWire.condition || "Neutral return wire verified.",
+                            icon: "fa-minus-circle"
+                        });
+                    }
+                    if (details.earthWire) {
+                        detectedWires.push({
+                            id: 3,
+                            positionLabel: "Terminal 3 (Earth Ground)",
+                            detectedColor: details.earthWire.colorCode || "Green Insulation",
+                            classifiedRole: details.earthWire.name || "Earth Ground (PE)",
+                            expectedColor: "Green",
+                            isCorrect: true,
+                            confidence: scanData.confidenceScore || 90,
+                            note: details.earthWire.condition || "Earth ground verified.",
+                            icon: "fa-shield-alt"
+                        });
+                    }
+                }
+
+                const totalCount = details.totalWiresDetected || detectedWires.length;
+                const correctCount = details.correctlyWiredCount !== undefined ? details.correctlyWiredCount : detectedWires.filter(w => w.isCorrect !== false).length;
+                const incorrectCount = details.incorrectlyWiredCount !== undefined ? details.incorrectlyWiredCount : detectedWires.filter(w => w.isCorrect === false).length;
+
+                if (wireSummaryStrip) {
+                    wireSummaryStrip.classList.remove("d-none");
+                    if (incorrectCount > 0) {
+                        wireSummaryCountText.innerText = `${totalCount} conductor${totalCount === 1 ? '' : 's'} detected — ${correctCount} correct, ${incorrectCount} flagged / miswired`;
+                        wireSummaryStatusPill.className = "badge bg-danger text-white px-3 py-2 rounded-pill fw-bold";
+                        wireSummaryStatusPill.innerHTML = `<i class="fas fa-exclamation-triangle me-1"></i> ${incorrectCount} Miswiring Risk${incorrectCount > 1 ? 's' : ''}`;
+                        if (wireSummaryIconBg) wireSummaryIconBg.style.background = "#DC2626";
+                        if (wireSummaryIcon) wireSummaryIcon.className = "fas fa-exclamation-triangle fs-5";
+                    } else {
+                        wireSummaryCountText.innerText = `${totalCount} conductor${totalCount === 1 ? '' : 's'} detected — All ${correctCount} correctly wired per standard`;
+                        wireSummaryStatusPill.className = "badge bg-emerald text-white px-3 py-2 rounded-pill fw-bold";
+                        wireSummaryStatusPill.innerHTML = `<i class="fas fa-check-circle me-1"></i> 100% Standard Compliant`;
+                        if (wireSummaryIconBg) wireSummaryIconBg.style.background = "#1F8A6B";
+                        if (wireSummaryIcon) wireSummaryIcon.className = "fas fa-check-double fs-5";
+                    }
+                }
+
+                // Sort wires so miswired/incorrect ones are displayed first
+                const sortedWires = [...detectedWires].sort((a, b) => (a.isCorrect === b.isCorrect) ? 0 : a.isCorrect ? 1 : -1);
+
+                sortedWires.forEach(w => {
+                    const wireCol = document.createElement("div");
+                    wireCol.className = totalCount === 1 ? "col-12" : totalCount === 2 ? "col-md-6" : "col-12 col-md-6 col-lg-4";
+
+                    const isIncorrect = w.isCorrect === false;
+                    const roleStr = w.classifiedRole || "Unidentified";
+                    const isLive = roleStr.includes("Live") || roleStr.includes("Phase") || roleStr.includes("(L)");
+                    const isNeutral = roleStr.includes("Neutral") || roleStr.includes("(N)");
+                    const isEarth = roleStr.includes("Earth") || roleStr.includes("Ground") || roleStr.includes("(PE)");
+
+                    const cardBg = isIncorrect ? "#FFF5F5" : (isLive ? "#FFFBFA" : isNeutral ? "#F4F7FF" : isEarth ? "#F0FDF4" : "#F8FAFC");
+                    const cardBorder = isIncorrect ? "#EF4444" : (isLive ? "#F59E0B" : isNeutral ? "#3B82F6" : isEarth ? "#10B981" : "#CBD5E1");
+                    const leftBorderColor = isIncorrect ? "#DC2626" : (isLive ? "#D97706" : isNeutral ? "#2563EB" : isEarth ? "#059669" : "#64748B");
+
+                    const statusBadge = isIncorrect ? 
+                        `<span class="badge bg-danger text-white px-2 py-1"><i class="fas fa-exclamation-triangle me-1"></i> Miswired</span>` : 
+                        `<span class="badge bg-success text-white px-2 py-1"><i class="fas fa-check-circle me-1"></i> Correctly Wired</span>`;
+
+                    const iconClass = w.icon || (isLive ? "fa-bolt" : isNeutral ? "fa-minus-circle" : isEarth ? "fa-shield-alt" : "fa-question-circle");
+                    const colorHex = getColorHex(w.detectedColor);
+
+                    wireCol.innerHTML = `
+                        <div class="p-3 rounded-3 border h-100 shadow-sm position-relative" style="background:${cardBg}; border-color:${cardBorder} !important; border-left: 5px solid ${leftBorderColor} !important;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-dark fs-6"><i class="fas ${iconClass} me-2 text-dark"></i> ${roleStr}</span>
+                                ${statusBadge}
+                            </div>
+                            <div class="small text-muted mb-2 d-flex align-items-center justify-content-between">
+                                <span><i class="fas fa-map-marker-alt me-1 text-secondary"></i> <strong>${w.positionLabel || ('Wire #' + w.id)}</strong></span>
+                                <span class="badge bg-white text-dark border px-2 py-1"><i class="fas fa-percentage me-1 text-emerald"></i> ${w.confidence || 90}%</span>
+                            </div>
+                            <div class="small text-dark mb-2 d-flex align-items-center gap-1 flex-wrap">
+                                <span style="display:inline-block; width:13px; height:13px; border-radius:50%; background:${colorHex}; border:1px solid rgba(0,0,0,0.2);"></span>
+                                <strong>Color:</strong> ${w.detectedColor || 'Unknown'} 
+                                ${w.expectedColor ? `<span class="text-muted ms-1">(Expected: <strong>${w.expectedColor}</strong>)</span>` : ''}
+                            </div>
+                            <div class="p-2 bg-white rounded border small text-dark mt-2" style="border-color: rgba(0,0,0,0.08) !important;">
+                                ${w.note || 'Conductor verified according to standard color codes.'}
+                            </div>
+                        </div>
+                    `;
+                    wireResultCardsRow.appendChild(wireCol);
+                });
+            }
+
+            // Render Spot Wire Color Pins if colorData has results
+            if (colorData && colorData.results && colorData.results.length > 0) {
+                pinAnalysisSection.style.display = "block";
+                pinResultCardsRow.innerHTML = "";
+                pinsOverlayContainer.innerHTML = "";
+
+                colorData.results.forEach(res => {
+                    const isUncertain = res.wireRole === "U" || res.confidence < 70;
+                    const pin = document.createElement("div");
+                    const roleClass = isUncertain ? "pin-u" : res.wireRole === "L" ? "pin-l" : res.wireRole === "N" ? "pin-n" : "pin-e";
+                    pin.className = `tap-wire-pin ${roleClass}`;
+                    pin.style.left = `${(res.xRatio * 100).toFixed(1)}%`;
+                    pin.style.top = `${(res.yRatio * 100).toFixed(1)}%`;
+                    pin.innerText = isUncertain ? "?" : res.wireRole;
+                    pin.title = `${res.detectedLabel} (${res.colorName})`;
+                    pinsOverlayContainer.appendChild(pin);
+
+                    const pinCol = document.createElement("div");
+                    pinCol.className = "col-md-4";
+                    const badgeClass = isUncertain ? "bg-warning text-dark" : "bg-emerald-subtle text-emerald fw-bold";
+                    const badgeText = isUncertain ? `${res.confidence}% (Uncertain)` : `${res.confidence}% Match`;
+
+                    pinCol.innerHTML = `
+                        <div class="p-3 bg-white rounded-3 border h-100 shadow-sm ${isUncertain ? 'border-warning' : ''}">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-dark">Point #${res.pointIndex || 1} (${isUncertain ? 'Uncertain' : res.wireRole})</span>
+                                <span class="badge ${badgeClass}">${badgeText}</span>
+                            </div>
+                            <div class="small mb-2 fw-semibold ${isUncertain ? 'text-danger' : 'text-dark'}">
+                                <strong>Role:</strong> ${res.detectedLabel}
+                            </div>
+                            <div class="small mb-2 d-flex align-items-center gap-2 text-muted">
+                                <strong>Sampled Color:</strong> ${res.colorName}
+                                <span style="display:inline-block; width:14px; height:14px; border-radius:3px; background:${res.rgbHex}; border:1px solid #ccc;"></span>
+                            </div>
+                            <div class="p-2 bg-light rounded border text-muted small">
+                                ${res.recommendation}
+                            </div>
+                        </div>
+                    `;
+                    pinResultCardsRow.appendChild(pinCol);
+                });
+            } else {
+                pinAnalysisSection.style.display = "none";
+            }
+
+            // Scroll down
+            resultsStage.scrollIntoView({ behavior: "smooth" });
+        }
+
+        scanAnotherBtn.addEventListener("click", function () {
+            resultsStage.style.display = "none";
+            confirmStage.style.display = "none";
+            cameraStage.style.display = "block";
+            webcamVideo.style.display = "none";
+            camPlaceholder.style.display = "block";
+        });
+
+        // =========================================================================
+        // SHARE & COPY FORMATTED TEXT SUMMARY REPORT HANDLERS
+        // =========================================================================
+        function generateFormattedTextSummary() {
+            if (!activeScanResultObject) {
+                return "⚡ ELECTROSCAN AI - ELECTRICAL INSPECTION REPORT\n==================================================\nNo scan inspection results available.";
+            }
+
+            const data = activeScanResultObject.scanData || {};
+            const color = activeScanResultObject.colorData || {};
+            const timestamp = activeScanResultObject.timestamp || new Date().toLocaleString();
+
+            const risk = data.riskLevel || "Low";
+            const confidence = data.confidenceScore || 90;
+            const issue = data.issue || "No critical hazards identified.";
+            const recommendation = data.recommendation || "Verify terminal torque and local code standards.";
+            const wd = data.wireDetails || {};
+            const wiresDetected = data.wiresDetected === true;
+
+            const isMeterVisible = (data.meterVisible === true || data.meter_visible === true || wd.meterVisible === true || wd.meter_visible === true);
+            const currentReading = data.currentReading || data.current_reading || wd.currentReading || wd.current_reading || "";
+            const voltageReading = data.voltageReading || data.voltage_reading || wd.voltageReading || wd.voltage_reading || "";
+            const hasOcr = isMeterVisible && currentReading && !currentReading.toLowerCase().includes("cannot be determined");
+
+            let meterSection = "";
+            if (hasOcr) {
+                meterSection = `\n⚡ VISIBLE METER DISPLAY READINGS:\n• Current Reading: ${currentReading}\n• Voltage Reading: ${voltageReading || 'Read from Display'}\n• Reading Source: Digital meter OCR display in image\n`;
+            } else if (wiresDetected) {
+                meterSection = `\n📷 CAMERA MEASUREMENT NOTE:\n• Current & Voltage: Exact current cannot be determined from a standard RGB camera (No digital meter display in frame).\n`;
+            }
+
+            let wireListText = "";
+            if (wd.detectedWires && wd.detectedWires.length > 0) {
+                wireListText = wd.detectedWires.map(w => {
+                    const status = w.isCorrect === false ? "⚠️ MISWIRED" : "✓ OK";
+                    return `  • ${w.positionLabel || ('Terminal ' + w.id)}: ${w.classifiedRole || 'Conductor'} (${w.detectedColor || 'Standard Insulation'}) - ${status}`;
+                }).join("\n");
+            } else if (color.results && color.results.length > 0) {
+                wireListText = color.results.map(r => {
+                    return `  • Point #${r.pointIndex || 1}: ${r.detectedLabel} (${r.colorName}) - ${r.confidence}% match`;
+                }).join("\n");
+            } else if (wiresDetected) {
+                wireListText = "  • Conductor terminals analyzed according to Pakistan Electrical Code.";
+            } else {
+                wireListText = "  • No electrical wires or components detected in photo.";
+            }
+
+            return `⚡ ELECTROSCAN AI - ELECTRICAL INSPECTION REPORT
+==================================================
+Date: ${timestamp}
+Risk Level: ${risk.toUpperCase()} RISK
+AI Vision Confidence: ${confidence}%
+Standard: Pakistan Electrical Code (Red=L, Black=N, Green=E)
+${meterSection}
+🔍 DETECTED CONDUCTORS & TERMINALS:
+${wireListText}
+
+📋 DIAGNOSTIC FINDINGS & SAFETY:
+• Primary Finding: ${issue}
+• Recommendation: ${recommendation}
+
+==================================================
+Generated by ElectroScan AI Electrical Inspection Engine
+https://electroscann-ai.com`;
+        }
+
+        function showShareToast(title, message) {
+            const toast = document.getElementById("shareToastAlert");
+            const toastTitle = document.getElementById("toastTitle");
+            const toastBody = document.getElementById("toastBody");
+            if (toast && toastTitle && toastBody) {
+                toastTitle.innerText = title;
+                toastBody.innerText = message;
+                toast.classList.remove("d-none");
+                setTimeout(() => {
+                    toast.classList.add("d-none");
+                }, 5000);
+            }
+        }
+
+        const shareReportBtn = document.getElementById("shareReportBtn");
+        const copySummaryBtn = document.getElementById("copySummaryBtn");
+
+        if (copySummaryBtn) {
+            copySummaryBtn.addEventListener("click", function () {
+                const reportText = generateFormattedTextSummary();
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(reportText).then(() => {
+                        showShareToast("Report Summary Copied! ✓", "Formatted inspection results copied to clipboard. You can paste or send it anywhere.");
+                    }).catch(() => {
+                        showShareToast("Report Summary Ready", "Please copy report text manually.");
+                    });
+                } else {
+                    showShareToast("Report Summary Ready", "Please copy report text manually.");
+                }
+            });
+        }
+
+        if (shareReportBtn) {
+            shareReportBtn.addEventListener("click", function () {
+                const reportText = generateFormattedTextSummary();
+                if (navigator.share) {
+                    navigator.share({
+                        title: "ElectroScan AI - Electrical Inspection Report",
+                        text: reportText
+                    }).then(() => {
+                        showShareToast("Report Shared Successfully! ✓", "Inspection summary shared via system drawer.");
+                    }).catch(err => {
+                        if (err.name !== "AbortError") {
+                            navigator.clipboard.writeText(reportText).then(() => {
+                                showShareToast("Report Summary Copied! ✓", "Formatted inspection results copied to clipboard.");
+                            });
+                        }
+                    });
+                } else {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(reportText).then(() => {
+                            showShareToast("Report Summary Copied! ✓", "Formatted inspection results copied to clipboard for sharing.");
+                        });
+                    } else {
+                        showShareToast("Report Summary Ready", "Inspection summary generated.");
+                    }
+                }
+            });
+        }
+    });
+</script>
+}

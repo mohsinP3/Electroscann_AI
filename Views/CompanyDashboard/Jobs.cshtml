@@ -1,0 +1,66 @@
+@model List<ElectroScanAI.Models.Entities.Job>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Manage Jobs";
+    ViewBag.PageTitle = "Manage Jobs";
+    ViewBag.ActivePage = "Jobs";
+}
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Manage Jobs</h1>
+        <p>Post and manage your company job listings</p>
+    </div>
+    <a asp-action="CreateJob" class="btn btn-success fw-bold px-4 py-2">
+        <i class="fas fa-plus me-1"></i> Post New Job
+    </a>
+</div>
+
+<!-- Existing Jobs -->
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-list"></i> My Company Job Listings (@(Model?.Count ?? 0))</div>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr><th>Job Title</th><th>Location</th><th>Budget</th><th>Status</th><th>Posted Date</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var job in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">@job.Title</td>
+                        <td>@job.Location</td>
+                        <td class="fw-bold text-success">PKR @job.Budget.ToString("N0")</td>
+                        <td><span class="badge bg-secondary">@job.Status</span></td>
+                        <td>@job.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a asp-action="EditJob" asp-route-id="@job.Id" class="btn btn-sm btn-outline-primary" title="Edit Job">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <form asp-action="DeleteJob" asp-route-id="@job.Id" method="post" class="d-inline" onsubmit="return confirm('Delete job?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Job">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="fas fa-briefcase fa-3x mb-3 text-secondary d-block"></i>
+                        No jobs posted yet. Click "Post New Job" above to create one!
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

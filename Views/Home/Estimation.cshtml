@@ -1,0 +1,515 @@
+@{
+    ViewData["Title"] = "Cost Estimation | ElectroScan AI";
+}
+
+<style>
+    /* ==========================================================================
+       COST ESTIMATION PAGE - PREMIUM SAAS STYLES
+       ========================================================================== */
+    .es-estimation-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-orange: #FF7A00;
+        --es-light-bg: #F8FAF9;
+        --es-card-bg: #FFFFFF;
+        --es-border: #E2EFE9;
+        --es-text-main: #0F221E;
+        --es-text-muted: #4A635B;
+        --es-font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --es-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .es-hero-section {
+        position: relative;
+        padding: 80px 0 50px;
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.12) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        text-align: center;
+    }
+
+    .es-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #0B2B26;
+        color: var(--es-mint);
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(11, 43, 38, 0.15);
+    }
+
+    .es-hero-section h1 {
+        font-family: var(--es-font-heading);
+        font-size: clamp(2.4rem, 4vw, 3.5rem);
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 16px;
+    }
+
+    .es-hero-section p {
+        font-size: 1.12rem;
+        color: var(--es-text-muted);
+        max-width: 620px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .es-container {
+        padding: 30px 0 80px;
+        max-width: 1140px;
+    }
+
+    /* Tab Switcher */
+    .es-tabs-bar {
+        display: inline-flex;
+        background: var(--es-light-bg);
+        border: 1px solid var(--es-border);
+        padding: 6px;
+        border-radius: 16px;
+        gap: 6px;
+        margin-bottom: 32px;
+        box-shadow: 0 4px 14px rgba(11, 43, 38, 0.03);
+    }
+
+    .es-tab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: none;
+        background: transparent;
+        color: var(--es-text-muted);
+        cursor: pointer;
+        transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .es-tab-btn.active {
+        background: #FFFFFF;
+        color: var(--es-emerald);
+        box-shadow: 0 4px 12px rgba(11, 43, 38, 0.08);
+    }
+
+    /* Card Panels */
+    .es-panel-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 24px;
+        padding: 36px;
+        box-shadow: 0 8px 24px rgba(11, 43, 38, 0.04);
+        transition: all 200ms ease;
+    }
+
+    .es-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 28px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--es-border);
+    }
+
+    .es-panel-title h3 {
+        font-family: var(--es-font-heading);
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin: 0 0 4px;
+    }
+
+    .es-panel-title p {
+        color: var(--es-text-muted);
+        font-size: 0.92rem;
+        margin: 0;
+    }
+
+    .es-btn-group {
+        display: flex;
+        gap: 12px;
+    }
+
+    .es-btn-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #FFFFFF;
+        color: var(--es-pine) !important;
+        border: 1px solid var(--es-border);
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 180ms ease;
+    }
+
+    .es-btn-outline:hover {
+        border-color: var(--es-emerald);
+        color: var(--es-emerald) !important;
+        transform: translateY(-2px);
+    }
+
+    .es-btn-solid {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, var(--es-emerald) 0%, #166A52 100%);
+        color: #FFFFFF !important;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        box-shadow: 0 6px 16px rgba(31, 138, 107, 0.25);
+        transition: all 180ms ease;
+    }
+
+    .es-btn-solid:hover {
+        background: linear-gradient(135deg, #166A52 0%, #0F3B33 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(31, 138, 107, 0.35);
+    }
+
+    .es-btn-warning {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, var(--es-orange) 0%, #E66E00 100%);
+        color: #FFFFFF !important;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        box-shadow: 0 6px 16px rgba(255, 122, 0, 0.25);
+        transition: all 180ms ease;
+    }
+
+    .es-btn-warning:hover {
+        background: linear-gradient(135deg, #E66E00 0%, #CC6200 100%);
+        transform: translateY(-2px);
+    }
+
+    /* Table Design */
+    .es-table-wrap {
+        border: 1px solid var(--es-border);
+        border-radius: 18px;
+        overflow: hidden;
+        margin-bottom: 28px;
+    }
+
+    .es-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    .es-table thead {
+        background: var(--es-light-bg);
+        border-bottom: 1px solid var(--es-border);
+    }
+
+    .es-table th {
+        padding: 16px 20px;
+        font-family: var(--es-font-heading);
+        font-weight: 700;
+        font-size: 0.88rem;
+        color: var(--es-pine);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .es-table td {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--es-border);
+        font-size: 0.95rem;
+        color: var(--es-text-main);
+        vertical-align: middle;
+    }
+
+    .es-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .es-table tbody tr:hover {
+        background: rgba(31, 138, 107, 0.02);
+    }
+
+    .qty-input {
+        width: 85px !important;
+        padding: 8px 12px;
+        border: 1px solid var(--es-border);
+        border-radius: 10px;
+        font-weight: 700;
+        color: var(--es-pine);
+        text-align: center;
+        outline: none;
+        transition: all 180ms ease;
+    }
+
+    .qty-input:focus {
+        border-color: var(--es-emerald);
+        box-shadow: 0 0 0 3px rgba(31, 138, 107, 0.12);
+    }
+
+    .item-amount {
+        color: var(--es-pine);
+        font-weight: 800;
+    }
+
+    /* Total Summary Box */
+    .es-summary-box {
+        background: linear-gradient(135deg, rgba(31, 138, 107, 0.06) 0%, rgba(11, 43, 38, 0.03) 100%);
+        border: 1px solid var(--es-border);
+        border-radius: 20px;
+        padding: 24px 30px;
+        text-align: right;
+    }
+
+    .es-summary-line {
+        font-size: 0.98rem;
+        color: var(--es-text-muted);
+        margin-bottom: 8px;
+    }
+
+    .es-summary-line strong {
+        color: var(--es-pine);
+    }
+
+    .es-grand-total {
+        font-family: var(--es-font-heading);
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--es-emerald);
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 2px dashed var(--es-border);
+    }
+
+    .code-badge {
+        font-family: 'Space Grotesk', monospace;
+        background: rgba(11, 43, 38, 0.06);
+        color: var(--es-pine);
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+</style>
+
+<div class="es-estimation-page">
+    <!-- Hero Section -->
+    <div class="es-hero-section">
+        <div class="container">
+            <div class="es-hero-badge">
+                <i class="fas fa-coins"></i> COST ESTIMATION
+            </div>
+            <h1>Smart Electrical Cost Estimator</h1>
+            <p>Pakistan market rates • Real-time calculation • NEC-compliant estimates</p>
+        </div>
+    </div>
+
+    <div class="container es-container">
+        <!-- Tab Navigation -->
+        <div class="text-center">
+            <div class="es-tabs-bar">
+                <button class="es-tab-btn active" id="estimateTabBtn">
+                    <i class="fas fa-clipboard-list"></i> Cost Estimator
+                </button>
+                <button class="es-tab-btn" id="adminTabBtn">
+                    <i class="fas fa-sliders-h"></i> Admin Rates Editor
+                </button>
+            </div>
+        </div>
+
+        <!-- Currency & Unit Preferences Bar (LocalStorage Persisted) -->
+        <div class="es-panel-card mb-4" style="background: linear-gradient(135deg, #0B2B26 0%, #163E38 100%); color: #ffffff; border-radius: 16px; border: 1px solid rgba(107, 203, 158, 0.3);">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3 border-bottom border-secondary border-opacity-25">
+                <h4 class="m-0 text-white" style="font-size: 1.1rem; font-weight: 700;">
+                    <i class="fas fa-sliders-h me-2" style="color: #6BCB9E;"></i> Currency &amp; Power Unit Preferences
+                </h4>
+                <span class="badge rounded-pill text-uppercase px-3 py-2" style="background: rgba(107, 203, 158, 0.2); color: #6BCB9E; font-size: 0.75rem; letter-spacing: 0.5px;">
+                    <i class="fas fa-database me-1"></i> Saved to LocalStorage
+                </span>
+            </div>
+            <div class="p-3">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-6">
+                        <label for="prefCurrencySelect" class="form-label text-white-50 fw-semibold small mb-1">Display Currency</label>
+                        <select id="prefCurrencySelect" class="form-select bg-dark text-white border-secondary rounded-3">
+                            <option value="PKR">₨ PKR (Pakistani Rupee)</option>
+                            <option value="USD">$ USD (US Dollar)</option>
+                            <option value="EUR">€ EUR (Euro)</option>
+                            <option value="GBP">£ GBP (British Pound)</option>
+                            <option value="AED">AED (UAE Dirham)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="prefPowerUnitSelect" class="form-label text-white-50 fw-semibold small mb-1">Default Power Unit</label>
+                        <select id="prefPowerUnitSelect" class="form-select bg-dark text-white border-secondary rounded-3">
+                            <option value="W">W (Watts)</option>
+                            <option value="kW">kW (Kilowatts)</option>
+                            <option value="HP">HP (Horsepower)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cost Estimator Panel -->
+        <div id="estimatorPanel">
+            <div class="es-panel-card">
+                <div class="es-panel-header">
+                    <div class="es-panel-title">
+                        <h3>Project Cost Breakdown</h3>
+                        <p>Pakistan Electrical Market — Live Rates</p>
+                    </div>
+                    <div class="es-btn-group">
+                        <button class="es-btn-outline" id="printEstimateBtn">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                        <button class="es-btn-solid" id="downloadEstimateBtn">
+                            <i class="fas fa-download"></i> Export PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div class="es-table-wrap">
+                    <div class="table-responsive">
+                        <table class="es-table" id="costTable">
+                            <thead>
+                                <tr>
+                                    <th>Item Description</th>
+                                    <th style="width: 110px;">Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Rate (PKR)</th>
+                                    <th>Amount (PKR)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="estimateBody">
+                                <tr>
+                                    <td class="fw-bold">Complete House Wiring Cable (3/029, 7/029)</td>
+                                    <td><input type="number" class="qty-input" value="10" min="1" /></td>
+                                    <td>Coils</td>
+                                    <td>4,500</td>
+                                    <td class="item-amount">45,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Main DB Box &amp; Circuit Breakers (32A - 63A)</td>
+                                    <td><input type="number" class="qty-input" value="1" min="1" /></td>
+                                    <td>Set</td>
+                                    <td>12,500</td>
+                                    <td class="item-amount">12,500</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Switch Board Plates &amp; Gang Switches</td>
+                                    <td><input type="number" class="qty-input" value="15" min="1" /></td>
+                                    <td>Units</td>
+                                    <td>850</td>
+                                    <td class="item-amount">12,750</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="totalSummary" class="es-summary-box">
+                    <div class="es-summary-line"><strong>Subtotal:</strong> <span id="subtotalVal">70,250</span> PKR</div>
+                    <div class="es-summary-line"><strong>Labor (15%):</strong> <span id="laborVal">10,537</span> PKR</div>
+                    <div class="es-summary-line"><strong>Tax (5%):</strong> <span id="taxVal">3,512</span> PKR</div>
+                    <div class="es-grand-total">
+                        Grand Total: <span id="grandTotalVal">84,299</span> PKR
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Editor Panel -->
+        <div id="adminPanel" style="display: none;">
+            <div class="es-panel-card">
+                <div class="es-panel-header">
+                    <div class="es-panel-title">
+                        <h3>Market Rates Editor</h3>
+                        <p>Update electrical inventory pricing globally</p>
+                    </div>
+                    <button class="es-btn-warning" id="saveRatesBtn">
+                        <i class="fas fa-save"></i> Save Global Rates
+                    </button>
+                </div>
+
+                <div class="es-table-wrap">
+                    <div class="table-responsive">
+                        <table class="es-table">
+                            <thead>
+                                <tr>
+                                    <th>Item Code</th>
+                                    <th>Description</th>
+                                    <th>Current Rate (PKR)</th>
+                                    <th>New Rate (PKR)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminRatesBody">
+                                <tr>
+                                    <td><span class="code-badge">EL-001</span></td>
+                                    <td class="fw-bold">House Cable 3/029 Coil</td>
+                                    <td>4,500</td>
+                                    <td><input type="number" class="qty-input" value="4500" style="width: 120px !important;" /></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="code-badge">EL-002</span></td>
+                                    <td class="fw-bold">Main Breaker Box</td>
+                                    <td>12,500</td>
+                                    <td><input type="number" class="qty-input" value="12500" style="width: 120px !important;" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const estBtn = document.getElementById("estimateTabBtn");
+        const adminBtn = document.getElementById("adminTabBtn");
+        const estPanel = document.getElementById("estimatorPanel");
+        const adminPanel = document.getElementById("adminPanel");
+
+        if (estBtn && adminBtn && estPanel && adminPanel) {
+            estBtn.addEventListener("click", function () {
+                estBtn.classList.add("active");
+                adminBtn.classList.remove("active");
+                estPanel.style.display = "block";
+                adminPanel.style.display = "none";
+            });
+
+            adminBtn.addEventListener("click", function () {
+                adminBtn.classList.add("active");
+                estBtn.classList.remove("active");
+                adminPanel.style.display = "block";
+                estPanel.style.display = "none";
+            });
+        }
+
+        document.getElementById("printEstimateBtn")?.addEventListener("click", () => window.print());
+        document.getElementById("downloadEstimateBtn")?.addEventListener("click", () => window.print());
+        document.getElementById("saveRatesBtn")?.addEventListener("click", () => alert("Global rates updated successfully!"));
+    });
+</script>
+}

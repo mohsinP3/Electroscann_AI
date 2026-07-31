@@ -1,0 +1,65 @@
+@model List<ElectroScanAI.Models.Entities.AIScan>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "AI Scans Log";
+    ViewBag.PageTitle = "AI Scans";
+    ViewBag.ActivePage = "AIScans";
+}
+
+<div class="page-header">
+    <h1>AI Scans Overview</h1>
+    <p>Track all electrical thermal & wire diagnostic scans processed by the AI model.</p>
+</div>
+
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-microscope"></i> Diagnostic Scans (@(Model?.Count ?? 0))</div>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Scan Type</th>
+                <th>Risk Level</th>
+                <th>Issues Detected</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var scan in Model)
+                {
+                    <tr>
+                        <td>#SCN-@scan.Id.ToString("D3")</td>
+                        <td class="fw-bold">@scan.User?.FullName</td>
+                        <td>@scan.ScanName</td>
+                        <td>
+                            @if (scan.RiskLevel == ElectroScanAI.Models.Enums.ScanRiskLevel.Critical || scan.RiskLevel == ElectroScanAI.Models.Enums.ScanRiskLevel.High)
+                            {
+                                <span class="badge badge-red">@scan.RiskLevel</span>
+                            }
+                            else if (scan.RiskLevel == ElectroScanAI.Models.Enums.ScanRiskLevel.Medium)
+                            {
+                                <span class="badge badge-yellow">@scan.RiskLevel</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-green">@scan.RiskLevel</span>
+                            }
+                        </td>
+                        <td>@(scan.ResultSummary ?? "N/A")</td>
+                        <td>@scan.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">No AI scans recorded yet.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

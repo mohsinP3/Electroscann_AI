@@ -1,0 +1,276 @@
+@{
+    ViewData["Title"] = "Testimonials | ElectroScan AI";
+}
+
+<style>
+    /* ==========================================================================
+       TESTIMONIALS PAGE - PREMIUM SAAS STYLES
+       ========================================================================== */
+    .es-testimonials-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-orange: #FF7A00;
+        --es-light-bg: #F8FAF9;
+        --es-card-bg: #FFFFFF;
+        --es-border: #E2EFE9;
+        --es-text-main: #0F221E;
+        --es-text-muted: #4A635B;
+        --es-font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --es-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: var(--es-font-body);
+        color: var(--es-text-main);
+    }
+
+    /* Hero Section */
+    .testimonials-hero {
+        position: relative;
+        padding: 80px 0 50px;
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.12) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        text-align: center;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #0B2B26;
+        color: var(--es-mint);
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(11, 43, 38, 0.15);
+    }
+
+    .testimonials-hero h1 {
+        font-family: var(--es-font-heading);
+        font-size: clamp(2.4rem, 4vw, 3.5rem);
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 16px;
+    }
+
+    .testimonials-hero p {
+        font-size: 1.12rem;
+        color: var(--es-text-muted);
+        max-width: 580px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .es-testimonials-container {
+        padding: 40px 0 90px;
+        max-width: 1140px;
+    }
+
+    /* Testimonials Grid */
+    .es-testimonial-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        align-items: stretch;
+    }
+
+    .es-testimonial-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 24px;
+        padding: 36px 30px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        box-shadow: 0 8px 24px rgba(11, 43, 38, 0.04);
+        transition: all 220ms ease;
+    }
+
+    .es-testimonial-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--es-emerald);
+        box-shadow: 0 16px 36px rgba(31, 138, 107, 0.14);
+    }
+
+    .quote-icon {
+        font-size: 2rem;
+        color: rgba(31, 138, 107, 0.2);
+        margin-bottom: 16px;
+    }
+
+    .star-rating {
+        color: #FFB800;
+        font-size: 1rem;
+        margin-bottom: 16px;
+        display: flex;
+        gap: 4px;
+    }
+
+    .testimonial-quote {
+        font-size: 1.02rem;
+        color: var(--es-text-main);
+        line-height: 1.6;
+        margin-bottom: 28px;
+        flex-grow: 1;
+        font-style: italic;
+    }
+
+    .author-info {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border-top: 1px solid var(--es-border);
+        padding-top: 20px;
+        margin-top: auto;
+    }
+
+    .author-avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--es-pine) 0%, var(--es-emerald) 100%);
+        color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.1rem;
+        font-family: var(--es-font-heading);
+    }
+
+    .author-details h4 {
+        font-family: var(--es-font-heading);
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin: 0 0 2px;
+    }
+
+    .author-details p {
+        font-size: 0.85rem;
+        color: var(--es-text-muted);
+        margin: 0;
+    }
+
+    /* Trust Stats Footer */
+    .trust-stats-bar {
+        margin-top: 60px;
+        background: linear-gradient(135deg, rgba(31, 138, 107, 0.06) 0%, rgba(11, 43, 38, 0.02) 100%);
+        border: 1px solid var(--es-border);
+        border-radius: 24px;
+        padding: 32px 40px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        text-align: center;
+        gap: 20px;
+    }
+
+    .stat-item h3 {
+        font-family: var(--es-font-heading);
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--es-emerald);
+        margin: 0 0 4px;
+    }
+
+    .stat-item p {
+        font-size: 0.92rem;
+        color: var(--es-text-muted);
+        margin: 0;
+        font-weight: 600;
+    }
+
+    @@media (max-width: 991px) {
+        .es-testimonial-grid {
+            grid-template-columns: 1fr;
+        }
+        .trust-stats-bar {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="es-testimonials-page">
+    <div class="testimonials-hero">
+        <div class="container">
+            <div class="hero-badge reveal">
+                <i class="fas fa-star"></i> CLIENT STORIES
+            </div>
+            <h1 class="reveal">Trusted by electrical professionals</h1>
+            <p class="reveal">See how ElectroScan AI is transforming electrical inspections, saving time, and preventing hazards across projects worldwide.</p>
+        </div>
+    </div>
+
+    <div class="container es-testimonials-container">
+        <div class="es-testimonial-grid">
+            <div class="es-testimonial-card reveal">
+                <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+                <div class="star-rating">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-quote">
+                    "ElectroScan AI has completely transformed our inspection workflow. The AI catches loose connections and thermal anomalies that our team would have missed."
+                </p>
+                <div class="author-info">
+                    <div class="author-avatar">MR</div>
+                    <div class="author-details">
+                        <h4>Michael Rodriguez</h4>
+                        <p>Master Electrician, NY</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="es-testimonial-card reveal" style="transition-delay: 0.1s;">
+                <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+                <div class="star-rating">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-quote">
+                    "The Pakistan market rates feature saves us hours of research. We generate accurate estimates in minutes and our clients love the professional reports."
+                </p>
+                <div class="author-info">
+                    <div class="author-avatar">AK</div>
+                    <div class="author-details">
+                        <h4>Ali Khan</h4>
+                        <p>Electrical Contractor, Lahore</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="es-testimonial-card reveal" style="transition-delay: 0.2s;">
+                <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+                <div class="star-rating">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-quote">
+                    "As a facility manager, safety is my top priority. ElectroScan AI helps us maintain NEC compliance and prevent incidents before they happen."
+                </p>
+                <div class="author-info">
+                    <div class="author-avatar">SW</div>
+                    <div class="author-details">
+                        <h4>Sarah Watson</h4>
+                        <p>Facility Manager, Houston</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="trust-stats-bar reveal">
+            <div class="stat-item">
+                <h3>99.4%</h3>
+                <p>Inspection Accuracy</p>
+            </div>
+            <div class="stat-item">
+                <h3>10,000+</h3>
+                <p>Scans Completed</p>
+            </div>
+            <div class="stat-item">
+                <h3>4.9 / 5.0</h3>
+                <p>Average Customer Rating</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,96 @@
+@model List<ElectroScanAI.Models.Entities.Payment>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Payments History";
+    ViewBag.PageTitle = "Payments";
+    ViewBag.ActivePage = "Payments";
+    decimal totalPaid = Model != null ? Model.Where(p => p.Status == ElectroScanAI.Models.Enums.PaymentStatus.Paid).Sum(p => p.Amount) : 0m;
+}
+
+<div class="page-header">
+    <h1>Payments & Billing</h1>
+    <p>View your past payment statements, receipts, and invoice records</p>
+</div>
+
+<!-- Payments Stats -->
+<div class="stats-grid" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+        <div class="stat-value">PKR @totalPaid.ToString("N0")</div>
+        <div class="stat-label">Total Amount Paid</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="stat-value">@(Model?.Count ?? 0)</div>
+        <div class="stat-label">Successful Transactions</div>
+    </div>
+</div>
+
+<!-- Transaction History List -->
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-receipt"></i> Receipts List (@(Model?.Count ?? 0))</div>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Receipt ID</th>
+                <th>Paid Date</th>
+                <th>Billing Method</th>
+                <th>Amount Paid</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td style="font-family:monospace;">#@p.TransactionId</td>
+                        <td>@p.PaymentDate.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@p.PaymentMethod</td>
+                        <td class="fw-bold text-success">PKR @p.Amount.ToString("N0")</td>
+                        <td>
+                            @if (p.Status == ElectroScanAI.Models.Enums.PaymentStatus.Paid)
+                            {
+                                <span class="badge badge-green"><i class="fas fa-check-circle me-1"></i> @p.Status</span>
+                            }
+                            else if (p.Status == ElectroScanAI.Models.Enums.PaymentStatus.Pending)
+                            {
+                                <div>
+                                    <span class="badge badge-warning"><i class="fas fa-clock me-1"></i> Pending</span>
+                                    <form asp-controller="Subscription" asp-action="RetryPayment" method="post" class="d-inline ms-2">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="paymentId" value="@p.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">Retry</button>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <div>
+                                    <span class="badge badge-red"><i class="fas fa-times-circle me-1"></i> @p.Status</span>
+                                    <form asp-controller="Subscription" asp-action="RetryPayment" method="post" class="d-inline ms-2">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="paymentId" value="@p.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">Retry</button>
+                                    </form>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-5">
+                        <i class="fas fa-credit-card fa-3x mb-3 text-secondary d-block"></i>
+                        No billing history or payments recorded on your account yet.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

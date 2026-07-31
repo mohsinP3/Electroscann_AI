@@ -1,0 +1,21 @@
+# Ignore local temporary DB fix tools and scratch folders
+temp-dbfix/
+sqlite-tools.zip
+
+# Build and IDE artifacts
+bin/
+obj/
+*.user
+*.db
+node_modules/
+.DS_Store
+
+# Sensitive Environment Configurations & Secrets
+appsettings.Development.json
+appsettings.Production.json
+appsettings.*.json
+!appsettings.json
+.env
+.env.*
+
+

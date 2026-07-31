@@ -1,0 +1,61 @@
+@model List<ElectroScanAI.Models.Entities.Job>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Jobs Management";
+    ViewBag.PageTitle = "Jobs";
+    ViewBag.ActivePage = "Jobs";
+}
+
+<div class="page-header">
+    <h1>Electrical Jobs</h1>
+    <p>Monitor posted electrical projects and contract status.</p>
+</div>
+
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-briefcase"></i> Posted Jobs (@(Model?.Count ?? 0))</div>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Company</th>
+                <th>Location</th>
+                <th>Budget</th>
+                <th>Status</th>
+                <th>Posted Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var job in Model)
+                {
+                    <tr>
+                        <td>#JOB-@job.Id.ToString("D3")</td>
+                        <td class="fw-bold">@job.Title</td>
+                        <td>@(job.Company?.CompanyName ?? "Direct Client")</td>
+                        <td>@job.Location</td>
+                        <td class="fw-bold text-success">PKR @job.Budget.ToString("N0")</td>
+                        <td><span class="badge bg-secondary">@job.Status</span></td>
+                        <td>@job.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <form asp-controller="Dashboard" asp-action="DeleteJob" asp-route-id="@job.Id" method="post" class="d-inline" onsubmit="return confirm('Delete job?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-action btn-delete" title="Delete Job"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8" class="text-center text-muted py-4">No jobs found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

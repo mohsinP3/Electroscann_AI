@@ -1,0 +1,45 @@
+@model List<ElectroScanAI.Models.Entities.Notification>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Notifications";
+    ViewBag.PageTitle = "Notifications";
+    ViewBag.ActivePage = "Notifications";
+}
+
+<div class="page-header">
+    <h1>Notifications</h1>
+    <p>Stay updated with application reviews, messages, and matches</p>
+</div>
+
+<!-- Notifications Box -->
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-bell"></i> Recent Alerts (@(Model?.Count ?? 0))</div>
+    </div>
+
+    <div class="d-flex flex-column">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var n in Model)
+            {
+                <div class="p-3 border-bottom d-flex align-items-start gap-3">
+                    <div class="bg-success-subtle text-success p-2 rounded-circle">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1 fw-bold">@n.Title</h6>
+                        <p class="mb-1 text-muted small">@n.Message</p>
+                        <small class="text-secondary" style="font-size: 0.75rem;">@n.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="fas fa-bell-slash fa-3x mb-3 text-secondary d-block"></i>
+                No notifications received yet.
+            </div>
+        }
+    </div>
+</div>

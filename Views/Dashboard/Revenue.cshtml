@@ -1,0 +1,63 @@
+@model List<Electroscann_ai.Controllers.DashboardController.MonthlyRevenue>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Revenue Reports";
+    ViewBag.PageTitle = "Revenue Reports";
+    ViewBag.ActivePage = "Revenue";
+}
+
+<div class="admin-container">
+    <main class="main-content">
+        <div class="page-header">
+            <div>
+                <h1>Revenue Reports</h1>
+                <p>Track earnings and financial metrics from paid transactions.</p>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">PKR @((ViewBag.CurrentMonthRevenue ?? 0m).ToString("N0"))</div>
+                <div class="stat-label">Total Revenue (Current Month)</div>
+                <div class="stat-change change-positive">@(((decimal)(ViewBag.TotalRevenueChange ?? 0m)).ToString("0.0"))%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">PKR @((ViewBag.CurrentYearRevenue ?? 0m).ToString("N0"))</div>
+                <div class="stat-label">Total Revenue (Year to Date)</div>
+                <div class="stat-change change-positive">+@(((decimal)(ViewBag.TotalRevenueChange ?? 0m)).ToString("0.0"))%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@((ViewBag.TotalTransactions ?? 0).ToString())</div>
+                <div class="stat-label">Total Transactions</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <h4 style="margin-bottom:16px;">Revenue Trend</h4>
+            <canvas id="revenueTrend" height="200"></canvas>
+        </div>
+    </main>
+</div>
+
+@section Scripts {
+    <script>
+        const revenueLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize((Model ?? new List<Electroscann_ai.Controllers.DashboardController.MonthlyRevenue>()).Select(r => System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(r.Month)).ToList()));
+        const revenueData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize((Model ?? new List<Electroscann_ai.Controllers.DashboardController.MonthlyRevenue>()).Select(r => r.Amount).ToList()));
+
+        new Chart(document.getElementById('revenueTrend'), {
+            type: 'line',
+            data: {
+                labels: revenueLabels,
+                datasets: [{
+                    label: 'Revenue (PKR)',
+                    data: revenueData,
+                    borderColor: '#1F8A6B',
+                    tension: 0.3,
+                    fill: true,
+                    backgroundColor: 'rgba(31,138,107,0.05)'
+                }]
+            },
+            options: { responsive: true }
+        });
+    </script>
+}

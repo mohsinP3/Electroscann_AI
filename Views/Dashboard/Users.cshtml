@@ -1,0 +1,85 @@
+@model List<ElectroScanAI.Models.Entities.User>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Users Management";
+    ViewBag.PageTitle = "Users Management";
+    ViewBag.ActivePage = "Users";
+}
+
+<div class="page-header">
+    <h1>Users Management</h1>
+    <p>Manage all registered users, roles, and account status.</p>
+</div>
+
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-users"></i> All Users (@(Model?.Count ?? 0))</div>
+        <form method="get" asp-controller="Dashboard" asp-action="Users" class="table-card-actions">
+            <div class="search-field">
+                <i class="fas fa-search"></i>
+                <input type="text" name="search" value="@Context.Request.Query["search"]" placeholder="Search users...">
+            </div>
+            <button type="submit" class="btn-primary-dash"><i class="fas fa-search"></i> Search</button>
+        </form>
+    </div>
+    <table class="data-table" id="usersTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Joined</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>#USR-@user.Id.ToString("D3")</td>
+                        <td class="fw-bold">@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td><span class="badge bg-secondary">@user.Role</span></td>
+                        <td>
+                            @if (user.IsActive)
+                            {
+                                <span class="badge badge-green">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-gray">Disabled</span>
+                            }
+                        </td>
+                        <td>@user.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <form asp-controller="Dashboard" asp-action="ToggleUserActive" asp-route-id="@user.Id" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-action btn-edit" title="@(user.IsActive ? "Disable User" : "Enable User")">
+                                        <i class="fas @(user.IsActive ? "fa-user-slash" : "fa-user-check")"></i>
+                                    </button>
+                                </form>
+                                <form asp-controller="Dashboard" asp-action="DeleteUser" asp-route-id="@user.Id" method="post" class="d-inline" onsubmit="return confirm('Delete this user permanently?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-action btn-delete" title="Delete User">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">No users found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

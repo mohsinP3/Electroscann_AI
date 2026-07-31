@@ -1,0 +1,96 @@
+@model ElectroScanAI.Models.Entities.User
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "My Profile";
+    ViewBag.PageTitle = "My Profile";
+    ViewBag.ActivePage = "Profile";
+}
+
+<div class="page-header">
+    <h1>My Profile</h1>
+    <p>Manage your professional information and settings</p>
+</div>
+
+<div class="row g-4">
+    <!-- Profile Card -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center p-4">
+            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <h3 class="fw-bold mb-1">@(Model?.FullName ?? User.Identity?.Name)</h3>
+            <p class="text-success fw-bold small mb-2">Licensed Electrician</p>
+            <span class="badge bg-success-subtle text-success border align-self-center px-3 py-2">
+                <i class="fas fa-check-circle me-1"></i> Active Profile
+            </span>
+
+            <div class="mt-4 pt-3 border-top text-start text-secondary small d-flex flex-column gap-2">
+                <div><i class="fas fa-envelope text-success me-2"></i> @(Model?.Email)</div>
+                <div><i class="fas fa-phone text-success me-2"></i> @(Model?.PhoneNumber ?? "Not provided")</div>
+                <div><i class="fas fa-map-marker-alt text-success me-2"></i> @(Model?.City ?? "City not set")</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm p-4 mb-4">
+            <h5 class="fw-bold mb-3"><i class="fas fa-user-edit text-success me-2"></i> Edit Profile</h5>
+
+            <form asp-action="UpdateProfile" method="post">
+                @Html.AntiForgeryToken()
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small">Full Name</label>
+                        <input type="text" name="fullName" class="form-control" value="@Model?.FullName" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small">Phone Number</label>
+                        <input type="text" name="phoneNumber" class="form-control" value="@Model?.PhoneNumber" placeholder="+92 300 0000000" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small">City</label>
+                        <input type="text" name="city" class="form-control" value="@Model?.City" placeholder="Lahore, Karachi..." />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small">Specialization</label>
+                        <input type="text" name="specialization" class="form-control" value="@Model?.ElectricianProfile?.Specialization" placeholder="Residential, Solar, Panels..." />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small">Years of Experience</label>
+                        <input type="number" name="yearsOfExperience" class="form-control" value="@(Model?.ElectricianProfile?.YearsOfExperience ?? 0)" min="0" max="50" />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success fw-bold px-4">
+                    <i class="fas fa-save me-1"></i> Save Changes
+                </button>
+            </form>
+        </div>
+
+        <!-- Change Password -->
+        <div class="card border-0 shadow-sm p-4">
+            <h5 class="fw-bold mb-3"><i class="fas fa-lock text-success me-2"></i> Change Password</h5>
+            <form asp-action="ChangePassword" method="post">
+                @Html.AntiForgeryToken()
+                <div class="row g-3 mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold small">Current Password</label>
+                        <input type="password" name="currentPassword" class="form-control" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small">New Password</label>
+                        <input type="password" name="newPassword" class="form-control" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small">Confirm New Password</label>
+                        <input type="password" name="confirmPassword" class="form-control" required />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-outline-success fw-bold px-4">
+                    <i class="fas fa-key me-1"></i> Update Password
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

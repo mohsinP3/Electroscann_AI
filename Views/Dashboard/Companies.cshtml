@@ -1,0 +1,68 @@
+@model List<ElectroScanAI.Models.Entities.Company>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Companies Management";
+    ViewBag.PageTitle = "Companies";
+    ViewBag.ActivePage = "Companies";
+}
+
+<div class="page-header">
+    <h1>Companies Management</h1>
+    <p>Manage and verify electrical contractors and company listings.</p>
+</div>
+
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-building"></i> All Companies (@(Model?.Count ?? 0))</div>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Company Name</th>
+                <th>Registration No.</th>
+                <th>City</th>
+                <th>Verified</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var company in Model)
+                {
+                    <tr>
+                        <td>#CMP-@company.Id.ToString("D3")</td>
+                        <td class="fw-bold">@company.CompanyName</td>
+                        <td>@(string.IsNullOrEmpty(company.NTNNumber) ? "N/A" : company.NTNNumber)</td>
+                        <td>@(string.IsNullOrEmpty(company.User?.City) ? "N/A" : company.User.City)</td>
+                        <td>
+                            @if (company.IsVerified)
+                            {
+                                <span class="badge badge-green"><i class="fas fa-check-circle me-1"></i> Verified</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-yellow">Pending</span>
+                            }
+                        </td>
+                        <td>
+                            <form asp-controller="Dashboard" asp-action="VerifyCompany" asp-route-id="@company.Id" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-action btn-edit" title="Toggle Verification">
+                                    <i class="fas @(company.IsVerified ? "fa-times-circle" : "fa-check-circle")"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">No companies found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

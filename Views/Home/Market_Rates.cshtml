@@ -1,0 +1,468 @@
+@{
+    ViewData["Title"] = "Market Rates | ElectroScan AI";
+    var rates = ViewBag.Rates as List<ElectroScanAI.Models.Entities.MarketRate> ?? new List<ElectroScanAI.Models.Entities.MarketRate>();
+    var cities = ViewBag.Cities as List<string> ?? new List<string>();
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
+}
+
+<style>
+    /* ==========================================================================
+       MARKET RATES PAGE - PREMIUM SAAS STYLES
+       ========================================================================== */
+    .es-market-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-orange: #FF7A00;
+        --es-light-bg: #F8FAF9;
+        --es-card-bg: #FFFFFF;
+        --es-border: #E2EFE9;
+        --es-text-main: #0F221E;
+        --es-text-muted: #4A635B;
+        --es-font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --es-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .es-market-hero {
+        position: relative;
+        padding: 80px 0 50px;
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.12) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        text-align: center;
+    }
+
+    .es-market-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #0B2B26;
+        color: var(--es-mint);
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(11, 43, 38, 0.15);
+    }
+
+    .es-market-hero h1 {
+        font-family: var(--es-font-heading);
+        font-size: clamp(2.4rem, 4vw, 3.5rem);
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 16px;
+    }
+
+    .es-market-hero p {
+        font-size: 1.12rem;
+        color: var(--es-text-muted);
+        max-width: 620px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .es-market-container {
+        padding: 30px 0 80px;
+        max-width: 1140px;
+    }
+
+    /* Filter Card */
+    .es-filter-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 20px;
+        padding: 24px 28px;
+        margin-bottom: 32px;
+        box-shadow: 0 6px 20px rgba(11, 43, 38, 0.03);
+    }
+
+    .es-select-custom {
+        width: 100%;
+        padding: 11px 16px;
+        border: 1px solid var(--es-border);
+        border-radius: 12px;
+        font-size: 0.95rem;
+        color: var(--es-text-main);
+        background-color: #FFFFFF;
+        outline: none;
+        transition: all 180ms ease;
+    }
+
+    .es-select-custom:focus {
+        border-color: var(--es-emerald);
+        box-shadow: 0 0 0 3px rgba(31, 138, 107, 0.12);
+    }
+
+    .es-btn-filter {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: linear-gradient(135deg, var(--es-emerald) 0%, #166A52 100%);
+        color: #FFFFFF !important;
+        border: none;
+        padding: 11px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        box-shadow: 0 6px 16px rgba(31, 138, 107, 0.25);
+        transition: all 180ms ease;
+        text-decoration: none !important;
+    }
+
+    .es-btn-filter:hover {
+        background: linear-gradient(135deg, #166A52 0%, #0F3B33 100%);
+        transform: translateY(-2px);
+    }
+
+    .es-btn-reset {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: #FFFFFF;
+        color: var(--es-pine) !important;
+        border: 1px solid var(--es-border);
+        padding: 11px 20px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-decoration: none !important;
+        transition: all 180ms ease;
+    }
+
+    .es-btn-reset:hover {
+        border-color: var(--es-emerald);
+        color: var(--es-emerald) !important;
+        transform: translateY(-2px);
+    }
+
+    /* Table Panel */
+    .es-rates-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(11, 43, 38, 0.04);
+    }
+
+    .es-table-wrap {
+        overflow-x: auto;
+    }
+
+    .es-rates-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    .es-rates-table thead {
+        background: var(--es-light-bg);
+        border-bottom: 1px solid var(--es-border);
+    }
+
+    .es-rates-table th {
+        padding: 18px 24px;
+        font-family: var(--es-font-heading);
+        font-weight: 700;
+        font-size: 0.88rem;
+        color: var(--es-pine);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .es-rates-table td {
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--es-border);
+        font-size: 0.95rem;
+        color: var(--es-text-main);
+        vertical-align: middle;
+    }
+
+    .es-rates-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .es-rates-table tbody tr:hover {
+        background: rgba(31, 138, 107, 0.02);
+    }
+
+    .category-badge {
+        display: inline-block;
+        background: rgba(31, 138, 107, 0.08);
+        border: 1px solid rgba(31, 138, 107, 0.18);
+        color: var(--es-emerald);
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    .city-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--es-pine);
+        font-weight: 600;
+        font-size: 0.92rem;
+    }
+
+    .city-tag i {
+        color: var(--es-orange);
+    }
+
+    .price-text {
+        font-family: var(--es-font-heading);
+        font-weight: 800;
+        color: var(--es-emerald);
+        font-size: 1.05rem;
+    }
+
+    .verified-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(0, 214, 143, 0.12);
+        color: #00A36C;
+        padding: 5px 12px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+</style>
+
+<div class="es-market-page">
+    <div class="es-market-hero">
+        <div class="container">
+            <div class="es-market-badge">
+                <i class="fas fa-chart-line"></i> LIVE MARKET DATA
+            </div>
+            <h1>Electrical Market Rates</h1>
+            <p>Real-time pricing for wires, breakers, conduits, and labor across Pakistan cities.</p>
+        </div>
+    </div>
+
+    <div class="container es-market-container">
+        <!-- Currency & Unit Preferences Bar (LocalStorage Persisted) -->
+        <div class="es-filter-card mb-4" style="background: linear-gradient(135deg, #0B2B26 0%, #163E38 100%); color: #ffffff; border-radius: 16px; border: 1px solid rgba(107, 203, 158, 0.3);">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3 border-bottom border-secondary border-opacity-25">
+                <h4 class="m-0 text-white" style="font-size: 1.1rem; font-weight: 700;">
+                    <i class="fas fa-sliders-h me-2" style="color: #6BCB9E;"></i> Currency &amp; Power Unit Preferences
+                </h4>
+                <span class="badge rounded-pill text-uppercase px-3 py-2" style="background: rgba(107, 203, 158, 0.2); color: #6BCB9E; font-size: 0.75rem; letter-spacing: 0.5px;">
+                    <i class="fas fa-database me-1"></i> Saved to LocalStorage
+                </span>
+            </div>
+            <div class="p-3">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-6">
+                        <label for="prefCurrencySelect" class="form-label text-white-50 fw-semibold small mb-1">Display Currency</label>
+                        <select id="prefCurrencySelect" class="form-select bg-dark text-white border-secondary rounded-3">
+                            <option value="PKR">₨ PKR (Pakistani Rupee)</option>
+                            <option value="USD">$ USD (US Dollar)</option>
+                            <option value="EUR">€ EUR (Euro)</option>
+                            <option value="GBP">£ GBP (British Pound)</option>
+                            <option value="AED">AED (UAE Dirham)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="prefPowerUnitSelect" class="form-label text-white-50 fw-semibold small mb-1">Default Power Unit</label>
+                        <select id="prefPowerUnitSelect" class="form-select bg-dark text-white border-secondary rounded-3">
+                            <option value="W">W (Watts)</option>
+                            <option value="kW">kW (Kilowatts)</option>
+                            <option value="HP">HP (Horsepower)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option B: Live Metals & Commodity Index Section -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4" style="background: #FFFFFF; border: 1px solid var(--es-border) !important;">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                <div>
+                    <h4 class="fw-bold m-0 text-dark"><i class="fas fa-globe-americas text-emerald me-2"></i> Option B: Live Metals &amp; Commodity Index</h4>
+                    <p class="text-muted small m-0">Real-time raw material market prices (Copper, Aluminum, Steel, Gold/Silver plating)</p>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-light text-muted small border px-3 py-2" id="commodityLastUpdate"><i class="fas fa-sync-alt fa-spin me-1"></i> Updating...</span>
+                    <button class="btn btn-outline-success btn-sm rounded-3" id="refreshCommoditiesBtn">
+                        <i class="fas fa-sync-alt me-1"></i> Refresh Rates
+                    </button>
+                </div>
+            </div>
+
+            <div class="row g-3" id="commodityGrid">
+                <!-- Dynamically populated live cards -->
+                <div class="col-md-4">
+                    <div class="p-3 rounded-3 border bg-light h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small font-monospace">HG=F</span>
+                            <span class="badge bg-success-subtle text-success small"><i class="fas fa-arrow-up"></i> +1.45%</span>
+                        </div>
+                        <h6 class="fw-bold text-dark mt-2 mb-1">Copper (Grade A)</h6>
+                        <div class="fs-4 fw-bold text-emerald">$4.38 <span class="fs-6 text-muted fw-normal">/ lb</span></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 rounded-3 border bg-light h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small font-monospace">ECW</span>
+                            <span class="badge bg-success-subtle text-success small"><i class="fas fa-arrow-up"></i> +2.10%</span>
+                        </div>
+                        <h6 class="fw-bold text-dark mt-2 mb-1">Electrical Copper Cable</h6>
+                        <div class="fs-4 fw-bold text-emerald">$9.85 <span class="fs-6 text-muted fw-normal">/ kg</span></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 rounded-3 border bg-light h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small font-monospace">ALI=F</span>
+                            <span class="badge bg-danger-subtle text-danger small"><i class="fas fa-arrow-down"></i> -0.68%</span>
+                        </div>
+                        <h6 class="fw-bold text-dark mt-2 mb-1">Aluminum (99.7%)</h6>
+                        <div class="fs-4 fw-bold text-dark">$2,640.00 <span class="fs-6 text-muted fw-normal">/ metric ton</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="es-filter-card">
+            <form method="get" asp-action="Market_Rates" class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <select name="city" class="es-select-custom">
+                        <option value="">All Cities</option>
+                        @foreach (var city in cities)
+                        {
+                            <option value="@city" selected="@(ViewBag.FilterCity == city)">@city</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select name="category" class="es-select-custom">
+                        <option value="">All Categories</option>
+                        @foreach (var cat in categories)
+                        {
+                            <option value="@cat" selected="@(ViewBag.FilterCategory == cat)">@cat</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="es-btn-filter flex-grow-1">
+                        <i class="fas fa-filter"></i> Filter Rates
+                    </button>
+                    <a href="/Home/Market_Rates" class="es-btn-reset">
+                        <i class="fas fa-undo"></i> Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Rates Table -->
+        <div class="es-rates-card">
+            <div class="es-table-wrap">
+                <table class="es-rates-table">
+                    <thead>
+                        <tr>
+                            <th>Item Description</th>
+                            <th>Category</th>
+                            <th>City</th>
+                            <th>Unit</th>
+                            <th>Average Price (PKR)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (rates.Any())
+                        {
+                            @foreach (var rate in rates)
+                            {
+                                <tr>
+                                    <td class="fw-bold" style="color: var(--es-pine);">@rate.ItemName</td>
+                                    <td><span class="category-badge">@rate.Category</span></td>
+                                    <td>
+                                        <span class="city-tag">
+                                            <i class="fas fa-map-marker-alt"></i> @rate.City
+                                        </span>
+                                    </td>
+                                    <td class="text-muted">@rate.Unit</td>
+                                    <td class="price-text">PKR @rate.Price.ToString("N0")</td>
+                                    <td>
+                                        <span class="verified-badge">
+                                            <i class="fas fa-check-circle"></i> Verified
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-5">
+                                    <i class="fas fa-search me-2"></i> No market rates found matching your criteria.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const grid = document.getElementById("commodityGrid");
+            const updateBadge = document.getElementById("commodityLastUpdate");
+            const refreshBtn = document.getElementById("refreshCommoditiesBtn");
+
+            async function fetchCommodities() {
+                if (updateBadge) updateBadge.innerHTML = '<i class="fas fa-sync-alt fa-spin me-1"></i> Updating...';
+                try {
+                    const response = await fetch("/api/market-rates/live-commodities");
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data && data.success && Array.isArray(data.commodities)) {
+                            if (updateBadge) updateBadge.innerHTML = `<i class="fas fa-clock me-1 text-emerald"></i> Updated ${data.updatedAt}`;
+                            if (grid) {
+                                grid.innerHTML = data.commodities.map(item => {
+                                    const isUp = item.trend === "up";
+                                    const badgeClass = isUp ? "bg-success-subtle text-success" : "bg-danger-subtle text-danger";
+                                    const icon = isUp ? "fa-arrow-up" : "fa-arrow-down";
+                                    const sign = isUp ? "+" : "";
+                                    return `
+                                        <div class="col-md-4">
+                                            <div class="p-3 rounded-3 border bg-light h-100 shadow-sm-hover">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="text-muted small font-monospace fw-semibold">${item.symbol}</span>
+                                                    <span class="badge ${badgeClass} small px-2 py-1"><i class="fas ${icon} me-1"></i> ${sign}${item.changePct.toFixed(2)}%</span>
+                                                </div>
+                                                <h6 class="fw-bold text-dark mt-2 mb-1">${item.name}</h6>
+                                                <div class="fs-4 fw-bold text-emerald">$${item.priceUsd.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span class="fs-6 text-muted fw-normal">/ ${item.unit}</span></div>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join("");
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.warn("Commodities fetch failed:", err);
+                    if (updateBadge) updateBadge.innerHTML = '<i class="fas fa-exclamation-triangle text-warning me-1"></i> Offline';
+                }
+            }
+
+            if (refreshBtn) {
+                refreshBtn.addEventListener("click", fetchCommodities);
+            }
+
+            fetchCommodities();
+        });
+    </script>
+}

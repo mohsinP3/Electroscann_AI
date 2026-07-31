@@ -1,0 +1,842 @@
+@{
+    ViewData["Title"] = "AI-Powered Electrical Inspection Platform";
+}
+
+<!-- ==========================================================================
+     SECTION 1: HERO SECTION (DARK MODERN SAAS)
+     ========================================================================== -->
+<section class="es-dark-hero">
+    <div class="container">
+        <div class="es-hero-grid">
+            <!-- Left Hero Content -->
+            <div class="es-hero-content-col">
+                <div class="es-pill-badge">
+                    <span class="es-pulse-dot"></span>
+                    <span>Next-Gen AI Inspection Engine 2.0</span>
+                </div>
+
+                <h1 class="es-hero-title-main">
+                    Smarter Scans.<br>
+                    <span class="es-gradient-heading">Safer Electrical Systems.</span>
+                </h1>
+
+                <p class="es-hero-subtext">
+                    ElectroScan AI leverages deep neural networks and computer vision to detect thermal anomalies, calculate branch loads, and generate NEC-compliant reports — 70% faster with 99.8% precision.
+                </p>
+
+                <div class="es-hero-btn-group">
+                    <a asp-action="AI_Scanner" asp-controller="Home" class="es-btn-hero-primary">
+                        <i class="fas fa-sparkles"></i>
+                        <span>Start Free AI Scan</span>
+                    </a>
+                    <a asp-action="Service" asp-controller="Home" class="es-btn-hero-glass">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Watch Platform Demo</span>
+                    </a>
+                </div>
+
+                <!-- Proof Strip -->
+                <div class="es-hero-proof-bar">
+                    <div class="es-proof-avatars">
+                        <img src="~/Image/testimonial-1.jpg" alt="Inspector" class="es-proof-avatar" onerror="this.src='/Image/user.jpg';" />
+                        <img src="~/Image/testimonial-2.jpg" alt="Engineer" class="es-proof-avatar" onerror="this.src='/Image/user.jpg';" />
+                        <img src="~/Image/user.jpg" alt="Master Electrician" class="es-proof-avatar" onerror="this.src='/Image/user.jpg';" />
+                    </div>
+                    <div class="es-proof-text">
+                        <strong>Trusted by 500+ Enterprise Firms</strong><br>
+                        <span>Over 120,000+ electrical panels inspected nationwide</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Hero Visual Frame with HUD Overlays -->
+            <div class="es-hero-visual-container">
+                <div class="es-product-mock-frame">
+                    <div class="es-mock-header">
+                        <div class="es-mock-dots">
+                            <span class="es-mock-dot red"></span>
+                            <span class="es-mock-dot yellow"></span>
+                            <span class="es-mock-dot green"></span>
+                        </div>
+                        <span class="es-mock-title">ElectroScan AI v2.0 — Thermal Telemetry HUD</span>
+                    </div>
+
+                    <div class="es-mock-img-wrap">
+                        <img src="~/Image/homeheader.jpg" alt="AI Electrical Inspection Telemetry" onerror="this.src='/Image/about.jpg';" />
+                    </div>
+                </div>
+
+                <!-- Floating HUD Card 1 -->
+                <div class="es-hud-card hud-top-right">
+                    <div class="es-hud-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <div class="es-hud-info">
+                        <strong>AI Thermal Scan Active</strong>
+                        <span>99.8% Anomaly Precision Score</span>
+                    </div>
+                </div>
+
+                <!-- Floating HUD Card 2 -->
+                <div class="es-hud-card hud-bottom-left">
+                    <div class="es-hud-icon" style="background: rgba(0, 214, 143, 0.25); color: #00D68F;">
+                        <i class="fas fa-shield-check"></i>
+                    </div>
+                    <div class="es-hud-info">
+                        <strong>NEC 2026 Compliant</strong>
+                        <span>0 Critical Faults Detected</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     SECTION 2: ENTERPRISE METRICS & STATISTICS STRIP
+     ========================================================================== -->
+<section class="es-stats-strip-section">
+    <div class="container">
+        <div class="es-stats-grid">
+            <div class="es-stat-card">
+                <div class="es-stat-card-num">99.8<span>%</span></div>
+                <div class="es-stat-card-label">Detection Precision</div>
+                <div class="es-stat-card-sub">+2.4% vs industry baseline</div>
+            </div>
+
+            <div class="es-stat-card">
+                <div class="es-stat-card-num">&lt; 3<span>s</span></div>
+                <div class="es-stat-card-label">Neural Scan Latency</div>
+                <div class="es-stat-card-sub">70% faster turnaround</div>
+            </div>
+
+            <div class="es-stat-card">
+                <div class="es-stat-card-num">500<span>+</span></div>
+                <div class="es-stat-card-label">Enterprise Contractors</div>
+                <div class="es-stat-card-sub">Zero compliance audit failures</div>
+            </div>
+
+            <div class="es-stat-card">
+                <div class="es-stat-card-num">$4.2<span>M+</span></div>
+                <div class="es-stat-card-label">Prevented Outage Costs</div>
+                <div class="es-stat-card-sub">Predictive arc risk avoidance</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     SECTION 3: BENTO BOX CORE ADVANTAGES
+     ========================================================================== -->
+<section class="es-section-padding es-bg-light-surface">
+    <div class="container">
+        <div class="es-section-header-center">
+            <span class="es-pill-badge">
+                <i class="fas fa-bolt"></i> Platform Capabilities
+            </span>
+            <h2 class="es-section-title-lg">Engineered for absolute accuracy in the field</h2>
+            <p class="es-section-subtext">
+                From thermal imagery analysis to automated NEC compliance, every feature is built to cut inspection overhead and eliminate guesswork.
+            </p>
+        </div>
+
+        <div class="es-bento-grid">
+            <!-- Bento Item 1: Large Featured Card -->
+            <div class="es-bento-card es-bento-col-8">
+                <div class="es-bento-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3>AI Computer Vision & Thermal Scanning</h3>
+                <p>
+                    Deep convolutional neural networks analyze infrared thermography and high-res optical photos to detect hotspots, loose lugs, phase imbalance, and degradation before catastrophic failures occur.
+                </p>
+                <div class="es-bento-preview-widget">
+                    <div class="es-widget-header">
+                        <span><i class="fas fa-microscope text-mint"></i> AI Diagnostic Stream #4092</span>
+                        <span class="es-widget-badge-ok"><i class="fas fa-check-circle"></i> Live Sync</span>
+                    </div>
+                    <div class="es-widget-row">
+                        <span>Thermal Delta: +14.2°C</span>
+                        <span class="text-warning">Status: Warning Level 2</span>
+                    </div>
+                    <div class="es-widget-row">
+                        <span>Busbar Imbalance: 1.4%</span>
+                        <span class="es-widget-badge-ok">Status: Optimal</span>
+                    </div>
+                </div>
+                <div style="margin-top: 24px;">
+                    <a asp-action="Service" asp-controller="Home" asp-fragment="ai-detection" class="es-bento-link">
+                        <span>Explore AI Diagnostic Engine</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Bento Item 2: Medium Card -->
+            <div class="es-bento-card es-bento-col-4">
+                <div class="es-bento-icon" style="background: rgba(255, 122, 0, 0.1); color: var(--es-orange);">
+                    <i class="fas fa-shield-check"></i>
+                </div>
+                <h3>Automated NEC & NFPA Compliance</h3>
+                <p>
+                    Instant compliance auditing mapped directly to NEC 2026, NFPA 70E safety standards, and OSHA guidelines.
+                </p>
+                <a asp-action="Service" asp-controller="Home" asp-fragment="safety-compliance" class="es-bento-link">
+                    <span>View Compliance Engine</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Bento Item 3: Medium Card -->
+            <div class="es-bento-card es-bento-col-4">
+                <div class="es-bento-icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h3>Real-Time Feeder & Load Optimizer</h3>
+                <p>
+                    Calculate branch circuit loads, transformer capacities, and feeder demand factors instantly without manual math errors.
+                </p>
+                <a asp-action="Calculator" asp-controller="Home" class="es-bento-link">
+                    <span>Open Load Calculator</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Bento Item 4: Large Card -->
+            <div class="es-bento-card es-bento-col-8">
+                <div class="es-bento-icon" style="background: rgba(0, 214, 143, 0.12); color: var(--es-bright-mint);">
+                    <i class="fas fa-file-signature"></i>
+                </div>
+                <h3>One-Click Signed Inspection Reports</h3>
+                <p>
+                    Transform raw field imagery and measurements into executive-ready, digital PDF reports complete with thermal imagery overlays, risk score matrices, and recommended mitigation actions in under 10 seconds.
+                </p>
+                <a asp-action="AI_Scanner" asp-controller="Home" class="es-bento-link">
+                    <span>Try Instant Report Generator</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     SECTION 4: HOW IT WORKS (INTERACTIVE 4-STEP TIMELINE)
+     ========================================================================== -->
+<section class="es-section-padding">
+    <div class="container">
+        <div class="es-section-header-center">
+            <span class="es-pill-badge">
+                <i class="fas fa-route"></i> Workflow Pipeline
+            </span>
+            <h2 class="es-section-title-lg">From raw field scan to signed report in 4 steps</h2>
+            <p class="es-section-subtext">
+                Streamline your inspection workflow with an automated digital process built for modern electrical contractors.
+            </p>
+        </div>
+
+        <div class="es-timeline-grid">
+            <!-- Step 1 -->
+            <div class="es-timeline-step-card">
+                <div class="es-step-number-badge">01</div>
+                <h4>Capture & Upload</h4>
+                <p>Snap panel thermal or optical photos using your smartphone, FLIR camera, or drone sensor directly into the web platform.</p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="es-timeline-step-card">
+                <div class="es-step-number-badge">02</div>
+                <h4>Neural Diagnostics</h4>
+                <p>ElectroScan AI models scan component signatures, comparing thermography against 2,000,000+ panel signatures.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="es-timeline-step-card">
+                <div class="es-step-number-badge">03</div>
+                <h4>Risk Severity Scoring</h4>
+                <p>Receive immediate hazard classifications (Low Risk, Thermal Warning, Critical Arc Danger) with exact lug coordinates.</p>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="es-timeline-step-card">
+                <div class="es-step-number-badge">04</div>
+                <h4>One-Click PDF Export</h4>
+                <p>Download or email signed, NEC-compliant inspection reports to clients, facility owners, or municipal inspectors.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     SECTION 5: SMART SOLUTIONS & PLATFORM CAPABILITIES
+     ========================================================================== -->
+<section class="es-section-padding es-bg-light-surface">
+    <div class="container">
+        <div class="es-section-header-center">
+            <span class="es-pill-badge">
+                <i class="fas fa-layer-group"></i> Smart Solutions
+            </span>
+            <h2 class="es-section-title-lg">Tailored for Electricians, Engineers & Facilities</h2>
+        </div>
+
+        <!-- Filter Pills -->
+        <div class="es-pills-row">
+            <span class="es-pill-filter active">AI Diagnostic Scan</span>
+            <span class="es-pill-filter">Load Calculation</span>
+            <span class="es-pill-filter">Market Rates</span>
+            <span class="es-pill-filter">System Telemetry</span>
+        </div>
+
+        <div class="es-bento-grid">
+            <div class="es-bento-card es-bento-col-4">
+                <div class="es-bento-icon">
+                    <i class="fas fa-microscope"></i>
+                </div>
+                <h3>AI Diagnostic Scanner</h3>
+                <p>Detect thermal anomalies, arc risks, and component degradation in real-time with sub-millimeter precision.</p>
+                <a asp-action="AI_Scanner" asp-controller="Home" class="es-btn-outline-emerald">Launch AI Scanner</a>
+            </div>
+
+            <div class="es-bento-card es-bento-col-4">
+                <div class="es-bento-icon" style="background: rgba(255, 122, 0, 0.1); color: var(--es-orange);">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h3>Smart Load Calculator</h3>
+                <p>Calculate service panel demand, feeder conductor sizing, and transformer loads adhering strictly to NEC Article 220.</p>
+                <a asp-action="Calculator" asp-controller="Home" class="es-btn-outline-emerald">Open Calculator</a>
+            </div>
+
+            <div class="es-bento-card es-bento-col-4">
+                <div class="es-bento-icon" style="background: rgba(0, 214, 143, 0.12); color: var(--es-bright-mint);">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Market Rates & Monitor</h3>
+                <p>Track regional contractor labor rates, material price shifts, and facility system telemetry live.</p>
+                <a asp-action="Market_Rates" asp-controller="Home" class="es-btn-outline-emerald">View Market Rates</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     SECTION 6: SIDE-BY-SIDE DEEP DIVE (WHY ELECTROSCAN AI vs MANUAL)
+     ========================================================================== -->
+<section class="es-section-padding">
+    <div class="container">
+        <div class="es-split-layout">
+            <!-- Left Text Column -->
+            <div class="es-split-text-col">
+                <span class="es-pill-badge">
+                    <i class="fas fa-balance-scale"></i> Operational Advantage
+                </span>
+                <h2 class="es-section-title-lg">
+                    Intelligence That Powers <span class="es-gradient-heading-dark">Electrical Safety</span>
+                </h2>
+                <p class="es-section-subtext" style="margin-bottom: 24px;">
+                    Traditional manual inspections rely on paper notes and visual estimation. ElectroScan AI replaces uncertainty with high-precision computer vision and instant cloud verification.
+                </p>
+
+                <div class="es-checklist-grid">
+                    <div class="es-checklist-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>AI-Powered Anomaly Detection</span>
+                    </div>
+                    <div class="es-checklist-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Zero Missed Thermal Hotspots</span>
+                    </div>
+                    <div class="es-checklist-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>70% Inspection Time Reduction</span>
+                    </div>
+                    <div class="es-checklist-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Instant NEC Code Compliance</span>
+                    </div>
+                    <div class="es-checklist-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>SOC2 Encrypted Cloud Records</span>
+                    </div>
+                    <div class="es-checklist-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>One-Click Signed PDF Reports</span>
+                    </div>
+                </div>
+
+                <a asp-action="About" asp-controller="Home" class="es-btn-hero-primary" style="display: inline-flex;">
+                    <span>Learn More About Our Tech</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Right Comparison Box -->
+            <div class="es-comparison-card-box">
+                <h3 style="font-size: 1.4rem; font-weight: 800; color: #FFFFFF; margin-bottom: 8px;">
+                    Legacy Manual vs ElectroScan AI
+                </h3>
+                <p style="font-size: 0.88rem; color: rgba(255,255,255,0.7); margin-bottom: 20px;">
+                    Comparison based on field benchmarks across 500+ commercial inspections.
+                </p>
+
+                <table class="es-comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature / Metric</th>
+                            <th>Manual Inspection</th>
+                            <th class="brand-col">ElectroScan AI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Report Time</td>
+                            <td style="color: rgba(255,255,255,0.6);">4 - 6 Hours</td>
+                            <td class="brand-col">&lt; 10 Seconds</td>
+                        </tr>
+                        <tr>
+                            <td>Thermal Precision</td>
+                            <td style="color: rgba(255,255,255,0.6);">Visual Estimate</td>
+                            <td class="brand-col">99.8% Neural Accuracy</td>
+                        </tr>
+                        <tr>
+                            <td>NEC Compliance</td>
+                            <td style="color: rgba(255,255,255,0.6);">Manual Lookup</td>
+                            <td class="brand-col">Automated NEC 2026</td>
+                        </tr>
+                        <tr>
+                            <td>Audit Trail</td>
+                            <td style="color: rgba(255,255,255,0.6);">Paper Binder</td>
+                            <td class="brand-col">Encrypted Cloud Vault</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     SECTION 7: WHY CHOOSE US (ENTERPRISE TRUST & SECURITY GRID)
+     ========================================================================== -->
+<section class="es-dark-hero" style="padding: 90px 0;">
+    <div class="container">
+        <div class="es-section-header-center">
+            <span class="es-pill-badge">
+                <i class="fas fa-shield-alt"></i> Enterprise Infrastructure
+            </span>
+            <h2 class="es-section-title-lg" style="color: #FFFFFF;">
+                Built for mission-critical reliability
+            </h2>
+            <p class="es-section-subtext" style="color: rgba(255,255,255,0.75);">
+                Bank-grade encryption, continuous uptime, and verified compliance for electrical contractors and Fortune 500 facilities.
+            </p>
+        </div>
+
+        <div class="es-stats-grid">
+            <div class="es-stat-card">
+                <i class="fas fa-lock text-mint" style="font-size: 2.2rem; margin-bottom: 16px;"></i>
+                <h4 style="font-size: 1.1rem; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">SOC2 Type II Security</h4>
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.68); margin: 0;">256-bit AES encryption end-to-end for all site schematics and reports.</p>
+            </div>
+
+            <div class="es-stat-card">
+                <i class="fas fa-server text-mint" style="font-size: 2.2rem; margin-bottom: 16px;"></i>
+                <h4 style="font-size: 1.1rem; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">99.99% Cloud Uptime</h4>
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.68); margin: 0;">Multi-region cloud architecture guarantees continuous field availability.</p>
+            </div>
+
+            <div class="es-stat-card">
+                <i class="fas fa-camera-retro text-mint" style="font-size: 2.2rem; margin-bottom: 16px;"></i>
+                <h4 style="font-size: 1.1rem; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">FLIR & Hardware Sync</h4>
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.68); margin: 0;">Direct integration with handheld thermal cameras and drone sensors.</p>
+            </div>
+
+            <div class="es-stat-card">
+                <i class="fas fa-headset text-mint" style="font-size: 2.2rem; margin-bottom: 16px;"></i>
+                <h4 style="font-size: 1.1rem; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">24/7 Field Support</h4>
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.68); margin: 0;">Dedicated support from licensed master electricians and AI engineers.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     SECTION 8: CLIENT TESTIMONIALS & OUTCOMES
+     ========================================================================== -->
+<section class="es-section-padding es-bg-light-surface">
+    <div class="container">
+        <div class="es-section-header-center">
+            <span class="es-pill-badge">
+                <i class="fas fa-star"></i> Customer Outcomes
+            </span>
+            <h2 class="es-section-title-lg">Trusted by Lead Engineers & Master Electricians</h2>
+            <p class="es-section-subtext">
+                See how top inspection teams eliminate compliance risks and deliver faster field decisions.
+            </p>
+        </div>
+
+        <div class="es-testimonial-grid">
+            <!-- Review 1 -->
+            <div class="es-testimonial-card-item">
+                <div class="es-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="es-testimonial-quote">
+                    "Before ElectroScan AI, our field team spent 4+ hours per commercial building compiling thermal reports manually. Now we generate signed NEC-compliant reports right on site in under 5 minutes."
+                </p>
+                <div class="es-testimonial-author">
+                    <img src="~/Image/testimonial-1.jpg" alt="Marcus Vance" class="es-author-img" onerror="this.src='/Image/user.jpg';" />
+                    <div class="es-author-info">
+                        <strong>Marcus Vance</strong>
+                        <span>Chief Inspector · Apex Power Systems</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review 2 -->
+            <div class="es-testimonial-card-item">
+                <div class="es-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="es-testimonial-quote">
+                    "The automatic risk scoring and feeder load calculations give our facility owners complete confidence. We passed 100% of our municipal safety audits this quarter."
+                </p>
+                <div class="es-testimonial-author">
+                    <img src="~/Image/testimonial-2.jpg" alt="Sarah Jenkins" class="es-author-img" onerror="this.src='/Image/user.jpg';" />
+                    <div class="es-author-info">
+                        <strong>Sarah Jenkins</strong>
+                        <span>Director of Engineering · BuildTech Global</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review 3 -->
+            <div class="es-testimonial-card-item">
+                <div class="es-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="es-testimonial-quote">
+                    "We identified an overheating 480V lug connection during a routine scan that would have caused a massive plant shutdown. ElectroScan AI literally saved us hundreds of thousands of dollars."
+                </p>
+                <div class="es-testimonial-author">
+                    <img src="~/Image/user.jpg" alt="David Miller" class="es-author-img" onerror="this.src='/Image/user.jpg';" />
+                    <div class="es-author-info">
+                        <strong>David Miller</strong>
+                        <span>Master Electrician & Operations Lead</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     SECTION 9: INTERACTIVE PRICING MATRIX
+     ========================================================================== -->
+<section class="es-section-padding">
+    <div class="container">
+        <div class="es-section-header-center">
+            <span class="es-pill-badge">
+                <i class="fas fa-tag"></i> Transparent Pricing
+            </span>
+            <h2 class="es-section-title-lg">Choose the plan built for your team</h2>
+            <p class="es-section-subtext">
+                Simple, predictable pricing for independent inspectors, growing service companies, and enterprise utilities.
+            </p>
+        </div>
+
+        <div class="es-pricing-matrix-grid">
+            <!-- Tier 1: Starter -->
+            <div class="es-pricing-tier-card">
+                <div style="font-size: 1.1rem; font-weight: 700; color: var(--es-pine);">Starter</div>
+                <div class="es-tier-price">$29 <span>/ month</span></div>
+                <p style="font-size: 0.9rem; color: var(--es-text-muted);">Ideal for independent consultants and small inspection jobs.</p>
+                <ul class="es-tier-features">
+                    <li><i class="fas fa-check-circle"></i> 10 AI Scans per month</li>
+                    <li><i class="fas fa-check-circle"></i> Standard NEC PDF Reports</li>
+                    <li><i class="fas fa-check-circle"></i> Basic Thermal HUD Analysis</li>
+                    <li><i class="fas fa-check-circle"></i> Email Support</li>
+                </ul>
+                <a asp-controller="Account" asp-action="Register" class="es-btn-outline-emerald" style="width: 100%;">
+                    <span>Get Started</span>
+                </a>
+            </div>
+
+            <!-- Tier 2: Growth (Featured) -->
+            <div class="es-pricing-tier-card featured-tier">
+                <div class="es-featured-ribbon">Most Popular</div>
+                <div style="font-size: 1.1rem; font-weight: 700; color: var(--es-pine);">Growth</div>
+                <div class="es-tier-price">$79 <span>/ month</span></div>
+                <p style="font-size: 0.9rem; color: var(--es-text-muted);">For growing electrical contracting teams that need speed and collaboration.</p>
+                <ul class="es-tier-features">
+                    <li><i class="fas fa-check-circle"></i> Unlimited AI Scans</li>
+                    <li><i class="fas fa-check-circle"></i> Advanced Neural Anomaly Engine</li>
+                    <li><i class="fas fa-check-circle"></i> Team Collaboration & Dashboards</li>
+                    <li><i class="fas fa-check-circle"></i> Instant Signed PDF Exporter</li>
+                    <li><i class="fas fa-check-circle"></i> Priority 24/7 Field Support</li>
+                </ul>
+                <a asp-controller="Account" asp-action="Register" class="es-btn-hero-primary" style="width: 100%;">
+                    <span>Choose Growth Plan</span>
+                </a>
+            </div>
+
+            <!-- Tier 3: Enterprise -->
+            <div class="es-pricing-tier-card">
+                <div style="font-size: 1.1rem; font-weight: 700; color: var(--es-pine);">Enterprise</div>
+                <div class="es-tier-price">Custom <span>scaling</span></div>
+                <p style="font-size: 0.9rem; color: var(--es-text-muted);">Custom features, FLIR API integrations, and white-labeling for large firms.</p>
+                <ul class="es-tier-features">
+                    <li><i class="fas fa-check-circle"></i> Unlimited Team Licenses</li>
+                    <li><i class="fas fa-check-circle"></i> Custom FLIR & Thermal Hardware API</li>
+                    <li><i class="fas fa-check-circle"></i> Custom White-Label Reports</li>
+                    <li><i class="fas fa-check-circle"></i> Dedicated Solutions Engineer</li>
+                    <li><i class="fas fa-check-circle"></i> 99.99% Uptime SLA Agreement</li>
+                </ul>
+                <a asp-controller="Home" asp-action="Contact" class="es-btn-outline-emerald" style="width: 100%;">
+                    <span>Talk to Enterprise Sales</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     SECTION 10: INTERACTIVE FAQ ACCORDION
+     ========================================================================== -->
+<section class="es-section-padding es-bg-light-surface">
+    <div class="container">
+        <div class="es-section-header-center">
+            <span class="es-pill-badge">
+                <i class="fas fa-question-circle"></i> FAQ
+            </span>
+            <h2 class="es-section-title-lg">Frequently Asked Questions</h2>
+            <p class="es-section-subtext">Everything you need to know about ElectroScan AI inspection technology.</p>
+        </div>
+
+        <div class="es-faq-container">
+            <!-- FAQ 1 -->
+            <div class="es-faq-item active">
+                <div class="es-faq-question" onclick="toggleFaq(this)">
+                    <span>How does ElectroScan AI detect electrical anomalies?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="es-faq-answer">
+                    ElectroScan AI uses computer vision models trained on over 2,000,000 thermal and optical electrical panel images. It identifies abnormal thermal gradients, loose lug connections, phase imbalances, and component wear in seconds.
+                </div>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="es-faq-item">
+                <div class="es-faq-question" onclick="toggleFaq(this)">
+                    <span>Are the generated reports compliant with NEC and NFPA standards?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="es-faq-answer">
+                    Yes. All reports generated by ElectroScan AI strictly align with NEC 2026 standards, NFPA 70E electrical safety guidelines, and OSHA risk documentation formats.
+                </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="es-faq-item">
+                <div class="es-faq-question" onclick="toggleFaq(this)">
+                    <span>Can I use handheld thermal cameras like FLIR with ElectroScan AI?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="es-faq-answer">
+                    ElectroScan AI supports images uploaded from any handheld thermal camera (FLIR, Fluke, Seek Thermal), drone infrared sensor, or standard smartphone camera.
+                </div>
+            </div>
+
+            <!-- FAQ 4 -->
+            <div class="es-faq-item">
+                <div class="es-faq-question" onclick="toggleFaq(this)">
+                    <span>How fast can our inspection team get started?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="es-faq-answer">
+                    Instant onboarding! You can create an account, upload your first thermal image, and generate a signed inspection report in under 2 minutes directly from your web browser.
+                </div>
+            </div>
+
+            <!-- FAQ 5 -->
+            <div class="es-faq-item">
+                <div class="es-faq-question" onclick="toggleFaq(this)">
+                    <span>Is our facility data stored securely in the cloud?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="es-faq-answer">
+                    Yes. We enforce SOC2 Type II compliance standards with 256-bit AES encryption for all stored thermal images, panel schematics, and customer reports.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     SECTION 11: HIGH-CONTRAST CALL TO ACTION BANNER
+     ========================================================================== -->
+<section class="es-section-padding" style="padding-bottom: 60px;">
+    <div class="container">
+        <div class="es-cta-banner-dark">
+            <h2>Ready to transform your electrical inspection workflow?</h2>
+            <p>
+                Join over 500+ engineering and contracting firms cutting inspection times by 70% while guaranteeing zero compliance audit failures.
+            </p>
+            <div class="es-hero-btn-group" style="justify-content: center; margin-bottom: 0;">
+                <a asp-controller="Account" asp-action="Register" class="es-btn-hero-primary">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Start Free Trial</span>
+                </a>
+                <a asp-controller="Home" asp-action="Contact" class="es-btn-hero-glass">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Schedule Live Demo</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     SECTION 12: LUXURY CONTACT FORM & LIVE SUPPORT
+     ========================================================================== -->
+<section class="es-section-padding">
+    <div class="container">
+        <div class="es-contact-split-grid">
+            <!-- Left Info Column -->
+            <div class="es-contact-info-col">
+                <span class="es-pill-badge">
+                    <i class="fas fa-envelope"></i> Get In Touch
+                </span>
+                <h2 class="es-section-title-lg">Talk with our electrical AI specialists</h2>
+                <p class="es-section-subtext" style="margin-bottom: 30px;">
+                    Have questions about FLIR integration, enterprise custom pricing, or NEC compliance? Our team is online and ready to assist.
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 32px;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="nav-brand-icon" style="width:44px; height:44px;"><i class="fas fa-map-marker-alt"></i></div>
+                        <div>
+                            <strong style="color: var(--es-pine); display: block;">Corporate Headquarters</strong>
+                            <span style="color: var(--es-text-muted); font-size: 0.92rem;">Suite 460, Houston, TX 77024</span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="nav-brand-icon" style="width:44px; height:44px;"><i class="fas fa-phone-alt"></i></div>
+                        <div>
+                            <strong style="color: var(--es-pine); display: block;">Direct Sales Line</strong>
+                            <span style="color: var(--es-text-muted); font-size: 0.92rem;">+1 (522) 605-6148</span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="nav-brand-icon" style="width:44px; height:44px;"><i class="fas fa-paper-plane"></i></div>
+                        <div>
+                            <strong style="color: var(--es-pine); display: block;">Support Email</strong>
+                            <span style="color: var(--es-text-muted); font-size: 0.92rem;">hello@electroscanai.com</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="es-status-pill" style="background: rgba(0, 214, 143, 0.12); padding: 10px 18px; border-radius: 50px; color: var(--es-pine); font-weight: 700;">
+                    <span class="es-pulse-dot"></span>
+                    <span>Live Chat Support: Active &amp; Online</span>
+                </div>
+            </div>
+
+            <!-- Right Form Card -->
+            <div class="es-contact-card-form">
+                <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--es-pine); margin-bottom: 6px;">Send Us a Message</h3>
+                <p style="font-size: 0.9rem; color: var(--es-text-muted); margin-bottom: 24px;">Our engineering team responds in under 24 hours.</p>
+
+                <form id="luxuryContactForm">
+                    <div class="es-form-field">
+                        <input type="text" id="name" placeholder="Full Name *" class="es-input-control" required />
+                    </div>
+                    <div class="es-form-field">
+                        <input type="email" id="email" placeholder="Work Email Address *" class="es-input-control" required />
+                    </div>
+                    <div class="es-form-field">
+                        <input type="tel" id="phone" placeholder="Phone Number" class="es-input-control" />
+                    </div>
+                    <div class="es-form-field">
+                        <textarea id="msg" rows="3" placeholder="Tell us about your inspection workflow..." class="es-input-control"></textarea>
+                    </div>
+                    <button type="submit" class="es-btn-hero-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Submit Inquiry</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     SECTION 13: NEWSLETTER BANNER
+     ========================================================================== -->
+<section class="es-section-padding es-bg-light-surface" style="padding-top: 0;">
+    <div class="container">
+        <div class="es-cta-banner-dark" style="background: linear-gradient(135deg, var(--es-pine) 0%, var(--es-forest) 100%); padding: 50px 30px;">
+            <h3 style="font-size: 2rem; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">Stay Updated with ElectroScan AI</h3>
+            <p style="font-size: 1rem; color: rgba(255,255,255,0.8); margin-bottom: 24px;">Get bi-weekly AI thermography case studies and NEC 2026 updates delivered to your inbox.</p>
+            <div style="display: flex; justify-content: center; gap: 12px; max-width: 520px; margin: 0 auto; flex-wrap: wrap;">
+                <input type="email" id="newsEmail" placeholder="Enter work email address..." class="es-input-control" style="flex: 1; min-width: 260px;" />
+                <button type="button" id="subscribeNewsBtn" class="es-btn-orange-glow">Subscribe</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // FAQ Accordion Toggle Function
+        function toggleFaq(element) {
+            const faqItem = element.parentElement;
+            const isOpen = faqItem.classList.contains('active');
+
+            // Close all items
+            document.querySelectorAll('.es-faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Toggle current item if was closed
+            if (!isOpen) {
+                faqItem.classList.add('active');
+            }
+        }
+
+        // Contact Form Submission Handler
+        document.getElementById('luxuryContactForm')?.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            if (name) {
+                showToast('Thank you, ' + name + '! Your inquiry has been sent to our engineering team. 🚀');
+                this.reset();
+            }
+        });
+
+        // Newsletter Subscription Handler
+        document.getElementById('subscribeNewsBtn')?.addEventListener('click', function () {
+            const emailInput = document.getElementById('newsEmail');
+            const email = emailInput ? emailInput.value : '';
+            if (email && email.includes('@@')) {
+                showToast('Subscribed to ElectroScan AI Insights newsletter! ⚡');
+                if (emailInput) emailInput.value = '';
+            } else {
+                showToast('Please enter a valid work email address.');
+            }
+        });
+    </script>
+}

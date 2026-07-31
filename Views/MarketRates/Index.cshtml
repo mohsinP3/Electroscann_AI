@@ -1,0 +1,105 @@
+@model List<ElectroScanAI.Models.Entities.MarketRate>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Manage Market Rates";
+    ViewBag.PageTitle = "Market Rates CRUD";
+    ViewBag.ActivePage = "MarketRates";
+}
+
+<div class="card shadow-sm border-0 p-4 rounded-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0"><i class="fas fa-coins text-success me-2"></i>Electrical Market Rates Management</h3>
+        <button class="btn btn-success fw-bold" data-bs-toggle="modal" data-bs-target="#addRateModal">
+            <i class="fas fa-plus me-1"></i> Add New Item
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Item Name</th>
+                    <th>Category</th>
+                    <th>City</th>
+                    <th>Unit</th>
+                    <th>Price (PKR)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">@item.ItemName</td>
+                            <td><span class="badge bg-secondary">@item.Category</span></td>
+                            <td>@item.City</td>
+                            <td>@item.Unit</td>
+                            <td class="fw-bold text-success">PKR @item.Price.ToString("N0")</td>
+                            <td>
+                                <form asp-controller="MarketRates" asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Delete this rate item?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">No market rates found in database.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addRateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="MarketRates" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Add Market Rate Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Item Name</label>
+                        <input type="text" name="ItemName" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Category</label>
+                        <select name="Category" class="form-select" required>
+                            <option value="Wire">Wire & Cable</option>
+                            <option value="Breaker">Breaker & Protection</option>
+                            <option value="Conduit">Conduit & Pipe</option>
+                            <option value="Accessories">Switch & Socket</option>
+                            <option value="Labor">Labor</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">City</label>
+                        <input type="text" name="City" class="form-control" value="Lahore" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Unit</label>
+                        <input type="text" name="Unit" class="form-control" placeholder="Coil, Meter, Unit, Day" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Price (PKR)</label>
+                        <input type="number" step="0.01" name="Price" class="form-control" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success fw-bold">Save Rate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,604 @@
+@{
+    ViewData["Title"] = "Careers | ElectroScan AI";
+}
+
+<style>
+    /* ==========================================================================
+       CAREERS PAGE - PREMIUM SAAS STYLES
+       ========================================================================== */
+    .es-careers-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-orange: #FF7A00;
+        --es-light-bg: #F8FAF9;
+        --es-card-bg: #FFFFFF;
+        --es-border: #E2EFE9;
+        --es-text-main: #0F221E;
+        --es-text-muted: #4A635B;
+        --es-font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --es-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: var(--es-font-body);
+        color: var(--es-text-main);
+    }
+
+    /* Hero Section */
+    .careers-hero {
+        position: relative;
+        padding: 80px 0 60px;
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.12) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        text-align: center;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #0B2B26;
+        color: var(--es-mint);
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(11, 43, 38, 0.15);
+    }
+
+    .careers-hero h1 {
+        font-family: var(--es-font-heading);
+        font-size: clamp(2.4rem, 4vw, 3.5rem);
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 16px;
+        line-height: 1.15;
+    }
+
+    .careers-hero p {
+        font-size: 1.12rem;
+        color: var(--es-text-muted);
+        max-width: 620px;
+        margin: 0 auto 32px;
+        line-height: 1.6;
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(135deg, var(--es-emerald) 0%, #166A52 100%);
+        color: #FFFFFF !important;
+        border: none;
+        padding: 14px 30px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.98rem;
+        cursor: pointer;
+        box-shadow: 0 6px 18px rgba(31, 138, 107, 0.25);
+        transition: all 200ms ease;
+        text-decoration: none !important;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #166A52 0%, #0F3B33 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(31, 138, 107, 0.35);
+    }
+
+    .es-careers-container {
+        padding: 40px 0 80px;
+        max-width: 1140px;
+    }
+
+    /* Section Headings */
+    .section-tag {
+        display: inline-block;
+        color: var(--es-emerald);
+        font-weight: 800;
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .section-header h2 {
+        font-family: var(--es-font-heading);
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+        color: var(--es-text-muted);
+        font-size: 1.05rem;
+        margin-bottom: 40px;
+    }
+
+    /* Benefits Section */
+    .benefits-section {
+        padding: 40px 0 80px;
+    }
+
+    .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+    }
+
+    .benefit-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 20px;
+        padding: 28px 24px;
+        box-shadow: 0 6px 20px rgba(11, 43, 38, 0.03);
+        transition: all 200ms ease;
+    }
+
+    .benefit-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--es-emerald);
+        box-shadow: 0 12px 28px rgba(31, 138, 107, 0.12);
+    }
+
+    .benefit-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        background: rgba(31, 138, 107, 0.08);
+        color: var(--es-emerald);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        margin-bottom: 18px;
+    }
+
+    .benefit-card h4 {
+        font-family: var(--es-font-heading);
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 8px;
+    }
+
+    .benefit-card p {
+        font-size: 0.9rem;
+        color: var(--es-text-muted);
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* Culture Section */
+    .culture-section {
+        padding: 40px 0 80px;
+    }
+
+    .culture-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        align-items: center;
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 28px;
+        padding: 48px;
+        box-shadow: 0 8px 24px rgba(11, 43, 38, 0.04);
+    }
+
+    .culture-image {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .culture-image img {
+        width: 100%;
+        height: 380px;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+
+    .culture-caption {
+        position: absolute;
+        bottom: 16px;
+        left: 16px;
+        background: rgba(11, 43, 38, 0.85);
+        backdrop-filter: blur(8px);
+        color: var(--es-mint);
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    .culture-content h2 {
+        font-family: var(--es-font-heading);
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 16px;
+    }
+
+    .culture-content p {
+        font-size: 1rem;
+        color: var(--es-text-muted);
+        line-height: 1.6;
+        margin-bottom: 24px;
+    }
+
+    .culture-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .culture-list li {
+        font-size: 0.95rem;
+        color: var(--es-text-main);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+    }
+
+    .culture-list li i {
+        color: var(--es-emerald);
+        font-size: 1.1rem;
+    }
+
+    /* Job Openings Section */
+    .jobs-section {
+        padding: 40px 0 80px;
+    }
+
+    .job-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 20px;
+        padding: 28px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        box-shadow: 0 6px 20px rgba(11, 43, 38, 0.03);
+        transition: all 200ms ease;
+    }
+
+    .job-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--es-emerald);
+        box-shadow: 0 12px 28px rgba(31, 138, 107, 0.12);
+    }
+
+    .job-info h3 {
+        font-family: var(--es-font-heading);
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 10px;
+    }
+
+    .job-meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .job-meta span {
+        font-size: 0.88rem;
+        color: var(--es-text-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .job-meta span i {
+        color: var(--es-emerald);
+    }
+
+    .job-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .job-badge {
+        background: rgba(31, 138, 107, 0.08);
+        border: 1px solid rgba(31, 138, 107, 0.18);
+        color: var(--es-emerald);
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    .apply-btn {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        color: var(--es-pine);
+        padding: 10px 22px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 180ms ease;
+    }
+
+    .apply-btn:hover {
+        border-color: var(--es-emerald);
+        background: var(--es-emerald);
+        color: #FFFFFF;
+        transform: translateX(4px);
+    }
+
+    /* CTA Section */
+    .cta-section {
+        background: linear-gradient(135deg, var(--es-pine) 0%, var(--es-forest) 100%);
+        border-radius: 28px;
+        padding: 60px 40px;
+        color: #FFFFFF;
+        text-align: center;
+        margin-bottom: 80px;
+    }
+
+    .careers-cta i {
+        font-size: 2.8rem;
+        color: var(--es-mint);
+        margin-bottom: 20px;
+    }
+
+    .cta-content h2 {
+        font-family: var(--es-font-heading);
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #FFFFFF;
+        margin-bottom: 12px;
+    }
+
+    .cta-content p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.05rem;
+        max-width: 580px;
+        margin: 0 auto 32px;
+    }
+
+    .btn-light {
+        background: #FFFFFF !important;
+        color: var(--es-pine) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-light:hover {
+        background: var(--es-mint) !important;
+        color: var(--es-pine) !important;
+    }
+
+    @@media (max-width: 991px) {
+        .benefits-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .culture-layout {
+            grid-template-columns: 1fr;
+        }
+        .job-card {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .job-actions {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .benefits-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="es-careers-page">
+    <!-- Careers Hero -->
+    <div class="careers-hero">
+        <div class="container">
+            <div class="careers-hero-content reveal">
+                <div class="hero-badge">
+                    <i class="fas fa-rocket"></i>
+                    JOIN THE TEAM
+                </div>
+                <h1>Shape the future of<br>electrical safety</h1>
+                <p>
+                    We're building an AI-powered platform that's transforming electrical inspections worldwide.
+                    Join us and make an impact.
+                </p>
+                <div class="careers-hero-actions">
+                    <a href="#openings" class="btn-primary">
+                        <i class="fas fa-briefcase"></i>
+                        View Open Positions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container es-careers-container">
+        <!-- Benefits -->
+        <div class="benefits-section">
+            <div class="section-header text-center reveal">
+                <span class="section-tag">WHY JOIN US</span>
+                <h2>Benefits &amp; perks</h2>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><i class="fas fa-rocket"></i></div>
+                    <h4>Innovation First</h4>
+                    <p>Work on cutting-edge AI &amp; computer vision technology that's changing the electrical industry.</p>
+                </div>
+                <div class="benefit-card reveal" style="transition-delay: 0.05s;">
+                    <div class="benefit-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <h4>Competitive Pay</h4>
+                    <p>Top-tier salaries, equity options, and performance bonuses for all team members.</p>
+                </div>
+                <div class="benefit-card reveal" style="transition-delay: 0.1s;">
+                    <div class="benefit-icon"><i class="fas fa-laptop-house"></i></div>
+                    <h4>Remote Friendly</h4>
+                    <p>Work from anywhere with flexible hours and async-first collaboration.</p>
+                </div>
+                <div class="benefit-card reveal" style="transition-delay: 0.15s;">
+                    <div class="benefit-icon"><i class="fas fa-heartbeat"></i></div>
+                    <h4>Health &amp; Wellness</h4>
+                    <p>Comprehensive health, dental, vision coverage and mental health support.</p>
+                </div>
+                <div class="benefit-card reveal" style="transition-delay: 0.2s;">
+                    <div class="benefit-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h4>Learning Budget</h4>
+                    <p>$5,000 annual budget for courses, conferences, and professional development.</p>
+                </div>
+                <div class="benefit-card reveal" style="transition-delay: 0.25s;">
+                    <div class="benefit-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <h4>Unlimited PTO</h4>
+                    <p>Take time off when you need it. We trust our team to deliver results.</p>
+                </div>
+                <div class="benefit-card reveal" style="transition-delay: 0.3s;">
+                    <div class="benefit-icon"><i class="fas fa-users"></i></div>
+                    <h4>Great Team</h4>
+                    <p>Work with talented engineers, researchers, and designers from around the world.</p>
+                </div>
+                <div class="benefit-card reveal" style="transition-delay: 0.35s;">
+                    <div class="benefit-icon"><i class="fas fa-globe"></i></div>
+                    <h4>Global Impact</h4>
+                    <p>Make buildings safer around the world with technology that saves lives.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Culture -->
+        <div class="culture-section">
+            <div class="culture-layout reveal">
+                <div class="culture-image">
+                    <img src="~/Image/about.jpg" alt="Careers culture" onerror="this.src='/Image/about.jpg';" />
+                    <span class="culture-caption">AI Innovation Lab</span>
+                </div>
+                <div class="culture-content">
+                    <h2>Our culture</h2>
+                    <p>
+                        At ElectroScan AI, we're pushing the boundaries of what's possible with deep learning
+                        and electrical engineering. Our team includes experts from top AI labs and electrical
+                        safety institutions.
+                    </p>
+                    <ul class="culture-list">
+                        <li><i class="fas fa-check-circle"></i> Move fast, ship quality, iterate rapidly</li>
+                        <li><i class="fas fa-check-circle"></i> Data-driven decisions with customer focus</li>
+                        <li><i class="fas fa-check-circle"></i> Continuous learning and technical growth</li>
+                        <li><i class="fas fa-check-circle"></i> Work-life balance and sustainable pace</li>
+                        <li><i class="fas fa-check-circle"></i> Diversity, inclusion, and belonging</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Openings -->
+        <div class="jobs-section" id="openings">
+            <div class="section-header text-center reveal">
+                <span class="section-tag">OPPORTUNITIES</span>
+                <h2>Open positions</h2>
+                <p class="section-subtitle">Join us in building the future of electrical inspections</p>
+            </div>
+
+            <div class="job-card reveal">
+                <div class="job-info">
+                    <h3>Senior Machine Learning Engineer</h3>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Remote (Global)</span>
+                        <span><i class="fas fa-clock"></i> Full-time</span>
+                        <span><i class="fas fa-dollar-sign"></i> $150k - $200k</span>
+                    </div>
+                </div>
+                <div class="job-actions">
+                    <span class="job-badge">AI Team</span>
+                    <button class="apply-btn" data-job="Senior ML Engineer">Apply &rarr;</button>
+                </div>
+            </div>
+
+            <div class="job-card reveal" style="transition-delay: 0.05s;">
+                <div class="job-info">
+                    <h3>Computer Vision Researcher</h3>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> San Francisco / Remote</span>
+                        <span><i class="fas fa-clock"></i> Full-time</span>
+                        <span><i class="fas fa-dollar-sign"></i> $140k - $180k</span>
+                    </div>
+                </div>
+                <div class="job-actions">
+                    <span class="job-badge">Research</span>
+                    <button class="apply-btn" data-job="Computer Vision Researcher">Apply &rarr;</button>
+                </div>
+            </div>
+
+            <div class="job-card reveal" style="transition-delay: 0.1s;">
+                <div class="job-info">
+                    <h3>Full Stack Engineer (.NET 8 + C#)</h3>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Remote</span>
+                        <span><i class="fas fa-clock"></i> Full-time</span>
+                        <span><i class="fas fa-dollar-sign"></i> $120k - $160k</span>
+                    </div>
+                </div>
+                <div class="job-actions">
+                    <span class="job-badge">Engineering</span>
+                    <button class="apply-btn" data-job="Full Stack Developer">Apply &rarr;</button>
+                </div>
+            </div>
+
+            <div class="job-card reveal" style="transition-delay: 0.15s;">
+                <div class="job-info">
+                    <h3>Electrical Safety Consultant (NEC Expert)</h3>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Remote (US)</span>
+                        <span><i class="fas fa-clock"></i> Contract / Part-time</span>
+                        <span><i class="fas fa-dollar-sign"></i> $100 - $150/hr</span>
+                    </div>
+                </div>
+                <div class="job-actions">
+                    <span class="job-badge">Domain Expert</span>
+                    <button class="apply-btn" data-job="Electrical Safety Consultant">Apply &rarr;</button>
+                </div>
+            </div>
+
+            <div class="job-card reveal" style="transition-delay: 0.2s;">
+                <div class="job-info">
+                    <h3>Product Designer (UI/UX)</h3>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Remote</span>
+                        <span><i class="fas fa-clock"></i> Full-time</span>
+                        <span><i class="fas fa-dollar-sign"></i> $110k - $150k</span>
+                    </div>
+                </div>
+                <div class="job-actions">
+                    <span class="job-badge">Design</span>
+                    <button class="apply-btn" data-job="Product Designer">Apply &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-section careers-cta">
+            <div class="cta-content reveal">
+                <i class="fas fa-envelope-open-text"></i>
+                <h2>Don't see the perfect role?</h2>
+                <p>We're always looking for exceptional talent. Send us your resume and we'll reach out when something matches.</p>
+                <button class="btn-primary btn-light" id="speculativeBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    Submit General Application
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

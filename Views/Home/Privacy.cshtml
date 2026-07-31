@@ -1,0 +1,305 @@
+@{
+    ViewData["Title"] = "Privacy & Terms | ElectroScan AI";
+}
+
+<style>
+    /* ==========================================================================
+       PRIVACY & LEGAL - PREMIUM SAAS STYLES
+       ========================================================================== */
+    .es-legal-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-orange: #FF7A00;
+        --es-light-bg: #F8FAF9;
+        --es-card-bg: #FFFFFF;
+        --es-border: #E2EFE9;
+        --es-text-main: #0F221E;
+        --es-text-muted: #4A635B;
+        --es-font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --es-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: var(--es-font-body);
+        color: var(--es-text-main);
+    }
+
+    /* Hero Section */
+    .legal-hero {
+        position: relative;
+        padding: 80px 0 50px;
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.12) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        text-align: center;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #0B2B26;
+        color: var(--es-mint);
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(11, 43, 38, 0.15);
+    }
+
+    .legal-hero h1 {
+        font-family: var(--es-font-heading);
+        font-size: clamp(2.4rem, 4vw, 3.5rem);
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 16px;
+        line-height: 1.15;
+    }
+
+    .legal-hero p {
+        font-size: 1.12rem;
+        color: var(--es-text-muted);
+        max-width: 580px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .es-legal-container {
+        padding: 40px 0 90px;
+        max-width: 1140px;
+    }
+
+    /* Sidebar Navigation List Group */
+    .es-legal-nav {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 20px;
+        padding: 12px;
+        box-shadow: 0 6px 20px rgba(11, 43, 38, 0.03);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .es-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 20px;
+        border-radius: 12px;
+        border: none;
+        background: transparent;
+        color: var(--es-text-muted);
+        font-family: var(--es-font-heading);
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-align: left;
+        cursor: pointer;
+        transition: all 180ms ease;
+        width: 100%;
+    }
+
+    .es-nav-item:hover {
+        background: var(--es-light-bg);
+        color: var(--es-emerald);
+    }
+
+    .es-nav-item.active {
+        background: var(--es-pine);
+        color: var(--es-mint);
+        box-shadow: 0 4px 14px rgba(11, 43, 38, 0.2);
+    }
+
+    .es-nav-item.active i {
+        color: var(--es-mint);
+    }
+
+    .es-nav-item i {
+        font-size: 1.05rem;
+        color: var(--es-emerald);
+        width: 20px;
+        text-align: center;
+    }
+
+    /* Main Content Card */
+    .es-legal-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 8px 24px rgba(11, 43, 38, 0.04);
+    }
+
+    .legal-sec h2 {
+        font-family: var(--es-font-heading);
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    .legal-sec h2 i {
+        color: var(--es-emerald);
+    }
+
+    .last-updated {
+        font-size: 0.88rem;
+        color: var(--es-text-muted);
+        margin-bottom: 28px;
+        display: inline-block;
+        background: var(--es-light-bg);
+        padding: 4px 14px;
+        border-radius: 50px;
+        border: 1px solid var(--es-border);
+    }
+
+    .legal-sec h4 {
+        font-family: var(--es-font-heading);
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-top: 28px;
+        margin-bottom: 12px;
+    }
+
+    .legal-sec p {
+        font-size: 0.98rem;
+        color: var(--es-text-muted);
+        line-height: 1.7;
+    }
+
+    .legal-sec ul {
+        padding-left: 20px;
+        margin-bottom: 20px;
+    }
+
+    .legal-sec ul li {
+        font-size: 0.95rem;
+        color: var(--es-text-main);
+        margin-bottom: 10px;
+        line-height: 1.6;
+    }
+
+    .es-security-alert {
+        background: linear-gradient(135deg, rgba(31, 138, 107, 0.08) 0%, rgba(11, 43, 38, 0.03) 100%);
+        border: 1px solid rgba(31, 138, 107, 0.2);
+        border-radius: 16px;
+        padding: 20px 24px;
+        margin: 24px 0;
+        color: var(--es-pine);
+        font-size: 0.95rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .es-security-alert i {
+        color: var(--es-emerald);
+        font-size: 1.3rem;
+        margin-top: 2px;
+    }
+
+    @@media (max-width: 768px) {
+        .es-legal-card {
+            padding: 24px;
+        }
+    }
+</style>
+
+<div class="es-legal-page">
+    <div class="legal-hero">
+        <div class="container">
+            <div class="hero-badge reveal">
+                <i class="fas fa-gavel"></i> LEGAL INFORMATION
+            </div>
+            <h1 class="reveal">Privacy &amp; Terms</h1>
+            <p class="reveal">Learn how we protect your inspection data, comply with global privacy standards, and govern platform usage.</p>
+        </div>
+    </div>
+
+    <div class="container es-legal-container">
+        <div class="row g-4">
+            <!-- Sidebar Navigation -->
+            <div class="col-md-3">
+                <div class="es-legal-nav reveal">
+                    <button class="es-nav-item list-group-item active" onclick="showLegal('privacy', this)">
+                        <i class="fas fa-lock"></i> Privacy Policy
+                    </button>
+                    <button class="es-nav-item list-group-item" onclick="showLegal('terms', this)">
+                        <i class="fas fa-file-contract"></i> Terms of Service
+                    </button>
+                    <button class="es-nav-item list-group-item" onclick="showLegal('security', this)">
+                        <i class="fas fa-user-shield"></i> Security Practices
+                    </button>
+                    <button class="es-nav-item list-group-item" onclick="showLegal('cookies', this)">
+                        <i class="fas fa-cookie-bite"></i> Cookies Policy
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Legal Content -->
+            <div class="col-md-9">
+                <div class="es-legal-card reveal">
+                    <!-- Privacy Policy Section -->
+                    <div id="privacySection" class="legal-sec">
+                        <h2><i class="fas fa-lock"></i> Privacy Policy</h2>
+                        <span class="last-updated"><strong>Last Updated:</strong> January 2026</span>
+
+                        <h4>1. Information We Collect</h4>
+                        <p>ElectroScan AI collects account info, scan data, calculation history, and technical telemetry required to deliver safety diagnostics.</p>
+
+                        <div class="es-security-alert">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <strong>Data Security Commitment:</strong> All electrical scan images and inspection data are encrypted at rest using AES-256 and transmitted via TLS 1.3. We never sell your personal data.
+                            </div>
+                        </div>
+
+                        <h4>2. How We Use Your Data</h4>
+                        <ul>
+                            <li>Processing AI-powered electrical inspections and generating NEC-compliant reports</li>
+                            <li>Improving detection accuracy and platform performance</li>
+                            <li>Providing customer support and technical assistance</li>
+                        </ul>
+                    </div>
+
+                    <!-- Terms Section -->
+                    <div id="termsSection" class="legal-sec" style="display: none;">
+                        <h2><i class="fas fa-file-contract"></i> Terms of Service</h2>
+                        <span class="last-updated"><strong>Effective Date:</strong> January 2026</span>
+                        <p>By using ElectroScan AI, you agree to comply with our terms. The AI scanner provides diagnostic support and does not replace certified professional electrical inspections required by local laws.</p>
+                    </div>
+
+                    <!-- Security Section -->
+                    <div id="securitySection" class="legal-sec" style="display: none;">
+                        <h2><i class="fas fa-user-shield"></i> Security Practices</h2>
+                        <span class="last-updated"><strong>Standards:</strong> SOC 2 Compliant Infrastructure</span>
+                        <p>We maintain SOC 2 compliant data center practices with AES-256 encryption at rest and TLS 1.3 encryption in transit.</p>
+                    </div>
+
+                    <!-- Cookies Section -->
+                    <div id="cookiesSection" class="legal-sec" style="display: none;">
+                        <h2><i class="fas fa-cookie-bite"></i> Cookies Policy</h2>
+                        <span class="last-updated"><strong>Strictly Necessary:</strong> Essential Session Cookies</span>
+                        <p>We use essential cookies strictly for session authentication and user security.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    function showLegal(sec, btn) {
+        document.querySelectorAll('.legal-sec').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.es-nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById(sec + 'Section').style.display = 'block';
+        btn.classList.add('active');
+    }
+</script>
+}

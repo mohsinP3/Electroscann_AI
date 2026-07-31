@@ -1,0 +1,189 @@
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Client Dashboard";
+    ViewBag.PageTitle = "Dashboard";
+    ViewBag.ActivePage = "Home";
+
+    int totalScans = ViewBag.TotalScans ?? 0;
+    int totalCalcs = ViewBag.TotalCalculations ?? 0;
+    decimal totalPayments = ViewBag.TotalPayments ?? 0m;
+    var recentScans = ViewBag.RecentScans as List<ElectroScanAI.Models.Entities.AIScan>;
+}
+
+<!-- Page Header -->
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h1 class="fw-bold fs-3 text-dark mb-1 d-flex align-items-center gap-2">
+            <span class="d-inline-flex align-items-center justify-content-center bg-emerald-subtle text-emerald rounded-3 p-2" style="width:40px; height:40px;">
+                <i class="fas fa-home fs-5"></i>
+            </span>
+            Welcome back, @User.Identity?.Name 👋
+        </h1>
+        <p class="text-muted m-0 small">Overview of your AI electrical panel scans, load calculations, and service history.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <a href="/Home/AI_Scanner" class="btn btn-emerald rounded-pill fw-bold px-3 py-2 btn-sm shadow-sm">
+            <i class="fas fa-microscope me-1"></i> New AI Scan
+        </a>
+    </div>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card-elevated" style="--stat-accent: #1F8A6B;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">AI Scanner Tests</span>
+                <div class="stat-icon-wrapper bg-emerald-subtle text-emerald">
+                    <i class="fas fa-microscope"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">@totalScans</div>
+            <div class="text-emerald small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-bolt me-1"></i> Panel Inspections Performed
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card-elevated" style="--stat-accent: #2BAA85;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Calculations Run</span>
+                <div class="stat-icon-wrapper bg-success-subtle text-success">
+                    <i class="fas fa-calculator"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">@totalCalcs</div>
+            <div class="text-success small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-folder-open me-1"></i> Wire & Breaker Sizing
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card-elevated" style="--stat-accent: #FF7A00;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Total Spent</span>
+                <div class="stat-icon-wrapper bg-warning-subtle text-warning">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">PKR @totalPayments.ToString("N0")</div>
+            <div class="text-warning small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-money-bill-wave me-1"></i> Subscriptions & Services
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Feature Actions Row -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="dashboard-action-card">
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-icon-wrapper bg-emerald-subtle text-emerald">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold text-dark m-0 fs-6">Scan Electrical Panels</h5>
+                        <p class="text-muted small m-0">AI Vision hazard inspection & wiring audit</p>
+                    </div>
+                </div>
+                <p class="text-secondary small mb-4">Upload photos of breaker boards or junction wiring to identify thermal risk hazards instantly and surface actionable diagnostic recommendations.</p>
+            </div>
+            <a href="/Home/AI_Scanner" class="btn btn-emerald rounded-pill fw-bold btn-sm align-self-start px-4">
+                <i class="fas fa-upload me-1"></i> Start AI Scan
+            </a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="dashboard-action-card">
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-icon-wrapper bg-success-subtle text-success">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold text-dark m-0 fs-6">Load Calculations</h5>
+                        <p class="text-muted small m-0">Pakistan & IEC code cable sizing</p>
+                    </div>
+                </div>
+                <p class="text-secondary small mb-4">Run standardized electrical load checks for accurate cable sizing, voltage drop estimates, and protection breaker decisions.</p>
+            </div>
+            <a href="/Home/Calculator" class="btn btn-outline-dark rounded-pill fw-bold btn-sm align-self-start px-4">
+                <i class="fas fa-calculator me-1"></i> Open Calculator
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Recent AI Scans Table -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4" style="border: 1px solid #E2ECE8 !important;">
+    <div class="d-flex justify-content-between align-items-center p-3 px-4 bg-white border-bottom">
+        <div class="fw-bold text-dark d-flex align-items-center gap-2">
+            <i class="fas fa-history text-emerald"></i> Recent AI Scans & Audits
+        </div>
+        <a href="/Home/AI_Scanner" class="btn btn-sm btn-outline-emerald rounded-pill fw-bold">Scan New Panel</a>
+    </div>
+    <div class="table-responsive">
+        <table class="data-table-modern">
+            <thead>
+                <tr>
+                    <th>Scan ID</th>
+                    <th>Type</th>
+                    <th>Risk Level</th>
+                    <th>Issues Found</th>
+                    <th>Scan Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (recentScans != null && recentScans.Any())
+                {
+                    @foreach (var scan in recentScans)
+                    {
+                        <tr>
+                            <td style="font-family: monospace;" class="fw-bold text-dark">#SCN-@scan.Id.ToString("D3")</td>
+                            <td class="fw-bold text-dark">@scan.ScanName</td>
+                            <td>
+                                @{
+                                    var riskStr = scan.RiskLevel.ToString().ToLower();
+                                }
+                                @if (riskStr == "high" || riskStr == "critical")
+                                {
+                                    <span class="badge bg-danger-subtle text-danger fw-bold px-3 py-1 rounded-pill border border-danger-subtle">@scan.RiskLevel</span>
+                                }
+                                else if (riskStr == "medium" || riskStr == "warning")
+                                {
+                                    <span class="badge bg-warning-subtle text-warning fw-bold px-3 py-1 rounded-pill border border-warning-subtle">@scan.RiskLevel</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-emerald-subtle text-emerald fw-bold px-3 py-1 rounded-pill border border-emerald-subtle">@scan.RiskLevel</span>
+                                }
+                            </td>
+                            <td>@(scan.ResultSummary ?? "Completed")</td>
+                            <td><span class="text-muted small">@scan.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="p-0">
+                            <div class="empty-state-card border-0 rounded-0 py-5">
+                                <div class="empty-state-icon-wrap">
+                                    <i class="fas fa-microscope"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1 fs-5">No scans yet — try your first inspection</h6>
+                                <p class="small text-muted mb-4 mx-auto" style="max-width: 420px;">Upload or capture a photo of any circuit breaker or junction panel to get instant AI hazard feedback.</p>
+                                <a href="/Home/AI_Scanner" class="btn btn-emerald btn-sm rounded-pill fw-bold px-4 py-2 shadow-sm">
+                                    <i class="fas fa-camera me-1"></i> Run AI Inspection
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

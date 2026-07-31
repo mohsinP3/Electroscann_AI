@@ -1,0 +1,293 @@
+@{
+    ViewData["Title"] = "Pricing | ElectroScan AI";
+}
+
+<style>
+    /* ==========================================================================
+       PRICING PAGE - PREMIUM SAAS STYLES
+       ========================================================================== */
+    .es-pricing-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-orange: #FF7A00;
+        --es-light-bg: #F8FAF9;
+        --es-card-bg: #FFFFFF;
+        --es-border: #E2EFE9;
+        --es-text-main: #0F221E;
+        --es-text-muted: #4A635B;
+        --es-font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --es-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .es-pricing-hero {
+        position: relative;
+        padding: 80px 0 50px;
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.12) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        text-align: center;
+    }
+
+    .es-pricing-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #0B2B26;
+        color: var(--es-mint);
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(11, 43, 38, 0.15);
+    }
+
+    .es-pricing-hero h1 {
+        font-family: var(--es-font-heading);
+        font-size: clamp(2.4rem, 4vw, 3.5rem);
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 16px;
+    }
+
+    .es-pricing-hero p {
+        font-size: 1.12rem;
+        color: var(--es-text-muted);
+        max-width: 620px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .es-pricing-container {
+        padding: 40px 0 90px;
+        max-width: 1140px;
+    }
+
+    /* Pricing Grid & Cards */
+    .es-pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        align-items: stretch;
+    }
+
+    .es-price-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 24px;
+        padding: 40px 32px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        box-shadow: 0 8px 24px rgba(11, 43, 38, 0.04);
+        transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .es-price-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px -10px rgba(31, 138, 107, 0.18);
+        border-color: var(--es-emerald);
+    }
+
+    .es-price-card.featured {
+        background: linear-gradient(180deg, #FFFFFF 0%, rgba(31, 138, 107, 0.04) 100%);
+        border: 2px solid var(--es-emerald);
+        box-shadow: 0 12px 32px rgba(31, 138, 107, 0.15);
+    }
+
+    .popular-tag {
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--es-emerald) 0%, #166A52 100%);
+        color: #FFFFFF;
+        padding: 5px 18px;
+        border-radius: 50px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        box-shadow: 0 4px 12px rgba(31, 138, 107, 0.3);
+    }
+
+    .es-price-card h3 {
+        font-family: var(--es-font-heading);
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 6px;
+    }
+
+    .es-price-desc {
+        font-size: 0.92rem;
+        color: var(--es-text-muted);
+        margin-bottom: 24px;
+    }
+
+    .es-price-val {
+        font-family: var(--es-font-heading);
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 28px;
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+    }
+
+    .es-price-val span {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--es-text-muted);
+    }
+
+    .es-features-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 36px;
+        flex-grow: 1;
+    }
+
+    .es-features-list li {
+        font-size: 0.95rem;
+        color: var(--es-text-main);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .es-features-list li i {
+        color: var(--es-emerald);
+        font-size: 0.9rem;
+        width: 18px;
+    }
+
+    /* Buttons */
+    .es-btn-plan-outline {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 13px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: 1px solid var(--es-border);
+        background: #FFFFFF;
+        color: var(--es-pine) !important;
+        transition: all 180ms ease;
+        cursor: pointer;
+    }
+
+    .es-btn-plan-outline:hover {
+        border-color: var(--es-emerald);
+        color: var(--es-emerald) !important;
+        transform: translateY(-2px);
+    }
+
+    .es-btn-plan-solid {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 13px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: none;
+        background: linear-gradient(135deg, var(--es-emerald) 0%, #166A52 100%);
+        color: #FFFFFF !important;
+        box-shadow: 0 8px 20px -4px rgba(31, 138, 107, 0.35);
+        transition: all 180ms ease;
+        cursor: pointer;
+    }
+
+    .es-btn-plan-solid:hover {
+        background: linear-gradient(135deg, #166A52 0%, #0F3B33 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 26px -4px rgba(31, 138, 107, 0.45);
+    }
+
+    @@media (max-width: 991px) {
+        .es-pricing-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="es-pricing-page">
+    <div class="es-pricing-hero">
+        <div class="container">
+            <div class="es-pricing-badge">
+                <i class="fas fa-tag"></i> SIMPLE PRICING
+            </div>
+            <h1>Plans for every electrical professional</h1>
+            <p>Choose the perfect plan for your business. All plans include AI-powered inspections.</p>
+        </div>
+    </div>
+
+    <div class="container es-pricing-container">
+        <div class="es-pricing-grid">
+            <!-- Basic Plan -->
+            <div class="es-price-card">
+                <h3>Basic</h3>
+                <p class="es-price-desc">For individual electricians</p>
+                <div class="es-price-val">$29<span>/mo</span></div>
+                <ul class="es-features-list">
+                    <li><i class="fas fa-check-circle"></i> 50 AI Scans/month</li>
+                    <li><i class="fas fa-check-circle"></i> Basic Safety Reports</li>
+                    <li><i class="fas fa-check-circle"></i> Standard Calculator</li>
+                    <li><i class="fas fa-check-circle"></i> Email Support</li>
+                </ul>
+                <form asp-controller="Subscription" asp-action="Create" method="post" class="mt-auto">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="plan" value="Basic" />
+                    <button type="submit" class="es-btn-plan-outline">Select Basic Plan</button>
+                </form>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="es-price-card featured">
+                <span class="popular-tag"><i class="fas fa-star me-1"></i> MOST POPULAR</span>
+                <h3>Professional</h3>
+                <p class="es-price-desc">For growing electrical businesses</p>
+                <div class="es-price-val">$79<span>/mo</span></div>
+                <ul class="es-features-list">
+                    <li><i class="fas fa-check-circle"></i> Unlimited AI Scans</li>
+                    <li><i class="fas fa-check-circle"></i> Advanced Safety Reports</li>
+                    <li><i class="fas fa-check-circle"></i> Full Calculator Suite</li>
+                    <li><i class="fas fa-check-circle"></i> Priority Support</li>
+                    <li><i class="fas fa-check-circle"></i> PDF &amp; Excel Export</li>
+                </ul>
+                <form asp-controller="Subscription" asp-action="Create" method="post" class="mt-auto">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="plan" value="Pro" />
+                    <button type="submit" class="es-btn-plan-solid">Get Professional</button>
+                </form>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="es-price-card">
+                <h3>Enterprise</h3>
+                <p class="es-price-desc">For large organizations</p>
+                <div class="es-price-val">$199<span>/mo</span></div>
+                <ul class="es-features-list">
+                    <li><i class="fas fa-check-circle"></i> Unlimited Everything</li>
+                    <li><i class="fas fa-check-circle"></i> Custom AI Training</li>
+                    <li><i class="fas fa-check-circle"></i> Pakistan Cost Estimation</li>
+                    <li><i class="fas fa-check-circle"></i> 24/7 Phone Support</li>
+                </ul>
+                <form asp-controller="Subscription" asp-action="Create" method="post" class="mt-auto">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="plan" value="Enterprise" />
+                    <button type="submit" class="es-btn-plan-outline">Subscribe Enterprise</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+@model List<ElectroScanAI.Models.Entities.JobApplication>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Job Applications";
+    ViewBag.PageTitle = "Applications";
+    ViewBag.ActivePage = "Applications";
+}
+
+<div class="page-header">
+    <h1>Job Applications</h1>
+    <p>Review applications submitted by licensed electricians for your active jobs</p>
+</div>
+
+<!-- Applications Listing -->
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-users-cog"></i> Applicants List (@(Model?.Count ?? 0))</div>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Applicant</th>
+                <th>Job Title</th>
+                <th>Applied Date</th>
+                <th>Cover Note / Pitch</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var app in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="fw-bold">@app.Electrician?.User?.FullName</div>
+                            <small class="text-muted">@app.Electrician?.User?.Email</small>
+                        </td>
+                        <td class="fw-bold">@app.Job?.Title</td>
+                        <td>@app.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td style="max-width: 250px;">@(string.IsNullOrEmpty(app.CoverLetter) ? "N/A" : app.CoverLetter)</td>
+                        <td>
+                            @if (app.Status == "Accepted")
+                            {
+                                <span class="badge badge-green"><i class="fas fa-check-circle me-1"></i> Accepted</span>
+                            }
+                            else if (app.Status == "Rejected")
+                            {
+                                <span class="badge badge-red"><i class="fas fa-times-circle me-1"></i> Rejected</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-yellow"><i class="fas fa-clock me-1"></i> Pending</span>
+                            }
+                        </td>
+                        <td>
+                            @if (app.Status == "Pending")
+                            {
+                                <div class="d-flex gap-1">
+                                    <form asp-action="UpdateApplicationStatus" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="applicationId" value="@app.Id" />
+                                        <input type="hidden" name="status" value="Accepted" />
+                                        <button type="submit" class="btn btn-sm btn-success" title="Accept Application"><i class="fas fa-check"></i> Accept</button>
+                                    </form>
+                                    <form asp-action="UpdateApplicationStatus" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="applicationId" value="@app.Id" />
+                                        <input type="hidden" name="status" value="Rejected" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Reject Application"><i class="fas fa-times"></i> Reject</button>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">Status Updated</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="fas fa-users-slash fa-3x mb-3 text-secondary d-block"></i>
+                        No job applications received yet.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

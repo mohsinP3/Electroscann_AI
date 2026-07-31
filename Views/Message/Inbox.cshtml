@@ -1,0 +1,75 @@
+@model List<ElectroScanAI.Models.Entities.Message>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Inbox Messages";
+    ViewBag.PageTitle = "Inbox";
+    ViewBag.ActivePage = "Inbox";
+    var currentUserId = int.TryParse(User.FindFirst("UserId")?.Value, out int uid) ? uid : 0;
+}
+
+<div class="card shadow-sm border-0 p-4 rounded-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0"><i class="fas fa-envelope text-success me-2"></i>Messages & Inquiries</h3>
+        <button class="btn btn-success fw-bold" data-bs-toggle="modal" data-bs-target="#newMessageModal">
+            <i class="fas fa-paper-plane me-1"></i> New Message
+        </button>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="list-group list-group-flush">
+            @foreach (var msg in Model)
+            {
+                var isSender = msg.SenderId == currentUserId;
+                var otherPerson = isSender ? msg.Receiver?.FullName : msg.Sender?.FullName;
+
+                <div class="list-group-item p-3 border rounded mb-2 @(isSender ? "bg-light" : "bg-white")">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <strong class="text-dark">
+                            <i class="fas @(isSender ? "fa-arrow-up text-primary" : "fa-arrow-down text-success") me-1"></i>
+                            @(isSender ? $"To: {otherPerson}" : $"From: {otherPerson}")
+                        </strong>
+                        <small class="text-muted">@msg.SentAt.ToString("g")</small>
+                    </div>
+                    <p class="mb-0 text-secondary">@msg.MessageText</p>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="fas fa-comments fa-3x mb-3 opacity-50"></i>
+            <p class="mb-0 fs-5">No messages in your inbox yet.</p>
+        </div>
+    }
+</div>
+
+<!-- New Message Modal -->
+<div class="modal fade" id="newMessageModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="Message" asp-action="Send" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Send New Message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Recipient User ID</label>
+                        <input type="number" name="receiverId" class="form-control" placeholder="Enter recipient User ID (e.g., 2)" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Message Text</label>
+                        <textarea name="messageText" class="form-control" rows="4" placeholder="Type your message here..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success fw-bold">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

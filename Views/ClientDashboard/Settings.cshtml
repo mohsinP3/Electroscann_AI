@@ -1,0 +1,128 @@
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Settings";
+    ViewBag.PageTitle = "Settings";
+    ViewBag.ActivePage = "Settings";
+}
+
+<div class="page-header">
+    <h1>Settings</h1>
+    <p>Manage your account notifications, safety alerts, and profile security</p>
+</div>
+
+<div style="display:grid; grid-template-columns: 220px 1fr; gap:24px;">
+    <!-- Settings Menu -->
+    <div class="form-card" style="padding:12px; height:fit-content;">
+        @{
+            var settingsMenu = new[] {
+                new { Icon = "fas fa-user-cog", Label = "Preferences", Id = "preferences", Active = true },
+                new { Icon = "fas fa-bell", Label = "Notifications", Id = "notifications", Active = false },
+                new { Icon = "fas fa-lock", Label = "Security", Id = "security", Active = false },
+            };
+        }
+        @foreach (var item in settingsMenu)
+        {
+            <button onclick="showTab('@item.Id')" id="tab-btn-@item.Id"
+                    style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:none;border-radius:10px;cursor:pointer;font-size:0.875rem;font-weight:600;text-align:left;transition:all 0.2s;background:@(item.Active ? "rgba(31,138,107,0.1)" : "transparent");color:@(item.Active ? "#1F8A6B" : "#374151");">
+                <i class="@item.Icon" style="width:16px;"></i> @item.Label
+            </button>
+        }
+    </div>
+
+    <!-- Settings Content -->
+    <div>
+        <!-- Preferences Tab -->
+        <div id="tab-preferences" class="form-card">
+            <div style="font-size:1rem;font-weight:700;color:#1E293B;margin-bottom:20px;">Client Preferences</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Language</label>
+                    <select class="form-select"><option>English</option><option>Urdu</option></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">System of Measurement</label>
+                    <select class="form-select"><option>Metric System</option><option>Imperial System</option></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Timezone</label>
+                    <select class="form-select"><option>PKT (UTC+5)</option><option>UTC</option></select>
+                </div>
+            </div>
+            <button class="btn-primary-dash" style="margin-top:16px;" onclick="showDashToast('Preferences saved successfully!')">
+                <i class="fas fa-save"></i> Save Preferences
+            </button>
+        </div>
+
+        <!-- Notifications Tab -->
+        <div id="tab-notifications" class="form-card" style="display:none;">
+            <div style="font-size:1rem;font-weight:700;color:#1E293B;margin-bottom:20px;">Notifications & Alerts</div>
+            @{
+                var notifs = new[] {
+                    new { Label = "Diagnostic Report completion alerts", Desc = "Receive email notifications when an AI scan completes" },
+                    new { Label = "Urgent safety recommendations", Desc = "Get immediate SMS/email for high-risk hazards detected" },
+                    new { Label = "Messages from matched electricians", Desc = "Alerts when an electrician messages you regarding a booking" },
+                };
+            }
+            <div style="display:flex;flex-direction:column;gap:14px;">
+                @foreach (var n in notifs)
+                {
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #F0F5F3;">
+                        <div>
+                            <div style="font-size:0.875rem;font-weight:600;color:#1E293B;">@n.Label</div>
+                            <div style="font-size:0.78rem;color:#64748B;margin-top:2px;">@n.Desc</div>
+                        </div>
+                        <label style="position:relative;display:inline-block;width:42px;height:22px;cursor:pointer;">
+                            <input type="checkbox" checked style="opacity:0;width:0;height:0;">
+                            <span style="position:absolute;inset:0;background:#1F8A6B;border-radius:22px;transition:0.2s;"></span>
+                            <span style="position:absolute;left:3px;top:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:0.2s;transform:translateX(20px);"></span>
+                        </label>
+                    </div>
+                }
+            </div>
+            <button class="btn-primary-dash" style="margin-top:16px;" onclick="showDashToast('Alert settings saved!')">
+                <i class="fas fa-save"></i> Save Alert Options
+            </button>
+        </div>
+
+        <!-- Security Tab -->
+        <div id="tab-security" class="form-card" style="display:none;">
+            <div style="font-size:1rem;font-weight:700;color:#1E293B;margin-bottom:20px;">Account Security</div>
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label class="form-label">Current Password</label>
+                    <input type="password" class="form-input" placeholder="••••••••">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-input" placeholder="••••••••">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" placeholder="••••••••">
+                </div>
+            </div>
+            <button class="btn-primary-dash" style="margin-top:16px;" onclick="showDashToast('Password changed!')">
+                <i class="fas fa-key"></i> Update Password
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    function showTab(id) {
+        document.querySelectorAll('[id^="tab-"]').forEach(el => {
+            if (!el.id.startsWith('tab-btn')) el.style.display = 'none';
+        });
+        document.getElementById('tab-' + id).style.display = 'block';
+
+        document.querySelectorAll('[id^="tab-btn-"]').forEach(btn => {
+            btn.style.background = 'transparent';
+            btn.style.color = '#374151';
+        });
+        const activeBtn = document.getElementById('tab-btn-' + id);
+        activeBtn.style.background = 'rgba(31,138,107,0.1)';
+        activeBtn.style.color = '#1F8A6B';
+    }
+</script>
+}

@@ -1,0 +1,260 @@
+@model Electroscann_ai.Controllers.DashboardController.AdminDashboardViewModel
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Admin Dashboard";
+    ViewBag.PageTitle = "Dashboard";
+    ViewBag.ActivePage = "Dashboard";
+}
+
+<!-- Page Header -->
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h1 class="fw-bold fs-3 text-dark mb-1 d-flex align-items-center gap-2">
+            <span class="d-inline-flex align-items-center justify-content-center bg-emerald-subtle text-emerald rounded-3 p-2" style="width:40px; height:40px;">
+                <i class="fas fa-user-shield fs-5"></i>
+            </span>
+            Admin Control Center
+        </h1>
+        <p class="text-muted m-0 small">Platform analytics, user management, revenue performance, and system diagnostics.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-emerald-subtle text-emerald px-3 py-2 rounded-pill fw-bold border border-emerald-subtle d-inline-flex align-items-center gap-2">
+            <span class="es-pulse-dot"></span> System Operational
+        </span>
+        <a asp-action="Users" asp-controller="Dashboard" class="btn btn-emerald btn-sm rounded-pill px-3 fw-bold">
+            <i class="fas fa-users-cog me-1"></i> Manage Users
+        </a>
+    </div>
+</div>
+
+<!-- Primary Stats Row -->
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #1F8A6B;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Total Users</span>
+                <div class="stat-icon-wrapper bg-emerald-subtle text-emerald">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">@Model.TotalUsers</div>
+            <div class="text-emerald small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-check-circle me-1"></i> Registered Accounts
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #2BAA85;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Electricians</span>
+                <div class="stat-icon-wrapper bg-success-subtle text-success">
+                    <i class="fas fa-bolt"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">@Model.TotalElectricians</div>
+            <div class="text-success small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-user-check me-1"></i> Verified Technicians
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #6BCB9E;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Companies</span>
+                <div class="stat-icon-wrapper bg-info-subtle text-info">
+                    <i class="fas fa-building"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">@Model.TotalCompanies</div>
+            <div class="text-info small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-briefcase me-1"></i> Registered Firms
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #FF7A00;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Total Revenue</span>
+                <div class="stat-icon-wrapper bg-warning-subtle text-warning">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">$@Model.TotalRevenue.ToString("N0")</div>
+            <div class="text-warning small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-credit-card me-1"></i> Paid Orders & Billing
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Secondary Metrics Row -->
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #1F8A6B;">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-muted fw-semibold small">AI Scans Run</span>
+                <div class="stat-icon-wrapper bg-emerald-subtle text-emerald" style="width:40px; height:40px; font-size:1rem;">
+                    <i class="fas fa-microscope"></i>
+                </div>
+            </div>
+            <div class="fs-3 fw-bold text-dark mb-1">@Model.TotalScans</div>
+            <small class="text-muted d-block">Total Panel Inspections</small>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #2BAA85;">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-muted fw-semibold small">Active Subscriptions</span>
+                <div class="stat-icon-wrapper bg-success-subtle text-success" style="width:40px; height:40px; font-size:1rem;">
+                    <i class="fas fa-crown"></i>
+                </div>
+            </div>
+            <div class="fs-3 fw-bold text-dark mb-1">@Model.ActiveSubscriptions</div>
+            <small class="text-muted d-block">Pro & Enterprise Users</small>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #6BCB9E;">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-muted fw-semibold small">Total Jobs</span>
+                <div class="stat-icon-wrapper bg-info-subtle text-info" style="width:40px; height:40px; font-size:1rem;">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+            </div>
+            <div class="fs-3 fw-bold text-dark mb-1">@Model.TotalJobs</div>
+            <small class="text-muted d-block">Posted Hiring Listings</small>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #FF7A00;">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-muted fw-semibold small">Unread Messages</span>
+                <div class="stat-icon-wrapper bg-warning-subtle text-warning" style="width:40px; height:40px; font-size:1rem;">
+                    <i class="fas fa-envelope"></i>
+                </div>
+            </div>
+            <div class="fs-3 fw-bold text-dark mb-1">@Model.UnreadMessages</div>
+            <small class="text-muted d-block">Support & Contact Inbox</small>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Analytics Row -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white" style="border: 1px solid #E2ECE8 !important;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="p-2 bg-emerald-subtle text-emerald rounded-3 d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;">
+                        <i class="fas fa-chart-line"></i>
+                    </span>
+                    <h6 class="fw-bold text-dark m-0">Revenue Trend</h6>
+                </div>
+                <span class="badge bg-light text-muted border px-2 py-1">Monthly</span>
+            </div>
+            <canvas id="revenueChart" height="210"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white" style="border: 1px solid #E2ECE8 !important;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="p-2 bg-emerald-subtle text-emerald rounded-3 d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;">
+                        <i class="fas fa-microscope"></i>
+                    </span>
+                    <h6 class="fw-bold text-dark m-0">AI Scans Overview</h6>
+                </div>
+                <span class="badge bg-light text-muted border px-2 py-1">Weekly</span>
+            </div>
+            <canvas id="scansChart" height="210"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Quick Access Shortcuts -->
+<div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4" style="border: 1px solid #E2ECE8 !important;">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h6 class="fw-bold text-dark m-0 d-flex align-items-center gap-2">
+            <i class="fas fa-sliders-h text-emerald"></i> Quick System Shortcuts
+        </h6>
+        <span class="small text-muted">Admin Operations</span>
+    </div>
+    <div class="row g-2">
+        <div class="col-md-2 col-6">
+            <a asp-action="Users" asp-controller="Dashboard" class="btn btn-light border w-full text-start p-3 rounded-3 d-flex flex-column gap-2 hover-elevate">
+                <i class="fas fa-users text-emerald fs-5"></i>
+                <span class="fw-bold small text-dark">User Accounts</span>
+            </a>
+        </div>
+        <div class="col-md-2 col-6">
+            <a asp-action="Electricians" asp-controller="Dashboard" class="btn btn-light border w-full text-start p-3 rounded-3 d-flex flex-column gap-2 hover-elevate">
+                <i class="fas fa-bolt text-emerald fs-5"></i>
+                <span class="fw-bold small text-dark">Electricians</span>
+            </a>
+        </div>
+        <div class="col-md-2 col-6">
+            <a asp-action="Companies" asp-controller="Dashboard" class="btn btn-light border w-full text-start p-3 rounded-3 d-flex flex-column gap-2 hover-elevate">
+                <i class="fas fa-building text-emerald fs-5"></i>
+                <span class="fw-bold small text-dark">Companies</span>
+            </a>
+        </div>
+        <div class="col-md-2 col-6">
+            <a asp-action="Jobs" asp-controller="Dashboard" class="btn btn-light border w-full text-start p-3 rounded-3 d-flex flex-column gap-2 hover-elevate">
+                <i class="fas fa-briefcase text-emerald fs-5"></i>
+                <span class="fw-bold small text-dark">Jobs Management</span>
+            </a>
+        </div>
+        <div class="col-md-2 col-6">
+            <a asp-action="AIScans" asp-controller="Dashboard" class="btn btn-light border w-full text-start p-3 rounded-3 d-flex flex-column gap-2 hover-elevate">
+                <i class="fas fa-microscope text-emerald fs-5"></i>
+                <span class="fw-bold small text-dark">AI Scan Logs</span>
+            </a>
+        </div>
+        <div class="col-md-2 col-6">
+            <a asp-action="Settings" asp-controller="Dashboard" class="btn btn-light border w-full text-start p-3 rounded-3 d-flex flex-column gap-2 hover-elevate">
+                <i class="fas fa-cog text-emerald fs-5"></i>
+                <span class="fw-bold small text-dark">System Settings</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    if (document.getElementById('revenueChart')) {
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Revenue ($)',
+                    data: [120, 250, 480, 750, 1100, 1500],
+                    borderColor: '#1F8A6B',
+                    backgroundColor: 'rgba(31,138,107,0.08)',
+                    tension: 0.35,
+                    fill: true,
+                    pointBackgroundColor: '#1F8A6B',
+                    pointRadius: 4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+    }
+    if (document.getElementById('scansChart')) {
+        new Chart(document.getElementById('scansChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'AI Scans',
+                    data: [12, 28, 45, 60],
+                    backgroundColor: '#1F8A6B',
+                    borderRadius: 8
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+    }
+</script>
+}
+

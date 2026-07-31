@@ -1,0 +1,71 @@
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "System Settings";
+    ViewBag.PageTitle = "Settings";
+    ViewBag.ActivePage = "Settings";
+    var settings = ViewBag.Settings as Dictionary<string, string> ?? new Dictionary<string, string>();
+}
+
+<div class="admin-container">
+    <main class="main-content">
+        <div class="page-header">
+            <div>
+                <h1>Settings</h1>
+                <p>System configuration and preferences</p>
+            </div>
+        </div>
+
+        <form asp-action="SaveSettings" asp-controller="Dashboard" method="post" class="stats-grid" style="grid-template-columns: 1fr;">
+            @Html.AntiForgeryToken()
+            <div class="stat-card">
+                <h3>General Settings</h3>
+                <div class="form-group">
+                    <label>Site Name</label>
+                    <input type="text" name="siteName" value="@(settings.ContainsKey("SiteName") ? settings["SiteName"] : "ElectroScan AI")" />
+                </div>
+                <div class="form-group">
+                    <label>Admin Email</label>
+                    <input type="email" name="adminEmail" value="@(settings.ContainsKey("AdminEmail") ? settings["AdminEmail"] : "admin@electroscan.ai")" />
+                </div>
+                <div class="form-group">
+                    <label>Time Zone</label>
+                    <select name="timeZone">
+                        <option value="Asia/Karachi" selected="@(settings.ContainsKey("TimeZone") && settings["TimeZone"] == "Asia/Karachi")">Asia/Karachi</option>
+                        <option value="UTC" selected="@(settings.ContainsKey("TimeZone") && settings["TimeZone"] == "UTC")">UTC</option>
+                    </select>
+                </div>
+                <button class="btn-primary" type="submit">Save Changes</button>
+            </div>
+
+            <div class="stat-card">
+                <h3>AI Scan Settings</h3>
+                <div class="form-group">
+                    <label>Confidence Threshold</label>
+                    <input type="range" min="0" max="100" name="confidenceThreshold" value="@(settings.ContainsKey("ConfidenceThreshold") ? settings["ConfidenceThreshold"] : "85")" />
+                </div>
+                <div class="form-group">
+                    <label>Auto-report Generation</label>
+                    <select name="autoReportGeneration">
+                        <option value="true" selected="@(settings.ContainsKey("AutoReportGeneration") && settings["AutoReportGeneration"] == "true")">Enabled</option>
+                        <option value="false" selected="@(settings.ContainsKey("AutoReportGeneration") && settings["AutoReportGeneration"] == "false")">Disabled</option>
+                    </select>
+                </div>
+                <button class="btn-primary" type="submit">Save Changes</button>
+            </div>
+
+            <div class="stat-card">
+                <h3>Notification Settings</h3>
+                <div class="form-group">
+                    <label><input type="checkbox" name="emailNotifications" value="true" checked="@(settings.ContainsKey("EmailNotifications") && settings["EmailNotifications"] == "true")" /> Email Notifications</label>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" name="pushNotifications" value="true" checked="@(settings.ContainsKey("PushNotifications") && settings["PushNotifications"] == "true")" /> Push Notifications</label>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" name="smsAlerts" value="true" checked="@(settings.ContainsKey("SmsAlerts") && settings["SmsAlerts"] == "true")" /> SMS Alerts</label>
+                </div>
+                <button class="btn-primary" type="submit">Save Changes</button>
+            </div>
+        </form>
+    </main>
+</div>

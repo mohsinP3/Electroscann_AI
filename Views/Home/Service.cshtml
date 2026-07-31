@@ -1,0 +1,313 @@
+@{
+    ViewData["Title"] = "Services & Solutions | ElectroScan AI";
+}
+
+<style>
+    /* ==========================================================================
+       SERVICE PAGE - PREMIUM SAAS STYLES
+       ========================================================================== */
+    .es-service-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-orange: #FF7A00;
+        --es-light-bg: #F8FAF9;
+        --es-card-bg: #FFFFFF;
+        --es-border: #E2EFE9;
+        --es-text-main: #0F221E;
+        --es-text-muted: #4A635B;
+        --es-font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --es-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .es-service-hero {
+        position: relative;
+        padding: 90px 0 70px;
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.1) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        text-align: center;
+    }
+
+    .es-service-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(31, 138, 107, 0.08);
+        border: 1px solid rgba(31, 138, 107, 0.2);
+        color: var(--es-emerald);
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+
+    .es-service-hero h1 {
+        font-family: var(--es-font-heading);
+        font-size: clamp(2.4rem, 4vw, 3.5rem);
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 18px;
+    }
+
+    .es-service-hero p {
+        font-size: 1.12rem;
+        color: var(--es-text-muted);
+        max-width: 650px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Core Services Grid */
+    .es-services-section {
+        padding: 60px 0 100px;
+        background: var(--es-light-bg);
+    }
+
+    .es-services-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-bottom: 80px;
+    }
+
+    .es-service-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 24px;
+        padding: 40px 32px;
+        box-shadow: 0 8px 24px rgba(11, 43, 38, 0.04);
+        transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .es-service-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--es-emerald);
+        box-shadow: 0 24px 48px -12px rgba(31, 138, 107, 0.18);
+    }
+
+    .es-service-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        background: rgba(31, 138, 107, 0.1);
+        color: var(--es-emerald);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.7rem;
+        margin-bottom: 24px;
+        transition: all 200ms ease;
+    }
+
+    .es-service-card:hover .es-service-icon {
+        background: var(--es-emerald);
+        color: #FFFFFF;
+        transform: scale(1.08);
+    }
+
+    .es-service-card h3 {
+        font-family: var(--es-font-heading);
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--es-pine);
+        margin-bottom: 12px;
+    }
+
+    .es-service-card p {
+        color: var(--es-text-muted);
+        font-size: 0.98rem;
+        line-height: 1.65;
+        margin-bottom: 28px;
+        flex-grow: 1;
+    }
+
+    .es-btn-service {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.92rem;
+        text-decoration: none !important;
+        background: rgba(31, 138, 107, 0.08);
+        color: var(--es-emerald) !important;
+        border: 1px solid rgba(31, 138, 107, 0.2);
+        transition: all 200ms ease;
+    }
+
+    .es-btn-service:hover {
+        background: var(--es-emerald);
+        color: #FFFFFF !important;
+        border-color: var(--es-emerald);
+        transform: translateY(-2px);
+    }
+
+    /* Capabilities Grid */
+    .es-capabilities-title {
+        font-family: var(--es-font-heading);
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .es-capabilities-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .es-cap-item {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 18px;
+        padding: 24px 28px;
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+        transition: all 200ms ease;
+    }
+
+    .es-cap-item:hover {
+        border-color: var(--es-emerald);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(11, 43, 38, 0.05);
+    }
+
+    .es-cap-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: rgba(255, 122, 0, 0.1);
+        color: var(--es-orange);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .es-cap-text h4 {
+        font-family: var(--es-font-heading);
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--es-pine);
+        margin-bottom: 6px;
+    }
+
+    .es-cap-text p {
+        font-size: 0.92rem;
+        color: var(--es-text-muted);
+        line-height: 1.55;
+        margin: 0;
+    }
+
+    @@media (max-width: 991px) {
+        .es-services-grid {
+            grid-template-columns: 1fr;
+        }
+        .es-capabilities-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="es-service-page">
+    <div class="es-service-hero">
+        <div class="container">
+            <div class="es-service-badge">
+                <i class="fas fa-layer-group"></i>
+                ELECTRICAL INTELLIGENCE
+            </div>
+            <h1>AI-Powered Electrical Solutions</h1>
+            <p>From computer vision wire scanning to NEC load analysis and localized cost estimation — everything you need for safer, smarter electrical operations.</p>
+        </div>
+    </div>
+
+    <div class="es-services-section">
+        <div class="container">
+            <!-- Services Grid -->
+            <div class="es-services-grid">
+                <div class="es-service-card">
+                    <div class="es-service-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3>AI Wire Scanner</h3>
+                    <p>Computer vision that detects anomalies, thermal hotspots, loose connections, and component risks in seconds with full severity ratings.</p>
+                    <a asp-action="AI_Scanner" asp-controller="Home" class="es-btn-service">
+                        Try AI Scanner <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="es-service-card">
+                    <div class="es-service-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>Load Calculator</h3>
+                    <p>NEC-compliant load analysis, wire gauge selection, breaker ratings, and room specification calculations for residential and commercial panels.</p>
+                    <a asp-action="Calculator" asp-controller="Home" class="es-btn-service">
+                        Open Calculator <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="es-service-card">
+                    <div class="es-service-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h3>Cost Estimation</h3>
+                    <p>Localized market rates with real-time pricing for wires, breakers, conduits, and labor to prepare accurate, transparent client bids.</p>
+                    <a asp-action="Market_Rates" asp-controller="Home" class="es-btn-service">
+                        View Market Rates <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Additional Capabilities -->
+            <h2 class="es-capabilities-title">Built-in Intelligent Features</h2>
+
+            <div class="es-capabilities-grid">
+                <div class="es-cap-item">
+                    <div class="es-cap-icon"><i class="fas fa-shield-virus"></i></div>
+                    <div class="es-cap-text">
+                        <h4>Thermal Anomaly & Arc Detection</h4>
+                        <p>Identifies dangerous heating patterns and insulation degradation before catastrophic equipment failure occurs.</p>
+                    </div>
+                </div>
+
+                <div class="es-cap-item">
+                    <div class="es-cap-icon"><i class="fas fa-file-pdf"></i></div>
+                    <div class="es-cap-text">
+                        <h4>Instant NEC Compliance PDF Export</h4>
+                        <p>Generates client-ready audit reports stamped with scan IDs, timestamped findings, and safety scores.</p>
+                    </div>
+                </div>
+
+                <div class="es-cap-item">
+                    <div class="es-cap-icon"><i class="fas fa-microchip"></i></div>
+                    <div class="es-cap-text">
+                        <h4>Real-Time Camera Diagnostics</h4>
+                        <p>Direct webcam or tablet video feed capturing for live field diagnostics and immediate component assessment.</p>
+                    </div>
+                </div>
+
+                <div class="es-cap-item">
+                    <div class="es-cap-icon"><i class="fas fa-database"></i></div>
+                    <div class="es-cap-text">
+                        <h4>Cloud Inspection History</h4>
+                        <p>Securely log, filter, and track historical calculations and scan results across multiple job sites.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

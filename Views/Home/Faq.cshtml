@@ -1,0 +1,437 @@
+@{
+    ViewData["Title"] = "FAQ & Help Center | ElectroScan AI";
+}
+
+<style>
+    /* ==========================================================================
+       FAQ & HELP CENTER - PREMIUM SAAS STYLES
+       ========================================================================== */
+    .es-faq-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-orange: #FF7A00;
+        --es-light-bg: #F8FAF9;
+        --es-card-bg: #FFFFFF;
+        --es-border: #E2EFE9;
+        --es-text-main: #0F221E;
+        --es-text-muted: #4A635B;
+        --es-font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --es-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: var(--es-font-body);
+        color: var(--es-text-main);
+    }
+
+    /* Hero Section */
+    .faq-hero {
+        position: relative;
+        padding: 80px 0 50px;
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.12) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        text-align: center;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #0B2B26;
+        color: var(--es-mint);
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(11, 43, 38, 0.15);
+    }
+
+    .faq-hero h1 {
+        font-family: var(--es-font-heading);
+        font-size: clamp(2.4rem, 4vw, 3.5rem);
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 16px;
+        line-height: 1.15;
+    }
+
+    .faq-hero p {
+        font-size: 1.12rem;
+        color: var(--es-text-muted);
+        max-width: 580px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .es-faq-container {
+        padding: 40px 0 90px;
+        max-width: 960px;
+    }
+
+    /* Category Cards Grid */
+    .faq-categories-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 48px;
+    }
+
+    .faq-cat-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 20px;
+        padding: 24px;
+        text-align: center;
+        box-shadow: 0 6px 20px rgba(11, 43, 38, 0.03);
+        transition: all 200ms ease;
+        cursor: pointer;
+    }
+
+    .faq-cat-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--es-emerald);
+        box-shadow: 0 12px 28px rgba(31, 138, 107, 0.12);
+    }
+
+    .cat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: rgba(31, 138, 107, 0.08);
+        color: var(--es-emerald);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        margin: 0 auto 14px;
+    }
+
+    .faq-cat-card h4 {
+        font-family: var(--es-font-heading);
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin: 0 0 4px;
+    }
+
+    .faq-cat-card p {
+        font-size: 0.85rem;
+        color: var(--es-text-muted);
+        margin: 0;
+    }
+
+    /* Accordion Container */
+    .es-accordion-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 24px;
+        padding: 16px;
+        box-shadow: 0 8px 24px rgba(11, 43, 38, 0.04);
+    }
+
+    .accordion-item {
+        border: 1px solid var(--es-border) !important;
+        border-radius: 16px !important;
+        margin-bottom: 12px;
+        overflow: hidden;
+        transition: all 200ms ease;
+    }
+
+    .accordion-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .accordion-item:hover {
+        border-color: var(--es-emerald) !important;
+    }
+
+    .accordion-button {
+        background: #FFFFFF !important;
+        color: var(--es-pine) !important;
+        font-family: var(--es-font-heading);
+        font-weight: 700 !important;
+        font-size: 1.08rem !important;
+        padding: 20px 24px !important;
+        box-shadow: none !important;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .accordion-button:not(.collapsed) {
+        background: rgba(31, 138, 107, 0.04) !important;
+        color: var(--es-emerald) !important;
+        border-bottom: 1px solid var(--es-border);
+    }
+
+    .accordion-button i {
+        color: var(--es-emerald);
+        font-size: 1.1rem;
+    }
+
+    .accordion-body {
+        padding: 24px !important;
+        font-size: 0.98rem;
+        color: var(--es-text-muted);
+        line-height: 1.7;
+        background: #FFFFFF;
+    }
+
+    /* Help Banner */
+    .help-cta-banner {
+        margin-top: 50px;
+        background: linear-gradient(135deg, var(--es-pine) 0%, var(--es-forest) 100%);
+        border-radius: 24px;
+        padding: 40px;
+        color: #FFFFFF;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        box-shadow: 0 12px 30px rgba(11, 43, 38, 0.15);
+    }
+
+    .banner-text h3 {
+        font-family: var(--es-font-heading);
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin: 0 0 6px;
+        color: #FFFFFF;
+    }
+
+    .banner-text p {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0;
+    }
+
+    .btn-contact-help {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--es-mint);
+        color: var(--es-pine) !important;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 0.92rem;
+        text-decoration: none !important;
+        transition: all 180ms ease;
+    }
+
+    .btn-contact-help:hover {
+        background: #FFFFFF;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    @@media (max-width: 768px) {
+        .faq-categories-grid {
+            grid-template-columns: 1fr;
+        }
+        .help-cta-banner {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="es-faq-page">
+    <div class="faq-hero">
+        <div class="container">
+            <div class="hero-badge reveal">
+                <i class="fas fa-question-circle"></i> HELP CENTER
+            </div>
+            <h1 class="reveal">How can we help you?</h1>
+            <p class="reveal">Find instant answers to common questions about AI wire scans, electrical calculations, market rates, and accounts.</p>
+        </div>
+    </div>
+
+    <div class="container es-faq-container">
+        <!-- Live Search Bar -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4" style="background: #FFFFFF; border: 1px solid var(--es-border) !important;">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" id="faqSearchInput" class="form-control bg-light border-start-0 rounded-end-3 fs-6" placeholder="Search questions, keywords (e.g. scanner, copper rates, NEC, subscription)..." />
+            </div>
+        </div>
+
+        <!-- Quick Topic Cards / Filter Badges -->
+        <div class="faq-categories-grid mb-4">
+            <div class="faq-cat-card reveal active" onclick="filterFaqCategory('all')">
+                <div class="cat-icon"><i class="fas fa-th-large"></i></div>
+                <h4>All Topics</h4>
+                <p>Browse full knowledge base</p>
+            </div>
+            <div class="faq-cat-card reveal" style="transition-delay: 0.08s;" onclick="filterFaqCategory('scanner')">
+                <div class="cat-icon"><i class="fas fa-camera"></i></div>
+                <h4>AI Scanner</h4>
+                <p>Wire vision &amp; L/N/E colors</p>
+            </div>
+            <div class="faq-cat-card reveal" style="transition-delay: 0.16s;" onclick="filterFaqCategory('calculator')">
+                <div class="cat-icon"><i class="fas fa-calculator"></i></div>
+                <h4>Calculator</h4>
+                <p>NEC ampacity &amp; wire gauge</p>
+            </div>
+        </div>
+
+        <!-- Accordion Section -->
+        <div class="es-accordion-card reveal">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item faq-item" data-category="scanner">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <i class="fas fa-camera me-2"></i> How does the AI wire color scanner work?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Our AI wire scanner analyzes images captured via live camera or uploaded photos using deep learning models. It identifies standard international wire insulation color codes (Live/Phase, Neutral, and Ground/Earth) and highlights thermal anomalies or safety compliance risks.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item faq-item" data-category="calculator">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <i class="fas fa-calculator me-2"></i> How accurate is the NEC wire ampacity calculator?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Our calculator applies National Electrical Code (NEC Article 220 &amp; 310) ampacity standards. It calculates total wattage, continuous load factors (125%), voltage drop, and distance derating to recommend appropriate AWG wire gauges and circuit breaker sizes.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item faq-item" data-category="rates">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <i class="fas fa-coins me-2"></i> Where does the Market Rates &amp; Commodity data come from?
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Market rates combine verified contractor rates across major Pakistan cities (Karachi, Lahore, Islamabad) updated by platform administrators, alongside real-time raw material commodity indices for Copper, Aluminum, and Steel via our global API feeds.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item faq-item" data-category="subscription">
+                    <h2 class="accordion-header" id="headingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            <i class="fas fa-crown me-2"></i> What benefits are included in Pro &amp; Enterprise subscriptions?
+                        </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Pro subscribers enjoy unlimited AI wire vision scans, exportable PDF engineering reports, full load calculation history, and priority customer support. Enterprise plans include multi-user team seats and custom company branding on generated reports.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item faq-item" data-category="calculator">
+                    <h2 class="accordion-header" id="headingFive">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            <i class="fas fa-sliders-h me-2"></i> How do I change my currency and power unit preferences?
+                        </button>
+                    </h2>
+                    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            You can switch currencies (PKR, USD, EUR, GBP, AED) and power units (Watts, kW, HP) using the top preferences bar on the Calculator or Market Rates pages. Your selections are automatically saved to your browser local storage and restored on future visits.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="noFaqResults" class="text-center py-5 d-none">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h5 class="fw-bold text-dark">No matching questions found</h5>
+                <p class="text-muted small">Try searching with different keywords or browse all topics above.</p>
+            </div>
+        </div>
+
+        <!-- Help Banner -->
+        <div class="help-cta-banner reveal">
+            <div class="banner-text">
+                <h3>Still have questions?</h3>
+                <p>Our electrical engineering and AI support team is available to assist you.</p>
+            </div>
+            <a asp-action="Contact" asp-controller="Home" class="btn-contact-help">
+                <i class="fas fa-headset"></i> Contact Support
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("faqSearchInput");
+            const items = document.querySelectorAll(".faq-item");
+            const noResults = document.getElementById("noFaqResults");
+
+            function filterFaqs() {
+                const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
+                let visibleCount = 0;
+
+                items.forEach(item => {
+                    const text = item.innerText.toLowerCase();
+                    if (!query || text.includes(query)) {
+                        item.classList.remove("d-none");
+                        visibleCount++;
+                    } else {
+                        item.classList.add("d-none");
+                    }
+                });
+
+                if (noResults) {
+                    if (visibleCount === 0) {
+                        noResults.classList.remove("d-none");
+                    } else {
+                        noResults.classList.add("d-none");
+                    }
+                }
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener("input", filterFaqs);
+            }
+
+            window.filterFaqCategory = function (cat) {
+                const cards = document.querySelectorAll(".faq-cat-card");
+                cards.forEach(c => c.classList.remove("active"));
+                if (event && event.currentTarget) {
+                    event.currentTarget.classList.add("active");
+                }
+
+                if (searchInput) searchInput.value = "";
+                let visibleCount = 0;
+
+                items.forEach(item => {
+                    const itemCat = item.getAttribute("data-category");
+                    if (cat === "all" || itemCat === cat) {
+                        item.classList.remove("d-none");
+                        visibleCount++;
+                    } else {
+                        item.classList.add("d-none");
+                    }
+                });
+
+                if (noResults) {
+                    if (visibleCount === 0) {
+                        noResults.classList.remove("d-none");
+                    } else {
+                        noResults.classList.add("d-none");
+                    }
+                }
+            };
+        });
+    </script>
+}

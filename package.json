@@ -1,0 +1,10 @@
+{
+  "name": "electroscann-ai",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "export DOTNET_ROOT=/root/.dotnet && export PATH=$PATH:/root/.dotnet && dotnet run --urls http://0.0.0.0:3000",
+    "build": "rm -rf dist && export DOTNET_ROOT=/root/.dotnet && export PATH=$PATH:/root/.dotnet && dotnet publish -c Release -o dist",
+    "lint": "export DOTNET_ROOT=/root/.dotnet && export PATH=$PATH:/root/.dotnet && dotnet build"
+  }
+}

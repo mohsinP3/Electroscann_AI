@@ -1,0 +1,56 @@
+@model List<ElectroScanAI.Models.Entities.JobApplication>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "My Projects";
+    ViewBag.PageTitle = "Projects";
+    ViewBag.ActivePage = "Projects";
+}
+
+<div class="page-header">
+    <h1>My Active Projects</h1>
+    <p>Track progress and client communications for your accepted contracts</p>
+</div>
+
+<!-- Active Projects List -->
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-tasks"></i> Accepted Contracts (@(Model?.Count ?? 0))</div>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Contract ID</th>
+                <th>Client / Company</th>
+                <th>Job Title</th>
+                <th>Budget</th>
+                <th>Accepted Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var app in Model)
+                {
+                    <tr>
+                        <td style="font-family:monospace;">#PRJ-@app.Id.ToString("D3")</td>
+                        <td class="fw-bold">@(app.Job?.Company?.CompanyName ?? "Direct Client")</td>
+                        <td>@app.Job?.Title</td>
+                        <td class="fw-bold text-success">PKR @(app.Job?.Budget.ToString("N0") ?? "0")</td>
+                        <td>@app.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td><span class="badge badge-green"><i class="fas fa-check-circle me-1"></i> Accepted</span></td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="fas fa-tasks fa-3x mb-3 text-secondary d-block"></i>
+                        No accepted projects yet. Apply to jobs to start working on active contracts!
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

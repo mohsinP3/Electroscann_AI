@@ -1,0 +1,685 @@
+@{
+    ViewData["Title"] = "About Us | ElectroScan AI";
+}
+
+<style>
+    /* ==========================================================================
+       ABOUT PAGE - PREMIUM SAAS STYLES
+       ========================================================================== */
+    .es-about-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-orange: #FF7A00;
+        --es-light-bg: #F8FAF9;
+        --es-card-bg: #FFFFFF;
+        --es-border: #E2EFE9;
+        --es-text-main: #0F221E;
+        --es-text-muted: #4A635B;
+        --es-font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --es-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* Hero Section */
+    .es-about-hero {
+        position: relative;
+        padding: 90px 0 80px;
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.12) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .es-about-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(31, 138, 107, 0.08);
+        border: 1px solid rgba(31, 138, 107, 0.2);
+        color: var(--es-emerald);
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+
+    .es-about-hero h1 {
+        font-family: var(--es-font-heading);
+        font-size: clamp(2.5rem, 4.5vw, 3.8rem);
+        font-weight: 800;
+        color: var(--es-pine);
+        line-height: 1.15;
+        margin-bottom: 20px;
+    }
+
+    .es-about-hero h1 .highlight {
+        background: linear-gradient(135deg, var(--es-emerald) 0%, var(--es-pine) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .es-about-hero p {
+        font-size: 1.15rem;
+        color: var(--es-text-muted);
+        max-width: 680px;
+        margin: 0 auto 32px;
+        line-height: 1.65;
+    }
+
+    .es-about-hero-actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    /* Common Buttons */
+    .es-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: linear-gradient(135deg, var(--es-emerald) 0%, #166A52 100%);
+        color: #FFFFFF !important;
+        padding: 13px 28px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.98rem;
+        text-decoration: none !important;
+        border: none;
+        box-shadow: 0 8px 20px -4px rgba(31, 138, 107, 0.35);
+        transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+    }
+
+    .es-btn-primary:hover {
+        background: linear-gradient(135deg, #166A52 0%, #0F3B33 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px -4px rgba(31, 138, 107, 0.45);
+    }
+
+    .es-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #FFFFFF;
+        color: var(--es-pine) !important;
+        padding: 13px 28px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.98rem;
+        text-decoration: none !important;
+        border: 1px solid var(--es-border);
+        box-shadow: 0 2px 8px rgba(11, 43, 38, 0.04);
+        transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+    }
+
+    .es-btn-secondary:hover {
+        border-color: var(--es-emerald);
+        color: var(--es-emerald) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px -4px rgba(31, 138, 107, 0.12);
+    }
+
+    /* Mission Grid */
+    .es-mission-section {
+        padding: 80px 0;
+        background: var(--es-light-bg);
+        scroll-margin-top: 80px;
+    }
+
+    .es-mission-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+
+    .es-mission-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 20px;
+        padding: 36px 30px;
+        box-shadow: 0 6px 20px rgba(11, 43, 38, 0.03);
+        transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .es-mission-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--es-emerald);
+        box-shadow: 0 20px 40px -10px rgba(31, 138, 107, 0.15);
+    }
+
+    .es-mission-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: rgba(31, 138, 107, 0.08);
+        color: var(--es-emerald);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 22px;
+        transition: all 200ms ease;
+    }
+
+    .es-mission-card:hover .es-mission-icon {
+        background: var(--es-emerald);
+        color: #FFFFFF;
+        transform: scale(1.05);
+    }
+
+    .es-mission-card h3 {
+        font-family: var(--es-font-heading);
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--es-pine);
+        margin-bottom: 12px;
+    }
+
+    .es-mission-card p {
+        color: var(--es-text-muted);
+        font-size: 0.98rem;
+        line-height: 1.65;
+        margin: 0;
+    }
+
+    /* Story Section */
+    .es-story-section {
+        padding: 100px 0;
+        background: #FFFFFF;
+    }
+
+    .es-story-layout {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 60px;
+        align-items: center;
+    }
+
+    .es-section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(31, 138, 107, 0.08);
+        border: 1px solid rgba(31, 138, 107, 0.18);
+        color: var(--es-emerald);
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+    }
+
+    .es-story-text h2 {
+        font-family: var(--es-font-heading);
+        font-size: 2.3rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 20px;
+    }
+
+    .es-story-text p {
+        font-size: 1.05rem;
+        color: var(--es-text-muted);
+        line-height: 1.65;
+        margin-bottom: 16px;
+    }
+
+    .es-story-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 32px;
+        padding-top: 28px;
+        border-top: 1px solid var(--es-border);
+    }
+
+    .es-story-stat h4 {
+        font-family: var(--es-font-heading);
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--es-emerald);
+        margin-bottom: 4px;
+    }
+
+    .es-story-stat span {
+        font-size: 0.85rem;
+        color: var(--es-text-muted);
+        font-weight: 600;
+    }
+
+    .es-story-img-wrap {
+        position: relative;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid var(--es-border);
+        box-shadow: 0 20px 50px rgba(11, 43, 38, 0.12);
+        background: var(--es-pine);
+    }
+
+    .es-story-img-wrap img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover;
+    }
+
+    .es-story-caption {
+        position: absolute;
+        bottom: 16px;
+        left: 16px;
+        right: 16px;
+        background: rgba(11, 43, 38, 0.85);
+        backdrop-filter: blur(10px);
+        color: #FFFFFF;
+        padding: 12px 20px;
+        border-radius: 14px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .es-story-caption i {
+        color: var(--es-bright-mint);
+        font-size: 0.6rem;
+    }
+
+    /* Values Section */
+    .es-values-section {
+        padding: 100px 0;
+        background: var(--es-light-bg);
+    }
+
+    .es-section-header {
+        max-width: 680px;
+        margin: 0 auto 50px;
+        text-align: center;
+    }
+
+    .es-section-title {
+        font-family: var(--es-font-heading);
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 12px;
+    }
+
+    .es-values-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+
+    .es-value-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 20px;
+        padding: 36px 30px;
+        box-shadow: 0 6px 20px rgba(11, 43, 38, 0.03);
+        transition: all 220ms ease;
+    }
+
+    .es-value-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--es-emerald);
+        box-shadow: 0 20px 40px -10px rgba(31, 138, 107, 0.15);
+    }
+
+    .es-value-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        background: rgba(255, 122, 0, 0.1);
+        color: var(--es-orange);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+    }
+
+    .es-value-card h4 {
+        font-family: var(--es-font-heading);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--es-pine);
+        margin-bottom: 10px;
+    }
+
+    .es-value-card p {
+        color: var(--es-text-muted);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Team Section */
+    .es-team-section {
+        padding: 100px 0;
+        background: #FFFFFF;
+    }
+
+    .es-team-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+
+    .es-team-card {
+        background: var(--es-card-bg);
+        border: 1px solid var(--es-border);
+        border-radius: 20px;
+        padding: 36px 28px;
+        text-align: center;
+        box-shadow: 0 6px 20px rgba(11, 43, 38, 0.03);
+        transition: all 220ms ease;
+    }
+
+    .es-team-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--es-emerald);
+        box-shadow: 0 16px 36px rgba(31, 138, 107, 0.12);
+    }
+
+    .es-team-avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: rgba(31, 138, 107, 0.1);
+        color: var(--es-emerald);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+        margin: 0 auto 20px;
+    }
+
+    .es-team-card h4 {
+        font-family: var(--es-font-heading);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--es-pine);
+        margin-bottom: 4px;
+    }
+
+    .es-team-role {
+        display: inline-block;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--es-emerald);
+        margin-bottom: 14px;
+    }
+
+    .es-team-card p {
+        color: var(--es-text-muted);
+        font-size: 0.92rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* CTA Section */
+    .es-cta-section {
+        padding: 80px 0;
+        background: linear-gradient(135deg, var(--es-pine) 0%, var(--es-forest) 100%);
+        color: #FFFFFF;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .es-cta-content h2 {
+        font-family: var(--es-font-heading);
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: #FFFFFF;
+        margin-bottom: 14px;
+    }
+
+    .es-cta-content p {
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 1.1rem;
+        max-width: 620px;
+        margin: 0 auto 32px;
+    }
+
+    .es-cta-actions {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .es-btn-light {
+        background: var(--es-bright-mint);
+        color: var(--es-pine) !important;
+        font-weight: 700;
+    }
+
+    .es-btn-light:hover {
+        background: #00B87A;
+        color: var(--es-pine) !important;
+        transform: translateY(-2px);
+    }
+
+    .es-btn-outline-light {
+        background: transparent;
+        color: #FFFFFF !important;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .es-btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #FFFFFF;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+    }
+
+    @@media (max-width: 991px) {
+        .es-mission-grid, .es-values-grid, .es-team-grid {
+            grid-template-columns: 1fr;
+        }
+        .es-story-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="es-about-page">
+    <!-- Hero -->
+    <div class="es-about-hero">
+        <div class="container">
+            <div class="es-about-hero-badge">
+                <i class="fas fa-bolt"></i>
+                About ElectroScan AI
+            </div>
+            <h1>Intelligence That Powers<br><span class="highlight">Electrical Safety</span></h1>
+            <p>
+                We're transforming electrical inspections with precision AI — making every building safer
+                through intelligent automation, predictive analytics, and unmatched accuracy.
+            </p>
+            <div class="es-about-hero-actions">
+                <a asp-action="About" asp-controller="Home" asp-fragment="mission" class="es-btn-primary">
+                    <i class="fas fa-play-circle"></i>
+                    See Our Mission
+                </a>
+                <a asp-action="Contact" asp-controller="Home" class="es-btn-secondary">
+                    Meet the Team <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mission / Vision / Values -->
+    <div id="mission" class="es-mission-section">
+        <div class="container">
+            <div class="es-mission-grid">
+                <div class="es-mission-card">
+                    <div class="es-mission-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Our Mission</h3>
+                    <p>Make every electrical system safer through intelligence — eliminating preventable failures before they cause harm.</p>
+                </div>
+                <div class="es-mission-card">
+                    <div class="es-mission-icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <h3>Our Vision</h3>
+                    <p>A world where no building fire, outage, or electrical hazard is caused by an issue that could have been detected in advance.</p>
+                </div>
+                <div class="es-mission-card">
+                    <div class="es-mission-icon">
+                        <i class="fas fa-hand-sparkles"></i>
+                    </div>
+                    <h3>Our Values</h3>
+                    <p>Precision over speed. Transparency over shortcuts. Safety above all — for the professionals who depend on us and the people they protect.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Story + Stats -->
+    <div class="es-story-section">
+        <div class="container">
+            <div class="es-story-layout">
+                <div class="es-story-text">
+                    <span class="es-section-tag">OUR STORY</span>
+                    <h2>Built to close a <span class="highlight">critical gap</span></h2>
+                    <p>
+                        ElectroScan AI was founded by a team of electrical engineers and AI specialists who saw
+                        what traditional inspection methods were missing. Inspections were slow, prone to human
+                        error, and blind to failures before they happened.
+                    </p>
+                    <p>
+                        We built an intelligent platform combining computer vision, machine learning, and deep
+                        electrical expertise — trained on millions of real-world scenarios to deliver inspection
+                        accuracy the industry had never seen.
+                    </p>
+                    <div class="es-story-stats">
+                        <div class="es-story-stat">
+                            <h4>2024</h4>
+                            <span>Founded</span>
+                        </div>
+                        <div class="es-story-stat">
+                            <h4>50K+</h4>
+                            <span>Scans completed</span>
+                        </div>
+                        <div class="es-story-stat">
+                            <h4>99.9%</h4>
+                            <span>Detection accuracy</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="es-story-media">
+                    <div class="es-story-img-wrap">
+                        <img src="~/Image/about.jpg" alt="About ElectroScan AI" onerror="this.src='/Image/about.jpg';" />
+                        <div class="es-story-caption">
+                            <i class="fas fa-circle"></i>
+                            AI-driven electrical diagnostics active
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Why Choose Us -->
+    <div class="es-values-section">
+        <div class="container">
+            <div class="es-section-header">
+                <span class="es-section-tag">WHY ELECTROSCAN AI</span>
+                <h2 class="es-section-title">Industry-leading technology meets electrical expertise</h2>
+            </div>
+            <div class="es-values-grid">
+                <div class="es-value-card">
+                    <div class="es-value-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4>AI-Powered Analysis</h4>
+                    <p>Advanced neural networks trained on millions of electrical scenarios — detecting issues humans routinely miss.</p>
+                </div>
+                <div class="es-value-card">
+                    <div class="es-value-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h4>Smart Calculations</h4>
+                    <p>Automated load calculations and wire sizing based on real-world NEC standards. Zero manual math required.</p>
+                </div>
+                <div class="es-value-card">
+                    <div class="es-value-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h4>Compliance Reports</h4>
+                    <p>Comprehensive, compliance-ready reports generated instantly — shareable with clients and authorities.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leadership Team -->
+    <div class="es-team-section">
+        <div class="container">
+            <div class="es-section-header">
+                <span class="es-section-tag">THE EXPERTS BEHIND THE AI</span>
+                <h2 class="es-section-title">Leadership & innovation</h2>
+            </div>
+            <div class="es-team-grid">
+                <div class="es-team-card">
+                    <div class="es-team-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h4>Dr. Sarah Chen</h4>
+                    <span class="es-team-role">CTO, AI Research Lead</span>
+                    <p>15+ years in machine learning and computer vision applied to industrial systems.</p>
+                </div>
+                <div class="es-team-card">
+                    <div class="es-team-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h4>Michael Rodriguez</h4>
+                    <span class="es-team-role">Head of Engineering</span>
+                    <p>Licensed Master Electrician with 20+ years designing large-scale electrical systems.</p>
+                </div>
+                <div class="es-team-card">
+                    <div class="es-team-avatar">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Emily Watson</h4>
+                    <span class="es-team-role">Safety Director</span>
+                    <p>Certified Safety Professional, NEC compliance expert and risk auditing specialist.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="es-cta-section">
+        <div class="container">
+            <div class="es-cta-content">
+                <h2>Ready to transform your inspections?</h2>
+                <p>Join thousands of electrical professionals using AI to work smarter, safer, and faster — starting today.</p>
+                <div class="es-cta-actions">
+                    <a asp-action="AI_Scanner" asp-controller="Home" class="es-btn-primary es-btn-light">
+                        <i class="fas fa-bolt"></i>
+                        Start AI Scan
+                    </a>
+                    <a asp-action="Contact" asp-controller="Home" class="es-btn-secondary es-btn-outline-light">
+                        Contact Sales <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

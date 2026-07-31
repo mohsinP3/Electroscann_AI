@@ -1,0 +1,176 @@
+@{
+    ViewData["Title"] = "Terms of Service | ElectroScan AI";
+}
+
+<style>
+    /* ==========================================================================
+       TERMS OF SERVICE - PREMIUM SAAS STYLES
+       ========================================================================== */
+    .es-terms-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-light-bg: #F8FAF9;
+        --es-card-bg: #FFFFFF;
+        --es-border: #E2EFE9;
+        --es-text-main: #0F221E;
+        --es-text-muted: #4A635B;
+        --es-font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --es-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: var(--es-font-body);
+        color: var(--es-text-main);
+    }
+
+    /* Hero Section */
+    .terms-hero {
+        position: relative;
+        padding: 80px 0 50px;
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.12) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        text-align: center;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #0B2B26;
+        color: var(--es-mint);
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(11, 43, 38, 0.15);
+    }
+
+    .terms-hero h1 {
+        font-family: var(--es-font-heading);
+        font-size: clamp(2.4rem, 4vw, 3.5rem);
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 12px;
+        line-height: 1.15;
+    }
+
+    .terms-hero p {
+        font-size: 1rem;
+        color: var(--es-text-muted);
+        margin: 0;
+    }
+
+    .es-terms-container {
+        padding: 40px 0 90px;
+        max-width: 860px;
+    }
+
+    .terms-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 24px;
+        padding: 48px;
+        box-shadow: 0 10px 30px rgba(11, 43, 38, 0.04);
+    }
+
+    .terms-section {
+        margin-bottom: 36px;
+    }
+
+    .terms-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .terms-section h2 {
+        font-family: var(--es-font-heading);
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .terms-section h2 i {
+        color: var(--es-emerald);
+        font-size: 1.1rem;
+    }
+
+    .terms-section p {
+        font-size: 0.98rem;
+        color: var(--es-text-muted);
+        line-height: 1.75;
+        margin: 0;
+    }
+
+    .disclaimer-alert {
+        background: rgba(255, 122, 0, 0.06);
+        border: 1px solid rgba(255, 122, 0, 0.2);
+        border-radius: 16px;
+        padding: 20px 24px;
+        color: #8C4300;
+        margin-top: 16px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .disclaimer-alert i {
+        color: #FF7A00;
+        font-size: 1.3rem;
+        margin-top: 2px;
+    }
+
+    @@media (max-width: 768px) {
+        .terms-card {
+            padding: 28px 20px;
+        }
+    }
+</style>
+
+<div class="es-terms-page">
+    <div class="terms-hero">
+        <div class="container">
+            <div class="hero-badge reveal">
+                <i class="fas fa-file-contract"></i> TERMS &amp; CONDITIONS
+            </div>
+            <h1 class="reveal">Terms of Service</h1>
+            <p class="reveal">Last Updated: July 14, 2026</p>
+        </div>
+    </div>
+
+    <div class="container es-terms-container">
+        <div class="terms-card reveal">
+            <div class="terms-section">
+                <h2><i class="fas fa-check-circle"></i> 1. Acceptance of Terms</h2>
+                <p>By accessing and using the ElectroScan AI application, tools, scanner engine, calculations models and professional matching features, you agree to comply with and be bound by these Terms of Service. If you do not agree, please refrain from using the platform.</p>
+            </div>
+
+            <div class="terms-section">
+                <h2><i class="fas fa-cogs"></i> 2. Description of Service</h2>
+                <p>ElectroScan AI provides computer-vision diagnostic models for electrical panel inspections, load estimators, compliance calculators, and directory listing profiles connecting clients with qualified electricians. The diagnostic recommendations are for general guidance and do not replace formal physical PEC inspections.</p>
+            </div>
+
+            <div class="terms-section">
+                <h2><i class="fas fa-user-shield"></i> 3. User Account Security</h2>
+                <p>You are responsible for keeping your login credentials, passwords, and security tokens confidential. You agree to notify us immediately of any unauthorized access. Active roles are subject to corporate validation checks.</p>
+            </div>
+
+            <div class="terms-section">
+                <h2><i class="fas fa-exclamation-triangle"></i> 4. Disclaimer of Liability</h2>
+                <p>Under no circumstances will ElectroScan AI, its developers, or its corporate partners be liable for electrical faults, system failures, overloads, or on-site accidents resulting from calculations or AI detection reports. Physical verification by licensed engineers is always recommended.</p>
+                <div class="disclaimer-alert">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>Important Notice:</strong> Physical verification by licensed electrical engineers or certified inspectors is always recommended prior to energizing critical circuits or panels.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

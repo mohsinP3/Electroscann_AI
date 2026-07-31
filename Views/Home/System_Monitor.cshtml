@@ -1,0 +1,328 @@
+@{
+    ViewData["Title"] = "System Monitor | ElectroScan AI";
+}
+
+<style>
+    /* ==========================================================================
+       SYSTEM MONITOR PAGE - PREMIUM SAAS STYLES
+       ========================================================================== */
+    .es-monitor-page {
+        --es-pine: #0B2B26;
+        --es-forest: #0F3B33;
+        --es-emerald: #1F8A6B;
+        --es-mint: #6BCB9E;
+        --es-bright-mint: #00D68F;
+        --es-orange: #FF7A00;
+        --es-light-bg: #F8FAF9;
+        --es-card-bg: #FFFFFF;
+        --es-border: #E2EFE9;
+        --es-text-main: #0F221E;
+        --es-text-muted: #4A635B;
+        --es-font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --es-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .es-monitor-hero {
+        position: relative;
+        padding: 60px 0 40px;
+        background: radial-gradient(120% 80% at 50% -10%, rgba(31, 138, 107, 0.1) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+        border-bottom: 1px solid var(--es-border);
+    }
+
+    .es-monitor-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .es-monitor-header h1 {
+        font-family: var(--es-font-heading);
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin: 0 0 6px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .es-monitor-header h1 i {
+        color: var(--es-emerald);
+    }
+
+    .es-monitor-header p {
+        color: var(--es-text-muted);
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .status-badge-live {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(0, 214, 143, 0.12);
+        border: 1px solid rgba(0, 214, 143, 0.3);
+        color: #00A36C;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 800;
+        font-size: 0.9rem;
+    }
+
+    .pulse-dot {
+        width: 10px;
+        height: 10px;
+        background-color: #00D68F;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 0 0 rgba(0, 214, 143, 0.7);
+        animation: pulse-ring 1.8s infinite cubic-bezier(0.66, 0, 0, 1);
+    }
+
+    @@keyframes pulse-ring {
+        0% {
+            box-shadow: 0 0 0 0 rgba(0, 214, 143, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(0, 214, 143, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(0, 214, 143, 0);
+        }
+    }
+
+    .es-monitor-container {
+        padding: 40px 0 80px;
+        max-width: 1140px;
+    }
+
+    /* Metric Grid */
+    .es-metric-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin-bottom: 36px;
+    }
+
+    .es-metric-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 6px 20px rgba(11, 43, 38, 0.03);
+        transition: all 200ms ease;
+    }
+
+    .es-metric-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--es-emerald);
+        box-shadow: 0 12px 28px rgba(31, 138, 107, 0.1);
+    }
+
+    .es-metric-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .es-metric-top span {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--es-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .es-metric-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: rgba(31, 138, 107, 0.08);
+        color: var(--es-emerald);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .es-metric-val {
+        font-family: var(--es-font-heading);
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 6px;
+    }
+
+    .es-metric-sub {
+        font-size: 0.85rem;
+        color: var(--es-text-muted);
+        font-weight: 500;
+    }
+
+    /* Log Console Card */
+    .es-logs-card {
+        background: #FFFFFF;
+        border: 1px solid var(--es-border);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 8px 24px rgba(11, 43, 38, 0.04);
+    }
+
+    .es-logs-card h4 {
+        font-family: var(--es-font-heading);
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: var(--es-pine);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .es-logs-card h4 i {
+        color: var(--es-emerald);
+    }
+
+    .es-logs-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .es-log-item {
+        background: var(--es-light-bg);
+        border: 1px solid var(--es-border);
+        border-radius: 14px;
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        transition: all 180ms ease;
+    }
+
+    .es-log-item:hover {
+        background: #FFFFFF;
+        border-color: var(--es-emerald);
+    }
+
+    .es-log-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.95rem;
+        color: var(--es-text-main);
+    }
+
+    .es-log-content i {
+        font-size: 1.1rem;
+    }
+
+    .es-log-time {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--es-text-muted);
+        background: rgba(11, 43, 38, 0.05);
+        padding: 4px 12px;
+        border-radius: 50px;
+        white-space: nowrap;
+    }
+
+    @@media (max-width: 991px) {
+        .es-metric-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .es-metric-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="es-monitor-page">
+    <div class="es-monitor-hero">
+        <div class="container">
+            <div class="es-monitor-header">
+                <div>
+                    <h1><i class="fas fa-server"></i> System Monitor</h1>
+                    <p>Real-time infrastructure health, performance metrics, and system events</p>
+                </div>
+                <div class="status-badge-live">
+                    <span class="pulse-dot"></span>
+                    All Systems Operational
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container es-monitor-container">
+        <!-- Status Cards -->
+        <div class="es-metric-grid">
+            <div class="es-metric-card">
+                <div class="es-metric-top">
+                    <span>Server Uptime</span>
+                    <div class="es-metric-icon"><i class="fas fa-server"></i></div>
+                </div>
+                <div class="es-metric-val">99.99%</div>
+                <div class="es-metric-sub">Last 30 days operational</div>
+            </div>
+
+            <div class="es-metric-card">
+                <div class="es-metric-top">
+                    <span>AI Engine Status</span>
+                    <div class="es-metric-icon"><i class="fas fa-microchip"></i></div>
+                </div>
+                <div class="es-metric-val" style="color: var(--es-emerald);">Active</div>
+                <div class="es-metric-sub">Response time: 42ms</div>
+            </div>
+
+            <div class="es-metric-card">
+                <div class="es-metric-top">
+                    <span>Database Status</span>
+                    <div class="es-metric-icon"><i class="fas fa-database"></i></div>
+                </div>
+                <div class="es-metric-val" style="color: var(--es-emerald);">Healthy</div>
+                <div class="es-metric-sub">SQLite Local Engine</div>
+            </div>
+
+            <div class="es-metric-card">
+                <div class="es-metric-top">
+                    <span>API Queue</span>
+                    <div class="es-metric-icon"><i class="fas fa-bolt"></i></div>
+                </div>
+                <div class="es-metric-val">0 Pending</div>
+                <div class="es-metric-sub">Queue latency: 0ms</div>
+            </div>
+        </div>
+
+        <!-- System Logs -->
+        <div class="es-logs-card">
+            <h4><i class="fas fa-list-alt"></i> Recent System Logs</h4>
+            <div class="es-logs-list">
+                <div class="es-log-item">
+                    <div class="es-log-content">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <div>
+                            <strong>Database Seeder Executed:</strong> Admin, Electrician, and Company demo accounts initialized.
+                        </div>
+                    </div>
+                    <span class="es-log-time">Just now</span>
+                </div>
+                <div class="es-log-item">
+                    <div class="es-log-content">
+                        <i class="fas fa-shield-alt text-primary"></i>
+                        <div>
+                            <strong>Authentication Engine:</strong> Cookie authentication initialized with sliding expiration.
+                        </div>
+                    </div>
+                    <span class="es-log-time">System startup</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

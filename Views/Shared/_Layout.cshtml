@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="ElectroScan AI - Enterprise AI-powered electrical inspection & NEC compliance platform." />
+    <title>@ViewData["Title"] - ElectroScan AI Enterprise</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="site-shell">
+    <!-- ENTERPRISE TOOLBAR / STATUS STRIP -->
+    <div class="es-top-announcement">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="es-top-left">
+                <span class="es-top-badge"><i class="fas fa-sparkles"></i> NEW 2.0</span>
+                <span>ElectroScan AI Neural Engine 2.0 Released — 99.8% Anomaly Detection Speed</span>
+            </div>
+            <div class="es-top-right d-none d-md-flex align-items-center gap-3">
+                <span class="es-status-pill"><span class="es-pulse-dot"></span> All Systems Operational</span>
+                <a asp-action="AI_Scanner" asp-controller="Home" class="es-top-link">Try Live AI Demo <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN TRANSLUCENT NAVBAR -->
+    <nav class="main-navbar" id="mainNavbar">
+        <a asp-action="Index" asp-controller="Home" class="nav-brand">
+            <div class="nav-brand-icon"><i class="fas fa-microchip"></i></div>
+            <span class="nav-brand-text">ElectroScan<span>AI</span></span>
+        </a>
+
+        <!-- Desktop Links -->
+        <div class="nav-links">
+            <a asp-action="Index" asp-controller="Home" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">Home</a>
+            <a asp-action="About" asp-controller="Home" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "About" ? "active" : "")">About</a>
+            <a asp-action="Service" asp-controller="Home" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Service" ? "active" : "")">Services</a>
+
+            <div class="nav-dropdown">
+                <span class="nav-dropdown-toggle @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && new[] { "AI_Scanner", "Calculator", "Market_Rates", "System_Monitor" }.Contains(ViewContext.RouteData.Values["action"]?.ToString()) ? "active" : "")">
+                    Platform Tools <i class="fas fa-chevron-down"></i>
+                </span>
+                <div class="nav-dropdown-menu">
+                    <a asp-action="AI_Scanner" asp-controller="Home">
+                        <div class="menu-icon"><i class="fas fa-microscope"></i></div>
+                        <div>
+                            <div class="menu-title">AI Wire Scanner <span class="badge-mini">L/N/E</span></div>
+                            <div class="menu-desc">Identify Live, Neutral & Earth wires</div>
+                        </div>
+                    </a>
+                    <a asp-action="History" asp-controller="Home">
+                        <div class="menu-icon"><i class="fas fa-history"></i></div>
+                        <div>
+                            <div class="menu-title">Scan History</div>
+                            <div class="menu-desc">Review past wire scans & L/N/E findings</div>
+                        </div>
+                    </a>
+                    <a asp-action="Calculator" asp-controller="Home">
+                        <div class="menu-icon"><i class="fas fa-calculator"></i></div>
+                        <div>
+                            <div class="menu-title">Load Calculator</div>
+                            <div class="menu-desc">NEC 220 load & feeder capacity</div>
+                        </div>
+                    </a>
+                    <a asp-action="Market_Rates" asp-controller="Home">
+                        <div class="menu-icon"><i class="fas fa-chart-bar"></i></div>
+                        <div>
+                            <div class="menu-title">Market Rates</div>
+                            <div class="menu-desc">Live contractor & rate analytics</div>
+                        </div>
+                    </a>
+                    <a asp-action="System_Monitor" asp-controller="Home">
+                        <div class="menu-icon"><i class="fas fa-desktop"></i></div>
+                        <div>
+                            <div class="menu-title">System Monitor</div>
+                            <div class="menu-desc">Real-time facility telemetry</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-dropdown">
+                <span class="nav-dropdown-toggle @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && new[] { "Blog", "Faq", "Careers", "Pricing" }.Contains(ViewContext.RouteData.Values["action"]?.ToString()) ? "active" : "")">
+                    Resources <i class="fas fa-chevron-down"></i>
+                </span>
+                <div class="nav-dropdown-menu">
+                    <a asp-action="Blog" asp-controller="Home"><i class="fas fa-newspaper"></i> Engineering Blog</a>
+                    <a asp-action="Faq" asp-controller="Home"><i class="fas fa-question-circle"></i> Knowledge Base & FAQ</a>
+                    <a asp-action="Index" asp-controller="Subscription"><i class="fas fa-crown text-emerald"></i> My Plan &amp; Subscriptions</a>
+                    <a asp-action="Careers" asp-controller="Home"><i class="fas fa-briefcase"></i> Careers <span class="badge-mini orange">Hiring</span></a>
+                    <a asp-action="Pricing" asp-controller="Home"><i class="fas fa-tag"></i> Plans &amp; Pricing</a>
+                </div>
+            </div>
+
+            <a asp-action="Contact" asp-controller="Home" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Contact" ? "active" : "")">Contact</a>
+        </div>
+
+        <!-- Desktop Actions -->
+        <div class="nav-actions">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                string dashController = User.IsInRole("Admin") ? "Dashboard" :
+                                         User.IsInRole("Electrician") ? "ElectricianDashboard" :
+                                         User.IsInRole("Company") ? "CompanyDashboard" :
+                                         User.IsInRole("Client") ? "ClientDashboard" : "Home";
+                <a href="@Url.Action("Index", dashController)" class="btn-nav-cta me-2 text-decoration-none">
+                    <i class="fas fa-chart-line me-1"></i> Dashboard
+                </a>
+                <a href="@Url.Action("Index", dashController)" class="nav-user-info text-decoration-none me-2">
+                    <div class="nav-user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="nav-user-name">@(User.Identity?.Name ?? "User")</span>
+                </a>
+                <form asp-action="Logout" asp-controller="Account" method="post" class="nav-logout-form m-0">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-nav-login btn-nav-logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
+            }
+            else
+            {
+                <a asp-action="Login" asp-controller="Account" class="btn-nav-login">Sign In</a>
+                <a asp-action="Register" asp-controller="Account" class="btn-nav-cta">
+                    <span>Get Started Free</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            }
+        </div>
+
+        <!-- Hamburger (Mobile) -->
+        <div class="nav-hamburger" id="hamburger" onclick="toggleMobileNav()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Mobile Nav Drawer -->
+    <div class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-header d-flex justify-content-between align-items-center mb-4">
+            <div class="nav-brand">
+                <div class="nav-brand-icon"><i class="fas fa-microchip"></i></div>
+                <span class="nav-brand-text">ElectroScan<span>AI</span></span>
+            </div>
+            <button type="button" class="btn-close text-reset btn-close-white" onclick="toggleMobileNav()"></button>
+        </div>
+        <a asp-action="Index" asp-controller="Home"><i class="fas fa-home"></i> Home</a>
+        <a asp-action="About" asp-controller="Home"><i class="fas fa-info-circle"></i> About Us</a>
+        <a asp-action="Service" asp-controller="Home"><i class="fas fa-cogs"></i> Services</a>
+        <a asp-action="AI_Scanner" asp-controller="Home"><i class="fas fa-microscope"></i> AI Scanner</a>
+        <a asp-action="Calculator" asp-controller="Home"><i class="fas fa-calculator"></i> Load Calculator</a>
+        <a asp-action="Market_Rates" asp-controller="Home"><i class="fas fa-chart-bar"></i> Market Rates</a>
+        <a asp-action="Blog" asp-controller="Home"><i class="fas fa-newspaper"></i> Blog</a>
+        <a asp-action="Pricing" asp-controller="Home"><i class="fas fa-tag"></i> Pricing Tiers</a>
+        <a asp-action="Contact" asp-controller="Home"><i class="fas fa-envelope"></i> Contact Sales</a>
+        <div class="mobile-nav-divider"></div>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            var roleClaim = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+            string dashController = roleClaim switch
+            {
+                "Admin" => "Dashboard",
+                "Electrician" => "ElectricianDashboard",
+                "Company" => "CompanyDashboard",
+                "Client" => "ClientDashboard",
+                _ => "Dashboard"
+            };
+            <a href="@Url.Action("Index", dashController)" class="fw-bold text-mint"><i class="fas fa-chart-line text-mint"></i> My Dashboard</a>
+            <div class="mobile-nav-divider"></div>
+            <form asp-action="Logout" asp-controller="Account" method="post" class="mobile-nav-logout-form">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="mobile-nav-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+        }
+        else
+        {
+            <a asp-action="Login" asp-controller="Account"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+            <a asp-action="Register" asp-controller="Account" class="mobile-nav-cta">
+                <i class="fas fa-user-plus"></i> Get Started Free
+            </a>
+        }
+    </div>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Brand -->
+                <div class="footer-col footer-brand-col">
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon"><i class="fas fa-microchip"></i></div>
+                        <span>ElectroScan<span style="color:#6BCB9E;">AI</span></span>
+                    </div>
+                    <p class="footer-description">
+                        The enterprise platform powering AI electrical inspections, thermal anomaly detection, and automated NEC compliance for zero-risk facility operations.
+                    </p>
+                    <div class="footer-trust-badges">
+                        <span class="badge-trust"><i class="fas fa-shield-alt"></i> SOC2 Type II</span>
+                        <span class="badge-trust"><i class="fas fa-lock"></i> 256-bit Encrypted</span>
+                        <span class="badge-trust"><i class="fas fa-certificate"></i> NEC 2026 Compliant</span>
+                    </div>
+                    <div class="footer-social">
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Company -->
+                <div class="footer-col">
+                    <h4>Platform & Company</h4>
+                    <ul>
+                        <li><a asp-action="About" asp-controller="Home">About ElectroScan AI</a></li>
+                        <li><a asp-action="Careers" asp-controller="Home">Careers <span class="badge-hiring">We're Hiring</span></a></li>
+                        <li><a asp-action="Pricing" asp-controller="Home">Plans & Enterprise Pricing</a></li>
+                        <li><a asp-action="Contact" asp-controller="Home">Enterprise Support</a></li>
+                        <li><a asp-action="Testimonials" asp-controller="Home">Customer Success Stories</a></li>
+                    </ul>
+                </div>
+
+                <!-- Solutions -->
+                <div class="footer-col">
+                    <h4>AI Solutions</h4>
+                    <ul>
+                        <li><a asp-action="AI_Scanner" asp-controller="Home"><i class="fas fa-microscope text-mint"></i> AI Diagnostic Scanner</a></li>
+                        <li><a asp-action="Calculator" asp-controller="Home"><i class="fas fa-calculator text-mint"></i> Smart Load Calculator</a></li>
+                        <li><a asp-action="Market_Rates" asp-controller="Home"><i class="fas fa-chart-bar text-mint"></i> Electrical Market Rates</a></li>
+                        <li><a asp-action="System_Monitor" asp-controller="Home"><i class="fas fa-desktop text-mint"></i> Real-time System Monitor</a></li>
+                        <li><a asp-action="Blog" asp-controller="Home"><i class="fas fa-newspaper text-mint"></i> Technical Engineering Blog</a></li>
+                        <li><a asp-action="Faq" asp-controller="Home"><i class="fas fa-question-circle text-mint"></i> Help & FAQ Center</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="footer-col">
+                    <h4>Get Engineering Insights</h4>
+                    <p style="font-size:0.86rem;color:rgba(255,255,255,0.65);margin-bottom:16px;">
+                        Subscribe to our bi-weekly AI electrical safety newsletter read by 15,000+ engineers.
+                    </p>
+                    <div class="footer-newsletter">
+                        <div class="subscribe-flex">
+                            <input type="email" id="footerEmail" placeholder="Enter work email..." aria-label="Work Email">
+                            <button type="button" id="footerSubscribeBtn">
+                                <span>Subscribe</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div style="margin-top:28px;">
+                        <h4>Legal & Security</h4>
+                        <ul class="legal-inline-list">
+                            <li><a asp-action="Privacy" asp-controller="Home">Privacy Policy</a></li>
+                            <li><span class="sep">·</span></li>
+                            <li><a asp-action="Terms" asp-controller="Home">Terms of Service</a></li>
+                            <li><span class="sep">·</span></li>
+                            <li><a asp-action="Cookies" asp-controller="Home">Cookie Settings</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    © 2026 ElectroScanAI Technologies Inc. — Smarter Scans. Safer Systems. All rights reserved.
+                </div>
+                <div class="footer-status">
+                    <span class="pulse-green"></span>
+                    <span>System Status: <strong>100% Operational (99.99% Uptime)</strong></span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Widget -->
+    <div id="toastMsg" class="toast-msg">
+        <div class="toast-icon"><i class="fas fa-check-circle"></i></div>
+        <span id="toastText"></span>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Translucent Navbar Scroll Blur Effect
+        window.addEventListener('scroll', function () {
+            const navbar = document.getElementById('mainNavbar');
+            if (window.scrollY > 20) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile Nav Drawer Toggle
+        function toggleMobileNav() {
+            const nav = document.getElementById('mobileNav');
+            nav.classList.toggle('open');
+        }
+
+        // Footer Newsletter Subscription
+        document.getElementById('footerSubscribeBtn')?.addEventListener('click', function () {
+            const emailInput = document.getElementById('footerEmail');
+            const email = emailInput ? emailInput.value : '';
+            if (email && email.includes('@@')) {
+                showToast('Welcome aboard! Subscribed to ElectroScan AI Insights. ⚡');
+                if (emailInput) emailInput.value = '';
+            } else {
+                showToast('Please enter a valid work email address.');
+            }
+        });
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastMsg');
+            const toastText = document.getElementById('toastText');
+            if (toast && toastText) {
+                toastText.textContent = msg;
+                toast.classList.add('show');
+                setTimeout(() => { toast.classList.remove('show'); }, 3800);
+            }
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

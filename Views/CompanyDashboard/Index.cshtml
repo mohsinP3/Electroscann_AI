@@ -1,0 +1,218 @@
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Company Dashboard";
+    ViewBag.PageTitle = "Dashboard";
+    ViewBag.ActivePage = "Home";
+
+    int totalJobs = ViewBag.TotalJobs ?? 0;
+    int openJobs = ViewBag.OpenJobs ?? 0;
+    int pendingApps = ViewBag.PendingApplications ?? 0;
+    decimal totalSpent = ViewBag.TotalSpent ?? 0m;
+    var recentApplications = ViewBag.RecentApplications as List<ElectroScanAI.Models.Entities.JobApplication>;
+}
+
+<!-- Page Header -->
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h1 class="fw-bold fs-3 text-dark mb-1 d-flex align-items-center gap-2">
+            <span class="d-inline-flex align-items-center justify-content-center bg-emerald-subtle text-emerald rounded-3 p-2" style="width:40px; height:40px;">
+                <i class="fas fa-building fs-5"></i>
+            </span>
+            Company Dashboard
+        </h1>
+        <p class="text-muted m-0 small">Manage job postings, review electrician applicant proposals, and track project payments.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <a asp-action="CreateJob" asp-controller="CompanyDashboard" class="btn btn-emerald rounded-pill fw-bold px-3 py-2 btn-sm shadow-sm">
+            <i class="fas fa-plus me-1"></i> Post New Job
+        </a>
+    </div>
+</div>
+
+<!-- Key Stat Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #1F8A6B;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Total Jobs</span>
+                <div class="stat-icon-wrapper bg-emerald-subtle text-emerald">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">@totalJobs</div>
+            <div class="text-emerald small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-arrow-up me-1"></i> @openJobs Active Openings
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #2BAA85;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Applications</span>
+                <div class="stat-icon-wrapper bg-success-subtle text-success">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">@pendingApps</div>
+            <div class="text-success small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-users me-1"></i> Received Bids
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #6BCB9E;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Open Listings</span>
+                <div class="stat-icon-wrapper bg-info-subtle text-info">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">@openJobs</div>
+            <div class="text-info small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-star me-1"></i> Active Hiring
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card-elevated" style="--stat-accent: #FF7A00;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.04em;">Total Spent</span>
+                <div class="stat-icon-wrapper bg-warning-subtle text-warning">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+            </div>
+            <div class="fs-2 fw-bold text-dark mb-1" style="font-family: var(--es-font-heading);">PKR @totalSpent.ToString("N0")</div>
+            <div class="text-warning small fw-semibold d-flex align-items-center gap-1">
+                <i class="fas fa-money-bill me-1"></i> Completed Payments
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions Showcase Grid -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="dashboard-action-card">
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-icon-wrapper bg-emerald-subtle text-emerald">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-dark m-0">Post an Electrical Job</h6>
+                        <small class="text-muted">Hire certified electricians</small>
+                    </div>
+                </div>
+                <p class="text-secondary small mb-4">Find verified electrical technicians for commercial projects, residential wiring, or safety panel audits.</p>
+            </div>
+            <a asp-action="CreateJob" asp-controller="CompanyDashboard" class="btn btn-emerald rounded-pill fw-bold btn-sm px-4 align-self-start">
+                <i class="fas fa-plus me-1"></i> Post Job Now
+            </a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-action-card">
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-icon-wrapper bg-info-subtle text-info">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-dark m-0">Company Profile</h6>
+                        <small class="text-muted">Branding & details</small>
+                    </div>
+                </div>
+                <p class="text-secondary small mb-4">Keep company contact details, address, and verification status updated to attract top technicians.</p>
+            </div>
+            <a asp-action="Profile" asp-controller="CompanyDashboard" class="btn btn-outline-dark rounded-pill fw-bold btn-sm px-4 align-self-start">
+                <i class="fas fa-edit me-1"></i> Edit Profile
+            </a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-action-card">
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-icon-wrapper bg-warning-subtle text-warning">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-dark m-0">Billing & Payments</h6>
+                        <small class="text-muted">Invoices & subscriptions</small>
+                    </div>
+                </div>
+                <p class="text-secondary small mb-4">Track payment receipts, active subscription status, and billing history transparently.</p>
+            </div>
+            <a asp-action="Payments" asp-controller="CompanyDashboard" class="btn btn-outline-dark rounded-pill fw-bold btn-sm px-4 align-self-start">
+                <i class="fas fa-wallet me-1"></i> View Payments
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Table Container -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4" style="border: 1px solid #E2ECE8 !important;">
+    <div class="d-flex justify-content-between align-items-center p-3 px-4 bg-white border-bottom">
+        <div class="fw-bold text-dark d-flex align-items-center gap-2">
+            <i class="fas fa-file-alt text-emerald"></i> Recent Applications
+        </div>
+        <a asp-action="CreateJob" asp-controller="CompanyDashboard" class="btn btn-emerald btn-sm rounded-pill fw-bold">
+            <i class="fas fa-plus me-1"></i> Post New Job
+        </a>
+    </div>
+    <div class="table-responsive">
+        <table class="data-table-modern">
+            <thead>
+                <tr>
+                    <th>Applicant</th>
+                    <th>Job Title</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (recentApplications != null && recentApplications.Any())
+                {
+                    @foreach (var app in recentApplications)
+                    {
+                        <tr>
+                            <td class="fw-bold text-dark">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="bg-light rounded-circle p-2 text-emerald d-flex align-items-center justify-content-center" style="width:32px; height:32px;">
+                                        <i class="fas fa-user small"></i>
+                                    </div>
+                                    <span>@app.Electrician?.User?.FullName</span>
+                                </div>
+                            </td>
+                            <td>@app.Job?.Title</td>
+                            <td><span class="text-muted small">@app.CreatedAt.ToString("yyyy-MM-dd")</span></td>
+                            <td><span class="badge bg-emerald-subtle text-emerald px-3 py-1 rounded-pill fw-bold border border-emerald-subtle">@app.Status</span></td>
+                            <td>
+                                <a asp-action="Applications" asp-controller="CompanyDashboard" class="btn btn-sm btn-outline-dark rounded-pill fw-bold px-3">View Details</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="p-0">
+                            <div class="empty-state-card border-0 rounded-0 py-5">
+                                <div class="empty-state-icon-wrap">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1 fs-5">No applications received yet</h6>
+                                <p class="small text-muted mb-4 mx-auto" style="max-width: 420px;">Post a new electrical job listing to start receiving proposals and bids from verified electricians.</p>
+                                <a asp-action="CreateJob" asp-controller="CompanyDashboard" class="btn btn-emerald btn-sm rounded-pill fw-bold px-4 py-2 shadow-sm">
+                                    <i class="fas fa-plus me-1"></i> Post a Job Now
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

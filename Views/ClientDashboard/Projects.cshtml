@@ -1,0 +1,113 @@
+@model List<ElectroScanAI.Models.Entities.AIScan>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "My Projects & Scans";
+    ViewBag.PageTitle = "Projects";
+    ViewBag.ActivePage = "Projects";
+    var electricianId = (int?)ViewBag.DefaultElectricianId ?? 0;
+}
+
+<div class="page-header">
+    <h1>My Electrical Scans & Audits</h1>
+    <p>Track the history and findings of your thermal and panel diagnostic scans.</p>
+</div>
+
+<!-- Scans & Diagnostic History -->
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-history"></i> Completed Scans & Reports History (@(Model?.Count ?? 0))</div>
+        <a href="/Home/AI_Scanner" class="btn btn-sm btn-success font-bold"><i class="fas fa-plus me-1"></i> New AI Scan</a>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Scan ID</th>
+                <th>Scan Type</th>
+                <th>Risk Level</th>
+                <th>Issues Detected</th>
+                <th>Completion Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var scan in Model)
+                {
+                    <tr>
+                        <td style="font-family:monospace;">#SCN-@scan.Id.ToString("D3")</td>
+                        <td class="fw-bold">@scan.ScanName</td>
+                        <td>
+                            @if (scan.RiskLevel == ElectroScanAI.Models.Enums.ScanRiskLevel.Critical || scan.RiskLevel == ElectroScanAI.Models.Enums.ScanRiskLevel.High)
+                            {
+                                <span class="badge badge-red">@scan.RiskLevel</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-green">@scan.RiskLevel</span>
+                            }
+                        </td>
+                        <td>@(scan.ResultSummary ?? "Completed")</td>
+                        <td>@scan.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>
+                            <form asp-action="DeleteScan" asp-controller="Home" method="post" onsubmit="return confirm('Delete this scan entry?');" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@scan.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2 fw-bold" style="font-size: 0.75rem;">
+                                    <i class="fas fa-trash-alt me-1"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            @if (electricianId > 0)
+                            {
+                                var hasReview = false;
+                                if (ViewBag.ReviewedElectricianIds != null)
+                                {
+                                    hasReview = ((System.Collections.Generic.List<int>)ViewBag.ReviewedElectricianIds).Contains(electricianId);
+                                }
+                                if (scan.Status == "Completed" && !hasReview)
+                                {
+                                    <form asp-controller="Review" asp-action="Create" method="post" class="mt-3">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="electricianId" value="@electricianId" />
+                                        <div class="row g-2 align-items-end">
+                                            <div class="col-md-2">
+                                                <label class="form-label">Rating</label>
+                                                <select name="rating" class="form-select form-select-sm">
+                                                    <option value="5">5 ★</option>
+                                                    <option value="4">4 ★</option>
+                                                    <option value="3">3 ★</option>
+                                                    <option value="2">2 ★</option>
+                                                    <option value="1">1 ★</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <label class="form-label">Comment</label>
+                                                <textarea name="comment" class="form-control form-control-sm" rows="2" placeholder="Share your experience with the electrician"></textarea>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="submit" class="btn btn-sm btn-success">Leave a Review</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-5">
+                        <i class="fas fa-microscope fa-3x mb-3 text-secondary d-block"></i>
+                        No report history found. Use AI Scanner to generate diagnostic reports.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

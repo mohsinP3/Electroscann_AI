@@ -1,0 +1,60 @@
+@model List<ElectroScanAI.Models.Entities.Message>
+@{
+    Layout = "_DashboardLayout";
+    ViewBag.Title = "Messages";
+    ViewBag.PageTitle = "Messages";
+    ViewBag.ActivePage = "Messages";
+}
+
+<div class="page-header">
+    <h1>Messages & Inquiries</h1>
+    <p>Communicate with companies and clients</p>
+</div>
+
+<div class="table-card">
+    <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-comments"></i> Conversation Messages (@(Model?.Count ?? 0))</div>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Sender</th>
+                <th>Message Content</th>
+                <th>Sent At</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var msg in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">@msg.Sender?.FullName (@msg.Sender?.Role)</td>
+                        <td>@msg.MessageText</td>
+                        <td>@msg.SentAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>
+                            @if (msg.IsRead)
+                            {
+                                <span class="badge badge-green">Read</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-yellow">Unread</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-5">
+                        <i class="fas fa-comment-slash fa-3x mb-3 text-secondary d-block"></i>
+                        No messages found.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
