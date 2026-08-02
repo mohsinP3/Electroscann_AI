@@ -38,3 +38,9 @@ info: Electroscann_ai.Controllers.AccountController[0]
       User client@electroscann.ai logged in successfully with role Client.
 info: Electroscann_ai.Controllers.AccountController[0]
       User electrician@electroscann.ai logged in successfully with role Electrician.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User electrician@electroscann.ai logged in successfully with role Electrician.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User client@electroscann.ai logged in successfully with role Client.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User electrician@electroscann.ai logged in successfully with role Electrician.

@@ -50,6 +50,14 @@ namespace Electroscann_ai.Controllers
             ViewBag.TotalReviews = electrician?.TotalReviews ?? 0;
             ViewBag.IsVerified = electrician?.IsVerified ?? false;
 
+            var payments = await _context.Payments
+                .Where(p => p.UserId == userId)
+                .ToListAsync();
+
+            ViewBag.TotalEarnings = payments
+                .Where(p => p.Status == PaymentStatus.Paid)
+                .Sum(p => p.Amount);
+
             // Recent applied jobs
             if (electrician != null)
             {

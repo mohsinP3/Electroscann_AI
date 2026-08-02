@@ -331,7 +331,7 @@
                     {
                         @foreach (var chat in Model.Conversations)
                         {
-                            var partnerInitials = string.Join("", chat.Partner.FullName.Split(' ').Select(s => s[0])).ToUpper();
+                            var partnerInitials = string.Join("", chat.Partner.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0])).ToUpper();
                             if (partnerInitials.Length > 2) partnerInitials = partnerInitials.Substring(0, 2);
 
                             <a href="?selectedUserId=@chat.Partner.Id" class="chat-item @(chat.IsSelected ? "active" : "")" data-name="@chat.Partner.FullName.ToLower()">
@@ -371,7 +371,7 @@
             <div class="chat-main">
                 @if (Model.SelectedPartner != null)
                 {
-                    var partnerInitialsHeader = string.Join("", Model.SelectedPartner.FullName.Split(' ').Select(s => s[0])).ToUpper();
+                    var partnerInitialsHeader = string.Join("", Model.SelectedPartner.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0])).ToUpper();
                     if (partnerInitialsHeader.Length > 2) partnerInitialsHeader = partnerInitialsHeader.Substring(0, 2);
 
                     <!-- Chat Header -->
@@ -464,7 +464,7 @@
                     {
                         @foreach (var contact in Model.EligibleContacts)
                         {
-                            var initials = string.Join("", contact.FullName.Split(' ').Select(s => s[0])).ToUpper();
+                            var initials = string.Join("", contact.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0])).ToUpper();
                             if (initials.Length > 2) initials = initials.Substring(0, 2);
 
                             <a href="?selectedUserId=@contact.Id" class="list-group-item list-group-item-action d-flex align-items-center py-2 px-1 border-0 rounded mb-1 contact-list-item" data-name="@contact.FullName.ToLower()" data-role="@contact.Role.ToString().ToLower()">
