@@ -161,7 +161,7 @@
 <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4" style="border: 1px solid #E2ECE8 !important;">
     <div class="d-flex justify-content-between align-items-center p-3 px-4 bg-white border-bottom">
         <div class="fw-bold text-dark d-flex align-items-center gap-2">
-            <i class="fas fa-briefcase text-emerald"></i> Recent Job Activity
+            <i class="fas fa-briefcase text-emerald"></i> Recent Job Applications
         </div>
         <a asp-action="AvailableJobs" asp-controller="ElectricianDashboard" class="btn btn-sm btn-outline-dark rounded-pill fw-bold">Browse Jobs</a>
     </div>
@@ -172,48 +172,54 @@
                     <th>Job Title</th>
                     <th>Company</th>
                     <th>Location</th>
-                    <th>Pay</th>
+                    <th>Budget</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="fw-bold text-dark">Senior Electrical Wiring</td>
-                    <td>Tech Solutions Pvt</td>
-                    <td><i class="fas fa-map-marker-alt text-emerald me-1"></i> Lahore</td>
-                    <td class="fw-bold text-emerald">Rs. 25,000</td>
-                    <td><span class="badge bg-emerald-subtle text-emerald px-3 py-1 rounded-pill fw-bold border border-emerald-subtle">Open</span></td>
-                    <td>
-                        <a asp-action="AvailableJobs" asp-controller="ElectricianDashboard" class="btn btn-sm btn-outline-dark rounded-pill px-3 fw-bold">
-                            <i class="fas fa-eye me-1"></i> View
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="fw-bold text-dark">Commercial Panel Inspection</td>
-                    <td>Power Systems Ltd</td>
-                    <td><i class="fas fa-map-marker-alt text-emerald me-1"></i> Karachi</td>
-                    <td class="fw-bold text-emerald">Rs. 18,000</td>
-                    <td><span class="badge bg-warning-subtle text-warning px-3 py-1 rounded-pill fw-bold border border-warning-subtle">Applied</span></td>
-                    <td>
-                        <a asp-action="AppliedJobs" asp-controller="ElectricianDashboard" class="btn btn-sm btn-outline-dark rounded-pill px-3 fw-bold">
-                            <i class="fas fa-eye me-1"></i> View
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="fw-bold text-dark">Industrial Safety Audit</td>
-                    <td>ElectroCorp Industries</td>
-                    <td><i class="fas fa-map-marker-alt text-emerald me-1"></i> Islamabad</td>
-                    <td class="fw-bold text-emerald">Rs. 35,000</td>
-                    <td><span class="badge bg-info-subtle text-info px-3 py-1 rounded-pill fw-bold border border-info-subtle">In Review</span></td>
-                    <td>
-                        <a asp-action="AppliedJobs" asp-controller="ElectricianDashboard" class="btn btn-sm btn-outline-dark rounded-pill px-3 fw-bold">
-                            <i class="fas fa-eye me-1"></i> View
-                        </a>
-                    </td>
-                </tr>
+                @{
+                    var recentApps = ViewBag.RecentApplications as List<ElectroScanAI.Models.Entities.JobApplication>;
+                }
+                @if (recentApps != null && recentApps.Any())
+                {
+                    @foreach (var app in recentApps)
+                    {
+                        <tr>
+                            <td class="fw-bold text-dark">@(app.Job?.Title ?? "N/A")</td>
+                            <td>@(app.Job?.Company?.CompanyName ?? "Direct Client")</td>
+                            <td><i class="fas fa-map-marker-alt text-emerald me-1"></i> @(app.Job?.Location ?? "N/A")</td>
+                            <td class="fw-bold text-emerald">PKR @(app.Job?.Budget.ToString("N0") ?? "0")</td>
+                            <td>
+                                @if (app.Status == "Accepted")
+                                {
+                                    <span class="badge bg-success-subtle text-success px-3 py-1 rounded-pill fw-bold border border-success-subtle">Accepted</span>
+                                }
+                                else if (app.Status == "Rejected")
+                                {
+                                    <span class="badge bg-danger-subtle text-danger px-3 py-1 rounded-pill fw-bold border border-danger-subtle">Rejected</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning-subtle text-warning px-3 py-1 rounded-pill fw-bold border border-warning-subtle">Under Review</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="AppliedJobs" asp-controller="ElectricianDashboard" class="btn btn-sm btn-outline-dark rounded-pill px-3 fw-bold">
+                                    <i class="fas fa-eye me-1"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            You have not applied for any jobs yet. <a href="@Url.Action("AvailableJobs")" class="text-emerald fw-bold">Browse jobs</a> to apply!
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

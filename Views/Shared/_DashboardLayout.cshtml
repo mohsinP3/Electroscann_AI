@@ -286,5 +286,22 @@
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                showDashToast('@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(TempData["Success"]?.ToString()))', 'success');
+            });
+        </script>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                showDashToast('@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(TempData["Error"]?.ToString()))', 'error');
+            });
+        </script>
+    }
 </body>
 </html>

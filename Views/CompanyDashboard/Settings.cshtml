@@ -92,23 +92,26 @@
         <!-- Security Tab -->
         <div id="tab-security" class="form-card" style="display:none;">
             <div style="font-size:1rem;font-weight:700;color:#1E293B;margin-bottom:20px;">Company Security</div>
-            <div class="form-grid">
-                <div class="form-group full">
-                    <label class="form-label">Current Corporate Password</label>
-                    <input type="password" class="form-input" placeholder="••••••••">
+            <form asp-controller="CompanyDashboard" asp-action="ChangePassword" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label class="form-label">Current Corporate Password</label>
+                        <input type="password" name="currentPassword" class="form-input" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">New Password</label>
+                        <input type="password" name="newPassword" class="form-input" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" name="confirmPassword" class="form-input" placeholder="••••••••" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">New Password</label>
-                    <input type="password" class="form-input" placeholder="••••••••">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Confirm New Password</label>
-                    <input type="password" class="form-input" placeholder="••••••••">
-                </div>
-            </div>
-            <button class="btn-primary-dash" style="margin-top:16px;" onclick="showDashToast('Security credentials updated!')">
-                <i class="fas fa-key"></i> Update Credentials
-            </button>
+                <button type="submit" class="btn-primary-dash" style="margin-top:16px;">
+                    <i class="fas fa-key"></i> Update Credentials
+                </button>
+            </form>
         </div>
     </div>
 </div>
@@ -128,6 +131,14 @@
         const activeBtn = document.getElementById('tab-btn-' + id);
         activeBtn.style.background = 'rgba(31,138,107,0.1)';
         activeBtn.style.color = '#1F8A6B';
+    }
+
+    // Auto-activate Security tab if navigated back with errors/success
+    @if (TempData["Success"] != null || TempData["Error"] != null)
+    {
+        <text>
+        showTab('security');
+        </text>
     }
 </script>
 }

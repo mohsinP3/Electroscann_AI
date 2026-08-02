@@ -237,6 +237,11 @@ namespace Electroscann_ai.Controllers
                 .OrderByDescending(m => m.SentAt)
                 .ToListAsync();
 
+            ViewBag.Users = await _context.Users
+                .Where(u => u.Id != userId && !u.IsDeleted)
+                .OrderBy(u => u.FullName)
+                .ToListAsync();
+
             return View(messages);
         }
 
