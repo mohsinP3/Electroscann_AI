@@ -674,7 +674,7 @@ namespace Electroscann_ai.Controllers
                 string scanName = string.IsNullOrWhiteSpace(deviceName) ? "Thermal Scan Analysis" : deviceName;
                 string fullPhysicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", imagePath.TrimStart('/'));
 
-                // Fallback Chain: 1. Gemini 3.6 Flash -> 2. Groq -> 3. Rule-Based Demo Mode
+                // Fallback Chain: 1. Gemini 3.6 Flash -> 2. Local Heuristic Demo Mode
                 var geminiRes = await AnalyzeWireImageWithGeminiAsync(fullPhysicalPath, imageFile);
 
                 bool wiresDetected;
@@ -701,16 +701,17 @@ namespace Electroscann_ai.Controllers
                 }
                 else
                 {
-                    var groqRes = await AnalyzeWireImageWithGroqAsync(fullPhysicalPath, imageFile);
-                    wiresDetected = groqRes.wiresDetected;
-                    confidenceScore = groqRes.confidenceScore;
-                    riskLevel = groqRes.riskLevel;
-                    issue = groqRes.issue;
-                    recommendation = groqRes.recommendation;
-                    summary = groqRes.summary;
-                    demoMode = groqRes.demoMode;
-                    wireDetails = groqRes.wireDetails;
-                    providerUsed = demoMode ? "Rule-Based Demo Mode" : "Groq (fallback)";
+                    _logger.LogWarning("Gemini Vision API analysis failed or returned unsuccessful. Falling back to Local Heuristics / Demo Mode.");
+                    var heuristicRes = await AnalyzeWireImageWithHeuristicsAsync(fullPhysicalPath);
+                    wiresDetected = heuristicRes.wiresDetected;
+                    confidenceScore = heuristicRes.confidenceScore;
+                    riskLevel = heuristicRes.riskLevel;
+                    issue = heuristicRes.issue;
+                    recommendation = heuristicRes.recommendation;
+                    summary = heuristicRes.summary;
+                    demoMode = heuristicRes.demoMode;
+                    wireDetails = heuristicRes.wireDetails;
+                    providerUsed = "Rule-Based Demo Mode";
                 }
 
                 var scan = new AIScan
@@ -785,13 +786,15 @@ namespace Electroscann_ai.Controllers
         private async Task<(bool success, bool wiresDetected, int confidenceScore, ScanRiskLevel riskLevel, string issue, string recommendation, string summary, bool demoMode, object wireDetails)> AnalyzeWireImageWithGeminiAsync(string filePath, IFormFile? imageFile)
         {
             string apiKey = _configuration["Gemini:ApiKey"]
-                ?? _configuration["GEMINI_API_KEY"]
                 ?? Environment.GetEnvironmentVariable("GEMINI_API_KEY") ?? "";
 
-            string modelName = _configuration["Gemini:Model"] ?? "gemini-2.5-flash";
+            string modelName = _configuration["Gemini:Model"]
+                ?? Environment.GetEnvironmentVariable("GEMINI_VISION_MODEL")
+                ?? "gemini-3.6-flash";
 
             if (string.IsNullOrEmpty(apiKey) || !System.IO.File.Exists(filePath))
             {
+                _logger.LogError("Gemini API Key or image file is missing. Aborting Gemini call.");
                 return (false, false, 0, ScanRiskLevel.Low, "", "", "", false, null!);
             }
 
@@ -836,20 +839,20 @@ namespace Electroscann_ai.Controllers
                     }
                 };
 
-                string[] candidateModels = new[] { "gemini-1.5-flash", "gemini-2.0-flash", modelName };
                 var jsonOptions = new JsonSerializerOptions
                 {
                     PropertyNamingPolicy = null
                 };
 
-                foreach (var targetModel in candidateModels.Where(m => !string.IsNullOrWhiteSpace(m)).Distinct())
+                var content = new StringContent(JsonSerializer.Serialize(requestBody, jsonOptions), System.Text.Encoding.UTF8, "application/json");
+                string url = $"https://generativelanguage.googleapis.com/v1beta/models/{modelName}:generateContent?key={apiKey}";
+                var response = await client.PostAsync(url, content);
+
+                var responseJson = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
                 {
-                    var content = new StringContent(JsonSerializer.Serialize(requestBody, jsonOptions), System.Text.Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync($"https://generativelanguage.googleapis.com/v1beta/models/{targetModel}:generateContent?key={apiKey}", content);
-
-                    var responseJson = await response.Content.ReadAsStringAsync();
-
-                    if (response.IsSuccessStatusCode)
+                    try
                     {
                         using var doc = JsonDocument.Parse(responseJson);
 
@@ -872,260 +875,110 @@ namespace Electroscann_ai.Controllers
                                     if (cleanedJson.EndsWith("```")) cleanedJson = cleanedJson.Substring(0, cleanedJson.Length - 3);
                                     cleanedJson = cleanedJson.Trim();
 
-                                    using var resDoc = JsonDocument.Parse(cleanedJson);
-                                    var root = resDoc.RootElement;
-
-                                    bool detected = false;
-                                    int confidence = 0;
-                                    if (root.TryGetProperty("confidence", out var cProp) && cProp.ValueKind == JsonValueKind.Number)
-                                        confidence = cProp.GetInt32();
-                                    else if (root.TryGetProperty("confidenceScore", out var confProp) && confProp.ValueKind == JsonValueKind.Number)
-                                        confidence = confProp.GetInt32();
-                                    else if (root.TryGetProperty("confidence", out var cStrProp) && cStrProp.ValueKind == JsonValueKind.String && int.TryParse(cStrProp.GetString(), out int cVal1))
-                                        confidence = cVal1;
-
-                                    if (root.TryGetProperty("object_detected", out var odCheck) && odCheck.ValueKind == JsonValueKind.Array && odCheck.GetArrayLength() > 0)
-                                        detected = true;
-                                    else if (root.TryGetProperty("wiresDetected", out var detProp))
-                                        detected = detProp.GetBoolean();
-                                    else
-                                        detected = confidence >= 30;
-
-                                    if (!detected || confidence < 30)
+                                    try
                                     {
-                                        return (true, false, 0, ScanRiskLevel.Low,
-                                            "No electrical wires or components detected.",
-                                            "Please upload or capture a clear photo showing electrical wires, cables, or panel terminals.",
-                                            "Stage 1 Wire Detection: No electrical wires or components found in image.", false, null!);
-                                    }
+                                        using var resDoc = JsonDocument.Parse(cleanedJson);
+                                        var root = resDoc.RootElement;
 
-                                    string safetyLevel = root.TryGetProperty("safety_level", out var slProp) ? slProp.GetString() ?? "Low Risk" : (root.TryGetProperty("riskLevel", out var rProp) ? rProp.GetString() ?? "Low" : "Low");
-                                    ScanRiskLevel risk = ScanRiskLevel.Low;
-                                    if (safetyLevel.Equals("Critical", StringComparison.OrdinalIgnoreCase)) risk = ScanRiskLevel.Critical;
-                                    else if (safetyLevel.Equals("High Risk", StringComparison.OrdinalIgnoreCase) || safetyLevel.Equals("High", StringComparison.OrdinalIgnoreCase)) risk = ScanRiskLevel.High;
-                                    else if (safetyLevel.Equals("Medium Risk", StringComparison.OrdinalIgnoreCase) || safetyLevel.Equals("Medium", StringComparison.OrdinalIgnoreCase)) risk = ScanRiskLevel.Medium;
+                                        bool detected = false;
+                                        int confidence = 0;
+                                        if (root.TryGetProperty("confidence", out var cProp) && cProp.ValueKind == JsonValueKind.Number)
+                                            confidence = cProp.GetInt32();
+                                        else if (root.TryGetProperty("confidenceScore", out var confProp) && confProp.ValueKind == JsonValueKind.Number)
+                                            confidence = confProp.GetInt32();
+                                        else if (root.TryGetProperty("confidence", out var cStrProp) && cStrProp.ValueKind == JsonValueKind.String && int.TryParse(cStrProp.GetString(), out int cVal1))
+                                            confidence = cVal1;
 
-                                    var hazardsList = new List<string>();
-                                    if (root.TryGetProperty("hazards", out var hzElem) && hzElem.ValueKind == JsonValueKind.Array)
-                                    {
-                                        foreach (var h in hzElem.EnumerateArray())
+                                        if (root.TryGetProperty("object_detected", out var odCheck) && odCheck.ValueKind == JsonValueKind.Array && odCheck.GetArrayLength() > 0)
+                                            detected = true;
+                                        else if (root.TryGetProperty("wiresDetected", out var detProp))
+                                            detected = detProp.GetBoolean();
+                                        else
+                                            detected = confidence >= 30;
+
+                                        if (!detected || confidence < 30)
                                         {
-                                            if (h.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(h.GetString()))
-                                                hazardsList.Add(h.GetString()!);
+                                            return (true, false, 0, ScanRiskLevel.Low,
+                                                "No electrical wires or components detected.",
+                                                "Please upload or capture a clear photo showing electrical wires, cables, or panel terminals.",
+                                                "Stage 1 Wire Detection: No electrical wires or components found in image.", false, null!);
                                         }
-                                    }
 
-                                    var recsList = new List<string>();
-                                    if (root.TryGetProperty("recommendation", out var recElem))
-                                    {
-                                        if (recElem.ValueKind == JsonValueKind.Array)
+                                        string safetyLevel = root.TryGetProperty("safety_level", out var slProp) ? slProp.GetString() ?? "Low Risk" : (root.TryGetProperty("riskLevel", out var rProp) ? rProp.GetString() ?? "Low" : "Low");
+                                        ScanRiskLevel risk = ScanRiskLevel.Low;
+                                        if (safetyLevel.Equals("Critical", StringComparison.OrdinalIgnoreCase)) risk = ScanRiskLevel.Critical;
+                                        else if (safetyLevel.Equals("High Risk", StringComparison.OrdinalIgnoreCase) || safetyLevel.Equals("High", StringComparison.OrdinalIgnoreCase)) risk = ScanRiskLevel.High;
+                                        else if (safetyLevel.Equals("Medium Risk", StringComparison.OrdinalIgnoreCase) || safetyLevel.Equals("Medium", StringComparison.OrdinalIgnoreCase)) risk = ScanRiskLevel.Medium;
+
+                                        var hazardsList = new List<string>();
+                                        if (root.TryGetProperty("hazards", out var hzElem) && hzElem.ValueKind == JsonValueKind.Array)
                                         {
-                                            foreach (var r in recElem.EnumerateArray())
+                                            foreach (var h in hzElem.EnumerateArray())
                                             {
-                                                if (r.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(r.GetString()))
-                                                    recsList.Add(r.GetString()!);
+                                                if (h.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(h.GetString()))
+                                                    hazardsList.Add(h.GetString()!);
                                             }
                                         }
-                                        else if (recElem.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(recElem.GetString()))
+
+                                        var recsList = new List<string>();
+                                        if (root.TryGetProperty("recommendation", out var recElem))
                                         {
-                                            recsList.Add(recElem.GetString()!);
+                                            if (recElem.ValueKind == JsonValueKind.Array)
+                                            {
+                                                foreach (var r in recElem.EnumerateArray())
+                                                {
+                                                    if (r.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(r.GetString()))
+                                                        recsList.Add(r.GetString()!);
+                                                }
+                                            }
+                                            else if (recElem.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(recElem.GetString()))
+                                            {
+                                                recsList.Add(recElem.GetString()!);
+                                            }
                                         }
+
+                                        string issue = hazardsList.Any() ? string.Join(", ", hazardsList) : (root.TryGetProperty("issue", out var iProp) ? iProp.GetString() ?? "Electrical wires and components analyzed." : "Electrical components analyzed.");
+                                        string recommendation = recsList.Any() ? string.Join("; ", recsList) : "Routine electrical inspection recommended.";
+                                        string summary = root.TryGetProperty("summary", out var sProp) ? sProp.GetString() ?? $"Gemini Vision ({modelName}) inspection completed." : "AI inspection completed.";
+
+                                        var wireDetailsObj = ParseWireDetailsFromRoot(root, confidence, risk);
+
+                                        return (true, true, confidence, risk, issue, recommendation, summary, false, wireDetailsObj);
                                     }
-
-                                    string issue = hazardsList.Any() ? string.Join(", ", hazardsList) : (root.TryGetProperty("issue", out var iProp) ? iProp.GetString() ?? "Electrical wires and components analyzed." : "Electrical components analyzed.");
-                                    string recommendation = recsList.Any() ? string.Join("; ", recsList) : "Routine electrical inspection recommended.";
-                                    string summary = root.TryGetProperty("summary", out var sProp) ? sProp.GetString() ?? $"Gemini Vision ({targetModel}) inspection completed." : "AI inspection completed.";
-
-                                    var wireDetailsObj = ParseWireDetailsFromRoot(root, confidence, risk);
-
-                                    return (true, true, confidence, risk, issue, recommendation, summary, false, wireDetailsObj);
+                                    catch (Exception parseEx)
+                                    {
+                                        _logger.LogError(parseEx, "Failed to parse cleaned Gemini Vision JSON block. Cleaned text was: {Text}", cleanedJson);
+                                    }
                                 }
                             }
                         }
                     }
-                    else
+                    catch (Exception jsonEx)
                     {
-                        if (responseJson.Contains("API_KEY_INVALID") || responseJson.Contains("API key not valid"))
-                        {
-                            _logger.LogInformation("Gemini API Key is invalid. Skipping Gemini provider.");
-                            break;
-                        }
-
-                        _logger.LogInformation("Gemini Vision API call for model {Model} returned status: {StatusCode}",
-                            targetModel, response.StatusCode);
+                        _logger.LogError(jsonEx, "Encountered JSON parse error on raw Gemini Vision response payload: {RawJson}", responseJson);
                     }
+                }
+                else
+                {
+                    _logger.LogError("Gemini Vision API call failed. Status Code: {StatusCode}. Response Body: {Body}",
+                        (int)response.StatusCode, responseJson);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogInformation(ex, "Gemini Vision API provider skipped or encountered an error.");
+                _logger.LogError(ex, "Unexpected error in AnalyzeWireImageWithGeminiAsync.");
             }
 
             return (false, false, 0, ScanRiskLevel.Low, "", "", "", false, null!);
         }
 
-        private async Task<(bool wiresDetected, int confidenceScore, ScanRiskLevel riskLevel, string issue, string recommendation, string summary, bool demoMode, object wireDetails)> AnalyzeWireImageWithGroqAsync(string filePath, IFormFile? imageFile)
+        private async Task<(bool success, bool wiresDetected, int confidenceScore, ScanRiskLevel riskLevel, string issue, string recommendation, string summary, bool demoMode, object wireDetails)> AnalyzeWireImageWithHeuristicsAsync(string filePath)
         {
-            string apiKey = _configuration["Groq:ApiKey"]
-                ?? _configuration["GROQ_API_KEY"]
-                ?? Environment.GetEnvironmentVariable("GROQ_API_KEY") ?? "";
-
-            string modelName = _configuration["Groq:Model"] ?? "llama-3.2-11b-vision-preview";
-
-            if (!string.IsNullOrEmpty(apiKey) && System.IO.File.Exists(filePath))
-            {
-                try
-                {
-                    byte[] imageBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-                    string base64Image = Convert.ToBase64String(imageBytes);
-
-                    using var client = new HttpClient();
-                    client.Timeout = TimeSpan.FromSeconds(45);
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
-
-                    string promptText = GetMultiWirePromptText();
-
-                    var requestBody = new
-                    {
-                        model = modelName,
-                        messages = new object[]
-                        {
-                            new
-                            {
-                                role = "user",
-                                content = new object[]
-                                {
-                                    new { type = "text", text = promptText },
-                                    new
-                                    {
-                                        type = "image_url",
-                                        image_url = new { url = $"data:image/jpeg;base64,{base64Image}" }
-                                    }
-                                }
-                            }
-                        },
-                        temperature = 0.2,
-                        response_format = new { type = "json_object" }
-                    };
-
-                    var content = new StringContent(JsonSerializer.Serialize(requestBody), System.Text.Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync("https://api.groq.com/openai/v1/chat/completions", content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        try
-                        {
-                            using var doc = JsonDocument.Parse(responseJson);
-                            string textResult = doc.RootElement
-                                .GetProperty("choices")[0]
-                                .GetProperty("message")
-                                .GetProperty("content").GetString() ?? "";
-
-                            if (!string.IsNullOrEmpty(textResult))
-                            {
-                                var cleanedJson = textResult.Trim();
-                                if (cleanedJson.StartsWith("```json")) cleanedJson = cleanedJson.Substring(7);
-                                if (cleanedJson.StartsWith("```")) cleanedJson = cleanedJson.Substring(3);
-                                if (cleanedJson.EndsWith("```")) cleanedJson = cleanedJson.Substring(0, cleanedJson.Length - 3);
-                                cleanedJson = cleanedJson.Trim();
-
-                                using var resDoc = JsonDocument.Parse(cleanedJson);
-                                var root = resDoc.RootElement;
-
-                                bool detected = false;
-                                int confidence = 0;
-                                if (root.TryGetProperty("confidence", out var cProp) && cProp.ValueKind == JsonValueKind.Number)
-                                    confidence = cProp.GetInt32();
-                                else if (root.TryGetProperty("confidenceScore", out var confProp) && confProp.ValueKind == JsonValueKind.Number)
-                                    confidence = confProp.GetInt32();
-                                else if (root.TryGetProperty("confidence", out var cStrProp) && cStrProp.ValueKind == JsonValueKind.String && int.TryParse(cStrProp.GetString(), out int cVal1))
-                                    confidence = cVal1;
-
-                                if (root.TryGetProperty("object_detected", out var odCheck) && odCheck.ValueKind == JsonValueKind.Array && odCheck.GetArrayLength() > 0)
-                                    detected = true;
-                                else if (root.TryGetProperty("wiresDetected", out var detProp))
-                                    detected = detProp.GetBoolean();
-                                else
-                                    detected = confidence >= 30;
-
-                                if (!detected || confidence < 30)
-                                {
-                                    return (false, 0, ScanRiskLevel.Low, 
-                                        "No electrical wires or components detected.", 
-                                        "Please upload or capture a clear photo showing electrical wires, cables, or panel terminals.", 
-                                        "Stage 1 Wire Detection: No electrical wires or components found in image.", false, null!);
-                                }
-
-                                string safetyLevel = root.TryGetProperty("safety_level", out var slProp) ? slProp.GetString() ?? "Low Risk" : (root.TryGetProperty("riskLevel", out var rProp) ? rProp.GetString() ?? "Low" : "Low");
-                                ScanRiskLevel risk = ScanRiskLevel.Low;
-                                if (safetyLevel.Equals("Critical", StringComparison.OrdinalIgnoreCase)) risk = ScanRiskLevel.Critical;
-                                else if (safetyLevel.Equals("High Risk", StringComparison.OrdinalIgnoreCase) || safetyLevel.Equals("High", StringComparison.OrdinalIgnoreCase)) risk = ScanRiskLevel.High;
-                                else if (safetyLevel.Equals("Medium Risk", StringComparison.OrdinalIgnoreCase) || safetyLevel.Equals("Medium", StringComparison.OrdinalIgnoreCase)) risk = ScanRiskLevel.Medium;
-
-                                var hazardsList = new List<string>();
-                                if (root.TryGetProperty("hazards", out var hzElem) && hzElem.ValueKind == JsonValueKind.Array)
-                                {
-                                    foreach (var h in hzElem.EnumerateArray())
-                                    {
-                                        if (h.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(h.GetString()))
-                                            hazardsList.Add(h.GetString()!);
-                                    }
-                                }
-
-                                var recsList = new List<string>();
-                                if (root.TryGetProperty("recommendation", out var recElem))
-                                {
-                                    if (recElem.ValueKind == JsonValueKind.Array)
-                                    {
-                                        foreach (var r in recElem.EnumerateArray())
-                                        {
-                                            if (r.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(r.GetString()))
-                                                recsList.Add(r.GetString()!);
-                                        }
-                                    }
-                                    else if (recElem.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(recElem.GetString()))
-                                    {
-                                        recsList.Add(recElem.GetString()!);
-                                    }
-                                }
-
-                                string issue = hazardsList.Any() ? string.Join(", ", hazardsList) : (root.TryGetProperty("issue", out var iProp) ? iProp.GetString() ?? "Electrical wires and components analyzed." : "Electrical components analyzed.");
-                                string recommendation = recsList.Any() ? string.Join("; ", recsList) : "Routine electrical inspection recommended.";
-                                string summary = root.TryGetProperty("summary", out var sProp) ? sProp.GetString() ?? "Groq AI vision wire inspection completed." : "AI inspection completed.";
-
-                                var wireDetailsObj = ParseWireDetailsFromRoot(root, confidence, risk);
-
-                                return (true, confidence, risk, issue, recommendation, summary, false, wireDetailsObj);
-                            }
-                        }
-                        catch (Exception parseEx)
-                        {
-                            _logger.LogWarning(parseEx, "Failed to parse Groq Vision API response JSON. Raw Response: {Text}", responseJson);
-                        }
-                    }
-                    else
-                    {
-                        var errorBody = await response.Content.ReadAsStringAsync();
-                        _logger.LogWarning("Groq Vision API call failed. Status: {StatusCode}. Body: {Body}",
-                            response.StatusCode, errorBody);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex, "Exception encountered during Groq Vision API processing.");
-                }
-            }
-            else if (string.IsNullOrEmpty(apiKey))
-            {
-                _logger.LogWarning("Groq API Key is missing in appsettings.json, GROQ_API_KEY environment variable, or IConfiguration. Falling back to Stage 1 local vision presence analyzer.");
-            }
-
             // STAGE 1: Object / Wire Presence Fallback Check
             bool localDetected = CheckWirePresenceInImage(filePath);
             if (!localDetected)
             {
-                return (false, 0, ScanRiskLevel.Low,
+                return (true, false, 0, ScanRiskLevel.Low,
                     "No electrical wires or components detected (Demo Mode).",
                     "Please upload or capture a clear photo showing electrical wires, cables, or panel terminals.",
                     "Stage 1 Wire Detection: No electrical wires or components found in image (Demo Mode).", true, null!);
@@ -1165,7 +1018,7 @@ namespace Electroscann_ai.Controllers
                 summary = "Demo Mode — Local vision rule-based inspection completed."
             };
 
-            return (true, 90, ScanRiskLevel.Low,
+            return (true, true, 90, ScanRiskLevel.Low,
                 "Electrical conductors and terminal connections analyzed (Demo Mode).",
                 "Verify terminal torque and ensure proper phase separation per Pakistan electrical standards.",
                 "Demo Mode — Local vision heuristic applied.", true, fallbackWireDetails);
