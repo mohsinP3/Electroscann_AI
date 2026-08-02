@@ -65,6 +65,16 @@ namespace Electroscann_ai.Controllers
                 .Take(5)
                 .ToListAsync();
 
+            // Recent Applications (required by Index.cshtml)
+            ViewBag.RecentApplications = await _context.JobApplications
+                .Include(ja => ja.Job)
+                .Include(ja => ja.Electrician)
+                    .ThenInclude(e => e!.User)
+                .Where(ja => ja.Job!.CompanyId == company.Id)
+                .OrderByDescending(ja => ja.CreatedAt)
+                .Take(5)
+                .ToListAsync();
+
             return View();
         }
 
