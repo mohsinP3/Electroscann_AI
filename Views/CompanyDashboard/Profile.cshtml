@@ -1,3 +1,4 @@
+@model ElectroScanAI.Models.Entities.User
 @{
     Layout = "_DashboardLayout";
     ViewBag.Title = "Company Profile";
@@ -17,17 +18,27 @@
             <div style="width:80px;height:80px;background:linear-gradient(135deg,#1F8A6B,#6BCB9E);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:#fff;font-size:2rem;">
                 <i class="fas fa-building"></i>
             </div>
-            <h3 style="font-size:1.1rem;font-weight:700;color:#1E293B;margin-bottom:4px;">@(User.Identity?.Name ?? "Company")</h3>
-            <p style="font-size:0.8rem;color:#1F8A6B;font-weight:600;margin-bottom:16px;">Electrical Contracting</p>
-            <span class="badge badge-yellow" style="font-size:0.75rem;padding:6px 14px;">
-                <i class="fas fa-circle" style="font-size:6px;"></i> Pending Verification
-            </span>
+            <h3 style="font-size:1.1rem;font-weight:700;color:#1E293B;margin-bottom:4px;">@(Model?.CompanyProfile?.CompanyName ?? Model?.FullName ?? "Company")</h3>
+            <p style="font-size:0.8rem;color:#1F8A6B;font-weight:600;margin-bottom:16px;">@(Model?.CompanyProfile?.Industry ?? "Electrical Contractor")</p>
+
+            @if (Model?.CompanyProfile?.IsVerified == true)
+            {
+                <span class="badge badge-green" style="font-size:0.75rem;padding:6px 14px;">
+                    <i class="fas fa-check-circle" style="font-size:10px;"></i> Verified Account
+                </span>
+            }
+            else
+            {
+                <span class="badge badge-yellow" style="font-size:0.75rem;padding:6px 14px;">
+                    <i class="fas fa-circle" style="font-size:6px;"></i> Pending Verification
+                </span>
+            }
 
             <div style="margin-top:20px;border-top:1px solid #E2ECE9;padding-top:16px;text-align:left;">
                 <div style="font-size:0.8rem;color:#64748B;display:flex;flex-direction:column;gap:10px;">
-                    <div><i class="fas fa-envelope" style="width:18px;color:#1F8A6B;"></i> @User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value</div>
-                    <div><i class="fas fa-phone" style="width:18px;color:#1F8A6B;"></i> Not Provided</div>
-                    <div><i class="fas fa-map-marker-alt" style="width:18px;color:#1F8A6B;"></i> Pakistan</div>
+                    <div><i class="fas fa-envelope" style="width:18px;color:#1F8A6B;"></i> @Model?.Email</div>
+                    <div><i class="fas fa-phone" style="width:18px;color:#1F8A6B;"></i> @(Model?.PhoneNumber ?? "Not Provided")</div>
+                    <div><i class="fas fa-map-marker-alt" style="width:18px;color:#1F8A6B;"></i> @(Model?.City ?? "Pakistan")</div>
                 </div>
             </div>
         </div>
@@ -36,17 +47,17 @@
             <div style="font-size:0.8rem;font-weight:700;color:#374151;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px;">Corporate Documents</div>
             <div style="display:flex;flex-direction:column;gap:10px;font-size:0.82rem;">
                 <div style="display:flex;align-items:center;justify-content:space-between;">
-                    <span style="color:#64748B;">NTN Document</span>
-                    <span class="badge badge-yellow">Awaiting Upload</span>
-                </div>
-                <div style="display:flex;align-items:center;justify-content:space-between;">
-                    <span style="color:#64748B;">Incorporation Cert</span>
-                    <span class="badge badge-yellow">Awaiting Upload</span>
+                    <span style="color:#64748B;">NTN: @(Model?.CompanyProfile?.NTNNumber ?? "N/A")</span>
+                    @if (!string.IsNullOrEmpty(Model?.CompanyProfile?.NTNNumber))
+                    {
+                        <span class="badge badge-green">Registered</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-yellow">Awaiting NTN</span>
+                    }
                 </div>
             </div>
-            <button class="btn-outline-dash" style="width:100%;margin-top:14px;font-size:0.78rem;justify-content:center;" onclick="showDashToast('Upload dialog opened')">
-                <i class="fas fa-upload"></i> Upload Documents
-            </button>
         </div>
     </div>
 
@@ -57,7 +68,8 @@
                 <i class="fas fa-edit" style="color:#1F8A6B;"></i> Edit Company Information
             </div>
 
-            <form>
+            <form asp-controller="CompanyDashboard" asp-action="UpdateProfile" method="post">
+                @Html.AntiForgeryToken()
                 <div class="section-label" style="font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9CA3AF;padding:0 4px;margin-bottom:12px;display:flex;align-items:center;gap:8px; width:100%;">
                     Company Profile Details
                     <span style="flex:1;height:1px;background:#E5E7EB;display:inline-block;"></span>
@@ -66,62 +78,45 @@
                 <div class="form-grid" style="margin-bottom:20px;">
                     <div class="form-group">
                         <label class="form-label">Company Name *</label>
-                        <input type="text" class="form-input" value="@(User.Identity?.Name ?? "")" placeholder="Tech Solutions Pvt Ltd">
+                        <input type="text" name="companyName" class="form-input" value="@Model?.CompanyProfile?.CompanyName" placeholder="Tech Solutions Pvt Ltd" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">NTN Number</label>
-                        <input type="text" class="form-input" placeholder="NTN-XXXX-XXXX">
+                        <input type="text" name="ntnNumber" class="form-input" value="@Model?.CompanyProfile?.NTNNumber" placeholder="NTN-XXXX-XXXX">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Contact Person Name</label>
-                        <input type="text" class="form-input" placeholder="Contact person name">
+                        <label class="form-label">Contact Person Name *</label>
+                        <input type="text" name="fullName" class="form-input" value="@Model?.FullName" placeholder="Contact person name" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Contact Email</label>
-                        <input type="email" class="form-input" value="@User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value">
+                        <input type="email" class="form-input" value="@Model?.Email" readonly style="background:#F8FAFA;color:#9CA3AF;">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Phone Number</label>
-                        <input type="tel" class="form-input" placeholder="+92 300 0000000">
+                        <input type="tel" name="phoneNumber" class="form-input" value="@Model?.PhoneNumber" placeholder="+92 300 0000000">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Website URL</label>
-                        <input type="url" class="form-input" placeholder="https://example.com">
+                        <label class="form-label">City / Region</label>
+                        <input type="text" name="city" class="form-input" value="@Model?.City" placeholder="Lahore, Karachi...">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Industry Sector</label>
-                        <select class="form-select">
-                            <option>Electrical Contracting</option>
-                            <option>Construction</option>
-                            <option>Solar Energy</option>
-                            <option>Facility Management</option>
-                            <option>Engineering Services</option>
+                        <select name="industry" class="form-select">
+                            <option value="Electrical Contracting" selected="@(Model?.CompanyProfile?.Industry == "Electrical Contracting")">Electrical Contracting</option>
+                            <option value="Construction" selected="@(Model?.CompanyProfile?.Industry == "Construction")">Construction</option>
+                            <option value="Solar Energy" selected="@(Model?.CompanyProfile?.Industry == "Solar Energy")">Solar Energy</option>
+                            <option value="Facility Management" selected="@(Model?.CompanyProfile?.Industry == "Facility Management")">Facility Management</option>
+                            <option value="Engineering Services" selected="@(Model?.CompanyProfile?.Industry == "Engineering Services")">Engineering Services</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Company Size</label>
-                        <select class="form-select">
-                            <option>1-10 Employees</option>
-                            <option>11-50 Employees</option>
-                            <option>51-200 Employees</option>
-                            <option>201+ Employees</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="grid-column:1/-1;">
-                        <label class="form-label">Office Address</label>
-                        <input type="text" class="form-input" placeholder="Full physical office address">
-                    </div>
-                    <div class="form-group" style="grid-column:1/-1;">
-                        <label class="form-label">About the Company</label>
-                        <textarea class="form-input" rows="4" placeholder="Brief description of your business history, projects, and mission..."></textarea>
                     </div>
                 </div>
 
                 <div style="display:flex;gap:12px;">
-                    <button type="button" class="btn-primary-dash" onclick="showDashToast('Company profile updated successfully!')">
+                    <button type="submit" class="btn-primary-dash">
                         <i class="fas fa-save"></i> Save Profile Details
                     </button>
-                    <button type="button" class="btn-outline-dash">Cancel</button>
+                    <a href="@Url.Action("Index")" class="btn-outline-dash" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Cancel</a>
                 </div>
             </form>
         </div>

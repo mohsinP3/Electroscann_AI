@@ -4,11 +4,48 @@
     ViewBag.Title = "Messages";
     ViewBag.PageTitle = "Messages";
     ViewBag.ActivePage = "Messages";
+    var users = ViewBag.Users as List<ElectroScanAI.Models.Entities.User> ?? new List<ElectroScanAI.Models.Entities.User>();
 }
 
-<div class="page-header">
-    <h1>Messages & Inquiries</h1>
-    <p>Communicate with companies and clients</p>
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Messages & Inquiries</h1>
+        <p>Communicate with companies, clients, and administrators</p>
+    </div>
+    <button class="btn btn-emerald fw-bold px-4" onclick="openModal('sendMessageModal')">
+        <i class="fas fa-paper-plane me-1"></i> Send New Message
+    </button>
+</div>
+
+<!-- Message Sending Modal -->
+<div class="modal-shell" id="sendMessageModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.3); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center;">
+    <div class="form-card" style="width:100%; max-width:500px; margin:20px; animation: modalIn 0.3s ease;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 style="font-size:1.15rem; font-weight:700; color:#1E293B; margin:0;"><i class="fas fa-comment-dots text-emerald me-2"></i>Send New Message</h3>
+            <button onclick="closeModal('sendMessageModal')" style="background:none; border:none; color:#64748B; font-size:1.2rem; cursor:pointer;"><i class="fas fa-times"></i></button>
+        </div>
+        <form asp-controller="ElectricianDashboard" asp-action="SendMessage" method="post">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label class="form-label fw-bold">Select Recipient</label>
+                <select name="receiverId" class="form-select" required style="width:100%; padding:10px; border-radius:10px; border:1px solid #E2ECE9;">
+                    <option value="" disabled selected>-- Choose a User --</option>
+                    @foreach (var user in users)
+                    {
+                        <option value="@user.Id">@user.FullName (@user.Role)</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-bold">Message Text</label>
+                <textarea name="messageText" class="form-control" rows="5" placeholder="Write your message here..." required style="width:100%; padding:12px; border-radius:10px; border:1px solid #E2ECE9;"></textarea>
+            </div>
+            <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-outline-secondary px-4 py-2" onclick="closeModal('sendMessageModal')" style="border-radius:10px;">Cancel</button>
+                <button type="submit" class="btn btn-emerald px-4 py-2" style="border-radius:10px; font-weight:700;"><i class="fas fa-paper-plane me-1"></i> Send Message</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div class="table-card">
@@ -18,31 +55,46 @@
     <table class="data-table">
         <thead>
             <tr>
-                <th>Sender</th>
+                <th>Contact</th>
+                <th>Direction</th>
                 <th>Message Content</th>
                 <th>Sent At</th>
-                <th>Status</th>
             </tr>
         </thead>
         <tbody>
             @if (Model != null && Model.Any())
             {
+                var userIdClaim = User.FindFirst("UserId")?.Value;
+                int.TryParse(userIdClaim, out int currentUserId);
+
                 @foreach (var msg in Model)
                 {
+                    bool isOutgoing = msg.SenderId == currentUserId;
                     <tr>
-                        <td class="fw-bold">@msg.Sender?.FullName (@msg.Sender?.Role)</td>
-                        <td>@msg.MessageText</td>
-                        <td>@msg.SentAt.ToString("yyyy-MM-dd HH:mm")</td>
-                        <td>
-                            @if (msg.IsRead)
+                        <td class="fw-bold">
+                            @if (isOutgoing)
                             {
-                                <span class="badge badge-green">Read</span>
+                                <span>@msg.Receiver?.FullName</span>
+                                <small class="text-muted d-block">@msg.Receiver?.Role</small>
                             }
                             else
                             {
-                                <span class="badge badge-yellow">Unread</span>
+                                <span>@msg.Sender?.FullName</span>
+                                <small class="text-muted d-block">@msg.Sender?.Role</small>
                             }
                         </td>
+                        <td>
+                            @if (isOutgoing)
+                            {
+                                <span class="badge badge-gray"><i class="fas fa-arrow-up me-1"></i> Sent</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-green"><i class="fas fa-arrow-down me-1"></i> Received</span>
+                            }
+                        </td>
+                        <td style="max-width: 450px; word-wrap: break-word; white-space: normal;">@msg.MessageText</td>
+                        <td>@msg.SentAt.ToString("yyyy-MM-dd HH:mm")</td>
                     </tr>
                 }
             }
@@ -51,10 +103,31 @@
                 <tr>
                     <td colspan="4" class="text-center text-muted py-5">
                         <i class="fas fa-comment-slash fa-3x mb-3 text-secondary d-block"></i>
-                        No messages found.
+                        No messages found. Click "Send New Message" above to start a conversation!
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+@section Scripts {
+<script>
+    function openModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+
+    function closeModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+<style>
+    @Html.Raw("@keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }")
+</style>
+}
