@@ -19,3 +19,4 @@ View your app in AI Studio: https://ai.studio/apps/d78fae76-fc9a-4e4e-a6d5-1e8f6
 3. Run the app:
    `npm run dev`
 "# Electroscann_AI" 
+"# Electroscann_AI" 
