@@ -1,0 +1,40 @@
+Using launch settings from /app/Properties/launchSettings.json...
+Building...
+/app/Electroscann-ai.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.7 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+/app/Electroscann-ai.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.7 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+warn: Electroscann-ai[0]
+      WARNING: Gemini API key (Gemini:ApiKey) is missing. AI Wire Scanner will fall back to Groq, then Rule-Based Demo Mode.
+warn: Electroscann-ai[0]
+      WARNING: Groq Vision API key (Groq:ApiKey) is missing. AI Wire Scanner will run in Rule-Based Demo Mode.
+warn: Electroscann-ai[0]
+      WARNING: Stripe Secret Key (PaymentGateway:Stripe:SecretKey) is missing. Payment checkout will notify users that payments are currently disabled.
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://0.0.0.0:3000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /app
+info: Electroscann_ai.Controllers.AccountController[0]
+      User client@electroscann.ai logged in successfully with role Client.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User client@electroscann.ai logged in successfully with role Client.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User client@electroscann.ai logged in successfully with role Client.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User client@electroscann.ai logged in successfully with role Client.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User client@electroscann.ai logged in successfully with role Client.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User client@electroscann.ai logged in successfully with role Client.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User electrician@electroscann.ai logged in successfully with role Electrician.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User client@electroscann.ai logged in successfully with role Client.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User electrician@electroscann.ai logged in successfully with role Electrician.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User client@electroscann.ai logged in successfully with role Client.
+info: Electroscann_ai.Controllers.AccountController[0]
+      User electrician@electroscann.ai logged in successfully with role Electrician.
