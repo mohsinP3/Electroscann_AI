@@ -1681,11 +1681,11 @@ Return ONLY valid JSON, no markdown fences, no extra text, in exactly this shape
 
         public IActionResult Careers() => View();
 
-        public IActionResult Analytics() => View();
+        public IActionResult Analytics() => RedirectToAction(nameof(System_Monitor));
 
         public IActionResult System_Monitor() => View();
 
-        public IActionResult Reports() => View();
+        public IActionResult Reports() => RedirectToAction(nameof(History));
 
         // ========== MARKET RATES — with real DB data + filtering ==========
         public async Task<IActionResult> Market_Rates(string? city, string? category)
@@ -1707,7 +1707,7 @@ Return ONLY valid JSON, no markdown fences, no extra text, in exactly this shape
             return View();
         }
 
-        public IActionResult Demo() => View();
+        public IActionResult Demo() => RedirectToAction(nameof(AI_Scanner));
 
         public IActionResult Pricing() => View();
 
