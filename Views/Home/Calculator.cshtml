@@ -492,29 +492,29 @@
                 <!-- Input Panel -->
                 <div class="es-calc-card">
                     <div class="es-calc-card-header">
-                        <h4><i class="fas fa-ruler-combined"></i> Room Specifications</h4>
+                        <h4><i class="fas fa-ruler-combined" aria-hidden="true"></i> Room Specifications</h4>
                     </div>
                     <div class="es-calc-card-body">
                         <div class="es-input-row">
                             <div class="es-input-group">
-                                <label asp-for="RoomLength"></label>
+                                <label asp-for="RoomLength" for="roomLength"></label>
                                 <input asp-for="RoomLength" type="number" id="roomLength" step="any" min="1" max="500" class="form-control" />
                                 <span asp-validation-for="RoomLength" class="text-danger small"></span>
                             </div>
                             <div class="es-input-group">
-                                <label asp-for="RoomWidth"></label>
+                                <label asp-for="RoomWidth" for="roomWidth"></label>
                                 <input asp-for="RoomWidth" type="number" id="roomWidth" step="any" min="1" max="500" class="form-control" />
                                 <span asp-validation-for="RoomWidth" class="text-danger small"></span>
                             </div>
                             <div class="es-input-group">
-                                <label asp-for="RoomHeight"></label>
+                                <label asp-for="RoomHeight" for="roomHeight"></label>
                                 <input asp-for="RoomHeight" type="number" id="roomHeight" step="any" min="7" max="30" class="form-control" />
                                 <span asp-validation-for="RoomHeight" class="text-danger small"></span>
                             </div>
                         </div>
 
                         <h5 class="fixtures-title">
-                            <i class="fas fa-plug"></i>
+                            <i class="fas fa-plug" aria-hidden="true"></i>
                             Electrical Fixtures &amp; Loads
                         </h5>
 
@@ -526,51 +526,51 @@
 
                         <div class="counter-grid">
                             <div class="counter-group">
-                                <i class="fas fa-lightbulb"></i>
-                                <div class="counter-value" id="lightVal">@Model.Lights</div>
+                                <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                                <div class="counter-value" id="lightVal" aria-live="polite">@Model.Lights</div>
                                 <div class="counter-controls">
-                                    <button type="button" class="counter-btn" onclick="modifyCounter('lights', -1)">−</button>
-                                    <button type="button" class="counter-btn" onclick="modifyCounter('lights', 1)">+</button>
+                                    <button type="button" class="counter-btn" onclick="modifyCounter('lights', -1)" aria-label="Decrease lights count">−</button>
+                                    <button type="button" class="counter-btn" onclick="modifyCounter('lights', 1)" aria-label="Increase lights count">+</button>
                                 </div>
                                 <span class="counter-label">Lights (60W)</span>
                                 <span asp-validation-for="Lights" class="text-danger small"></span>
                             </div>
                             <div class="counter-group">
-                                <i class="fas fa-fan"></i>
-                                <div class="counter-value" id="fanVal">@Model.Fans</div>
+                                <i class="fas fa-fan" aria-hidden="true"></i>
+                                <div class="counter-value" id="fanVal" aria-live="polite">@Model.Fans</div>
                                 <div class="counter-controls">
-                                    <button type="button" class="counter-btn" onclick="modifyCounter('fans', -1)">−</button>
-                                    <button type="button" class="counter-btn" onclick="modifyCounter('fans', 1)">+</button>
+                                    <button type="button" class="counter-btn" onclick="modifyCounter('fans', -1)" aria-label="Decrease fans count">−</button>
+                                    <button type="button" class="counter-btn" onclick="modifyCounter('fans', 1)" aria-label="Increase fans count">+</button>
                                 </div>
                                 <span class="counter-label">Fans (80W)</span>
                                 <span asp-validation-for="Fans" class="text-danger small"></span>
                             </div>
                             <div class="counter-group">
-                                <i class="fas fa-plug"></i>
-                                <div class="counter-value" id="socketVal">@Model.Sockets</div>
+                                <i class="fas fa-plug" aria-hidden="true"></i>
+                                <div class="counter-value" id="socketVal" aria-live="polite">@Model.Sockets</div>
                                 <div class="counter-controls">
-                                    <button type="button" class="counter-btn" onclick="modifyCounter('sockets', -1)">−</button>
-                                    <button type="button" class="counter-btn" onclick="modifyCounter('sockets', 1)">+</button>
+                                    <button type="button" class="counter-btn" onclick="modifyCounter('sockets', -1)" aria-label="Decrease sockets count">−</button>
+                                    <button type="button" class="counter-btn" onclick="modifyCounter('sockets', 1)" aria-label="Increase sockets count">+</button>
                                 </div>
                                 <span class="counter-label">Sockets (150W)</span>
                                 <span asp-validation-for="Sockets" class="text-danger small"></span>
                             </div>
                             <div class="counter-group">
-                                <i class="fas fa-wind"></i>
-                                <div class="counter-value" id="acVal">@Model.AcUnits</div>
+                                <i class="fas fa-wind" aria-hidden="true"></i>
+                                <div class="counter-value" id="acVal" aria-live="polite">@Model.AcUnits</div>
                                 <div class="counter-controls">
-                                    <button type="button" class="counter-btn" onclick="modifyCounter('ac', -1)">−</button>
-                                    <button type="button" class="counter-btn" onclick="modifyCounter('ac', 1)">+</button>
+                                    <button type="button" class="counter-btn" onclick="modifyCounter('ac', -1)" aria-label="Decrease AC units count">−</button>
+                                    <button type="button" class="counter-btn" onclick="modifyCounter('ac', 1)" aria-label="Increase AC units count">+</button>
                                 </div>
                                 <span class="counter-label">AC Units (2000W)</span>
                                 <span asp-validation-for="AcUnits" class="text-danger small"></span>
                             </div>
                             <div class="counter-group">
-                                <i class="fas fa-industry"></i>
-                                <div class="counter-value" id="heavyVal">@Model.HeavyLoads</div>
+                                <i class="fas fa-industry" aria-hidden="true"></i>
+                                <div class="counter-value" id="heavyVal" aria-live="polite">@Model.HeavyLoads</div>
                                 <div class="counter-controls">
-                                    <button type="button" class="counter-btn" onclick="modifyCounter('heavy', -1)">−</button>
-                                    <button type="button" class="counter-btn" onclick="modifyCounter('heavy', 1)">+</button>
+                                    <button type="button" class="counter-btn" onclick="modifyCounter('heavy', -1)" aria-label="Decrease heavy loads count">−</button>
+                                    <button type="button" class="counter-btn" onclick="modifyCounter('heavy', 1)" aria-label="Increase heavy loads count">+</button>
                                 </div>
                                 <span class="counter-label">Heavy Loads (3000W)</span>
                                 <span asp-validation-for="HeavyLoads" class="text-danger small"></span>
